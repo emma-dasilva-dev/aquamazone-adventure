@@ -47,7 +47,7 @@ export default function Home(){
  <span className="image-disclosure">{lang==='fr'?'Photo d’illustration · Visuels officiels à venir':'Illustrative photo · Official media coming soon'}</span>
  </section>
  <section id="activities" className="activities activities-v3 section-shell">
- <div className="activity-v3-heading"><div><p className="kicker">{lang==='fr'?'NOS ACTIVITÉS':'OUR ACTIVITIES'}</p><h2>{lang==='fr'?'Des expériences uniques sur l’eau':'Unforgettable moments on the water'}</h2></div><p>{lang==='fr'?'Pédalo, kayak, paddle et bien plus encore. Trouvez l’expérience qui vous ressemble.':'Pedal boats, kayaks, paddleboards and more. Find your kind of adventure.'}</p></div>
+ <div className="activity-v3-heading"><div><p className="kicker">{lang==='fr'?'02 / NOS ACTIVITÉS':'02 / OUR ACTIVITIES'}</p><h2>{lang==='fr'?'Des expériences uniques sur l’eau':'Unforgettable moments on the water'}</h2></div><p>{lang==='fr'?'Pédalo, kayak, paddle et bien plus encore. Trouvez l’expérience qui vous ressemble.':'Pedal boats, kayaks, paddleboards and more. Find your kind of adventure.'}</p></div>
  <p className="visual-warning">{lang==='fr'?'Photographies d’illustration — elles ne représentent pas le site Aquamazone.':'Illustrative stock photography — not images of the Aquamazone location.'}</p>
  <div className="activity-vertical-list">
  {activities.map((a,i)=><article className="activity-list-item" key={a.id}>
@@ -71,7 +71,7 @@ export default function Home(){
  <section id="packages" className="packages packages-v4" aria-labelledby="packages-title">
  <div className="section-shell">
    <div className="packages-v4-heading">
-     <div><p className="kicker">{lang==='fr'?'NOS FORFAITS':'OUR PACKAGES'}</p><h2 id="packages-title">{lang==='fr'?<>L’expérience <em>à votre façon.</em></>:<>Your kind of <em>adventure.</em></>}</h2></div>
+     <div><p className="kicker">{lang==='fr'?'03 / NOS FORFAITS':'03 / OUR PACKAGES'}</p><h2 id="packages-title">{lang==='fr'?<>L’expérience <em>à votre façon.</em></>:<>Your kind of <em>adventure.</em></>}</h2></div>
      <p>{lang==='fr'?'Seul, à deux, en famille ou entre amis : choisissez votre façon de profiter du lac.':'Solo, as a couple, with family or friends: find the right way to enjoy the lake.'}</p>
    </div>
    <div className="packages-v4-featured packages-v6-featured">
