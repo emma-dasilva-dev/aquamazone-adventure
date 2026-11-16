@@ -74,18 +74,31 @@ export default function Home(){
      <div><p className="kicker">{lang==='fr'?'NOS FORFAITS':'OUR PACKAGES'}</p><h2 id="packages-title">{lang==='fr'?<>L’expérience <em>à votre façon.</em></>:<>Your kind of <em>adventure.</em></>}</h2></div>
      <p>{lang==='fr'?'Seul, à deux, en famille ou entre amis : choisissez votre façon de profiter du lac.':'Solo, as a couple, with family or friends: find the right way to enjoy the lake.'}</p>
    </div>
-   <div className="packages-v4-featured">
-     <article className="package-feature package-feature-solo">
-       <div className="package-feature-top"><span className="package-number">01 / 04</span><span className="package-category">{lang==='fr'?'POUR 1 PERSONNE':'FOR 1 PERSON'}</span></div>
-       <div className="package-feature-main"><p className="package-intention">{lang==='fr'?'Pour découvrir':'For your first adventure'}</p><h3>GLÈLÈ</h3><p className="package-description">{lang==='fr'?'La première expérience, à votre rythme.':'A first adventure, at your own pace.'}</p></div>
-       <div className="package-inclusions"><span className="package-inclusions-title">{lang==='fr'?'Ce qui est inclus':'What is included'}</span><p>{lang==='fr'?'Traversée aller-retour incluse':'Return crossing included'}</p><p><strong>{lang==='fr'?'1 activité au choix':'Choose exactly 1 activity'}</strong> — {lang==='fr'?'canoë simple OU pédalo simple (30 min)':'single canoe OR single pedalo (30 min)'}</p></div>
-       <div className="package-feature-foot"><div className="package-pricing"><span>{lang==='fr'?'Adulte':'Adult'} <strong>5 000 FCFA</strong></span><span>{lang==='fr'?'Enfant':'Child'} <strong>3 500 FCFA</strong></span></div><a href={bookingWhatsApp} target="_blank" rel="noopener noreferrer" aria-label={lang==='fr'?'Demander le forfait GLÈLÈ':'Enquire about GLÈLÈ'}>{lang==='fr'?'Choisir GLÈLÈ':'Choose GLÈLÈ'}<ArrowUpRight size={18}/></a></div>
+   <div className="packages-v4-featured packages-v6-featured">
+     <article className="package-experience package-experience-solo">
+       <div className="package-experience-art" aria-hidden="true"><span className="package-art-sun"/><span className="package-art-wave package-art-wave-one"/><span className="package-art-wave package-art-wave-two"/><span className="package-art-label">01 <span>{lang==='fr'?'PERSONNE':'PERSON'}</span></span></div>
+       <div className="package-experience-body">
+         <div className="package-experience-top"><span>01 / 04</span><span>{lang==='fr'?'SOLO · 1 PERSONNE':'SOLO · 1 PERSON'}</span></div>
+         <p className="package-experience-eyebrow">{lang==='fr'?'Le plaisir de découvrir':'Your first adventure'}</p>
+         <h3>GLÈLÈ</h3>
+         <p className="package-experience-intro">{lang==='fr'?'Une première escapade sur l’eau, à votre rythme.':'Your first escape on the water, at your own pace.'}</p>
+         <div className="package-experience-included"><strong>{lang==='fr'?'Traversée aller-retour incluse':'Return crossing included'}</strong><br/><strong>{lang==='fr'?'1 activité au choix':'Choose 1 activity'}</strong> : {lang==='fr'?'canoë simple OU pédalo simple (30 min)':'single canoe OR single pedalo (30 min)'}</div>
+         <div className="package-experience-end">
+           <div className="package-v6-prices"><span>{lang==='fr'?'Adulte':'Adult'} <strong>5 000 <small>FCFA</small></strong></span><span>{lang==='fr'?'Enfant':'Child'} <strong>3 500 <small>FCFA</small></strong></span></div>
+           <a href={bookingWhatsApp} target="_blank" rel="noopener noreferrer" aria-label={lang==='fr'?'Se renseigner sur le forfait GLÈLÈ':'Enquire about GLÈLÈ'}>{lang==='fr'?'Choisir GLÈLÈ':'Choose GLÈLÈ'}<ArrowUpRight size={18}/></a>
+         </div>
+       </div>
      </article>
-     <article className="package-feature package-feature-couple">
-       <div className="package-feature-top"><span className="package-number">02 / 04</span><span className="package-category">{lang==='fr'?'POUR 2 PERSONNES':'FOR 2 PEOPLE'}</span></div>
-       <div className="package-feature-main"><p className="package-intention">{lang==='fr'?'À partager à deux':'An adventure for two'}</p><h3>GUÉZO</h3><p className="package-description">{lang==='fr'?'Des moments à vivre ensemble.':'Make memories together.'}</p></div>
-       <div className="package-inclusions"><span className="package-inclusions-title">{lang==='fr'?'Ce qui est inclus':'What is included'}</span><p>{lang==='fr'?'Traversée aller-retour incluse':'Return crossing included'}</p><p>{lang==='fr'?'Canoë double ET pédalo double':'Double canoe AND double pedalo'}</p><p>{lang==='fr'?'Eau offerte':'Complimentary water'}</p></div>
-       <div className="package-feature-foot"><div className="package-pricing"><span>{lang==='fr'?'Le couple':'Per couple'} <strong>12 000 FCFA</strong></span></div><a href={bookingWhatsApp} target="_blank" rel="noopener noreferrer" aria-label={lang==='fr'?'Demander le forfait GUÉZO':'Enquire about GUÉZO'}>{lang==='fr'?'Choisir GUÉZO':'Choose GUÉZO'}<ArrowUpRight size={18}/></a></div>
+     <article className="package-experience package-experience-couple">
+       <div className="package-experience-art" aria-hidden="true"><span className="package-art-sun"/><span className="package-art-wave package-art-wave-one"/><span className="package-art-wave package-art-wave-two"/><span className="package-art-label">02 <span>PERSONNES</span></span></div>
+       <div className="package-experience-body">
+         <div className="package-experience-top"><span>02 / 04</span><span>{lang==='fr'?'COUPLE · 2 PERSONNES':'COUPLE · 2 PEOPLE'}</span></div>
+         <p className="package-experience-eyebrow">{lang==='fr'?'Deux fois plus de souvenirs':'Make memories together'}</p>
+         <h3>GUÉZO</h3>
+         <p className="package-experience-intro">{lang==='fr'?'Une aventure à partager, ensemble.':'An adventure made for two.'}</p>
+         <div className="package-experience-included"><strong>{lang==='fr'?'Traversée aller-retour incluse':'Return crossing included'}</strong><br/>{lang==='fr'?'Canoë double ET pédalo double · Eau offerte':'Double canoe AND double pedalo · Complimentary water'}</div>
+         <div className="package-experience-end"><div><span className="package-experience-small">{lang==='fr'?'Pour le couple':'Per couple'}</span><strong>12 000 <small>FCFA</small></strong></div><a href={bookingWhatsApp} target="_blank" rel="noopener noreferrer" aria-label={lang==='fr'?'Se renseigner sur le forfait GUÉZO':'Enquire about GUÉZO'}>{lang==='fr'?'Choisir GUÉZO':'Choose GUÉZO'}<ArrowUpRight size={18}/></a></div>
+       </div>
      </article>
    </div>
    <div className="packages-v5-extras" aria-label={lang==='fr'?'Forfaits famille et groupe':'Family and group packages'}>
