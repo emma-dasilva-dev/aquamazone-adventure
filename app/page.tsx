@@ -1,6 +1,6 @@
 'use client';
 import {useEffect,useState} from 'react';
-import {ArrowDown,ArrowUpRight,ArrowRight,Menu,X,Plus,Minus,MapPin,Clock,MessageCircle,Waves} from 'lucide-react';
+import {ArrowDown,ArrowUpRight,ArrowRight,Menu,X,Plus,Minus,MapPin,Clock,MessageCircle,Waves,ZoomIn} from 'lucide-react';
 
 type Lang='fr'|'en';
 const activities=[
@@ -25,9 +25,10 @@ const activityVisuals:Record<string,string>={
  ball:'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=1100&q=80&auto=format&fit=crop'
 };
 export default function Home(){
- const [lang,setLang]=useState<Lang>('fr');const [menu,setMenu]=useState(false);const [active,setActive]=useState('pedalo');const [chat,setChat]=useState(false);const [question,setQuestion]=useState<number|null>(null);const t=copy[lang];const chosen=activities.find(a=>a.id===active)!;
+ const [lang,setLang]=useState<Lang>('fr');const [menu,setMenu]=useState(false);const [active,setActive]=useState('pedalo');const [chat,setChat]=useState(false);const [question,setQuestion]=useState<number|null>(null);const [preview,setPreview]=useState<string|null>(null);const t=copy[lang];const chosen=activities.find(a=>a.id===active)!;
  useEffect(()=>{document.documentElement.lang=lang;},[lang]);
- useEffect(()=>{document.body.style.overflow=menu?'hidden':'';return()=>{document.body.style.overflow='';};},[menu]);
+ useEffect(()=>{document.body.style.overflow=menu||preview?'hidden':'';return()=>{document.body.style.overflow='';};},[menu,preview]);
+ useEffect(()=>{if(!preview)return;const close=(event:KeyboardEvent)=>{if(event.key==='Escape')setPreview(null)};window.addEventListener('keydown',close);return()=>window.removeEventListener('keydown',close)},[preview]);
  const responses=lang==='fr'?['Nous sommes ouverts de 11h à 18h les samedis, dimanches et jours fériés.','Nous sommes à Adounko Village, Route des Pêches, Cotonou, Bénin.','Le pédalo coûte 3 000 FCFA par personne pour 30 minutes.']:['We open 11am–6pm on Saturdays, Sundays and public holidays.','We are in Adounko Village, Route des Pêches, Cotonou, Benin.','Pedal boating costs 3,000 FCFA per person for 30 minutes.'];
  return <>
  <header className="site-header"><a className="wordmark" href="#top" aria-label="Aquamazone Adventure — accueil"><span>AQUAMAZONE</span><small>ADVENTURE <span aria-hidden="true">/</span> BENIN</small></a><nav className="desktop-nav" aria-label={lang==='fr'?'Navigation principale':'Main navigation'}>{sections.map((section,i)=><a href={'#'+section} key={section}>{t.nav[i]}</a>)}</nav><div className="header-actions"><button className="lang" onClick={()=>setLang(lang==='fr'?'en':'fr')} aria-label={lang==='fr'?'Switch to English':'Passer en français'}><span className="lang-current">{lang.toUpperCase()}</span><span aria-hidden="true" className="lang-divider">/</span><span className="lang-alternate">{lang==='fr'?'EN':'FR'}</span></button><a className="header-book" href={bookingWhatsApp} target="_blank" rel="noopener noreferrer">{t.book} <ArrowUpRight size={17}/></a><button className="menu-toggle" onClick={()=>setMenu(!menu)} aria-expanded={menu} aria-controls="mobile-menu" aria-label={menu?t.close:t.menu}>{menu?<X/>:<Menu/>}</button></div></header>
@@ -48,15 +49,24 @@ export default function Home(){
  <section id="activities" className="activities activities-v3 section-shell">
  <div className="activity-v3-heading"><div><p className="kicker">{lang==='fr'?'NOS ACTIVITÉS':'OUR ACTIVITIES'}</p><h2>{lang==='fr'?'Des expériences uniques sur l’eau':'Unforgettable moments on the water'}</h2></div><p>{lang==='fr'?'Pédalo, kayak, paddle et bien plus encore. Trouvez l’expérience qui vous ressemble.':'Pedal boats, kayaks, paddleboards and more. Find your kind of adventure.'}</p></div>
  <p className="visual-warning">{lang==='fr'?'Photographies d’illustration — elles ne représentent pas le site Aquamazone.':'Illustrative stock photography — not images of the Aquamazone location.'}</p>
- <div className="activity-photo-grid" role="group" aria-label={lang==='fr'?'Choisir une activité':'Choose an activity'}>
- {activities.slice(0,5).map((a,i)=><button className={'activity-photo-card '+(active===a.id?'is-current':'')} key={a.id} onClick={()=>setActive(a.id)} aria-pressed={active===a.id}>
- <span className="activity-card-photo" style={{backgroundImage:`linear-gradient(0deg, rgba(2,23,42,.85), transparent 65%), url("${activityVisuals[a.id]}")`}} aria-hidden="true"/>
- <span className="activity-card-index">{String(i+1).padStart(2,'0')}</span><span className="activity-card-content"><span className="activity-card-name">{lang==='fr'?a.fr:a.en}</span><span className="activity-card-meta">{a.duration} <span aria-hidden="true">·</span> {a.id==='boat'?'Dès 3 000 FCFA':a.price.replace(' / personne','')}</span></span><span className="activity-card-arrow"><ArrowUpRight size={18}/></span>
- </button>)}
+ <div className="activity-vertical-list">
+ {activities.map((a,i)=><article className="activity-list-item" key={a.id}>
+   <span className="activity-list-index">{String(i+1).padStart(2,'0')}</span>
+   <div className="activity-list-copy">
+     <h3>{lang==='fr'?a.fr:a.en}</h3>
+     <div className="activity-list-facts">{a.duration&&<span>{a.duration}</span>}{a.duration&&a.price&&<span aria-hidden="true">·</span>}{a.price&&<strong>{a.price}</strong>}</div>
+     {a.note&&<p className={a.unavailable?'activity-list-alert':'activity-list-note'}>{a.note}</p>}
+     {!a.unavailable&&<a className="activity-list-link" href={bookingWhatsApp} target="_blank" rel="noopener noreferrer">{lang==='fr'?'Demander une réservation':'Request a booking'}<ArrowUpRight size={15}/></a>}
+   </div>
+   {activityVisuals[a.id]?
+     <button className="activity-thumbnail" type="button" onClick={()=>setPreview(a.id)} aria-label={(lang==='fr'?'Agrandir la photo illustrative : ':'Expand illustrative image: ')+(lang==='fr'?a.fr:a.en)}>
+       <span className="activity-thumbnail-photo" style={{backgroundImage:`url("${activityVisuals[a.id]}")`}} aria-hidden="true"/>
+       <span className="activity-thumbnail-zoom" aria-hidden="true"><ZoomIn size={17}/></span>
+     </button>:
+     <span className="activity-no-photo">{lang==='fr'?'Photo à venir':'Photo pending'}</span>}
+ </article>)}
  </div>
- <div className="activity-v3-detail" aria-live="polite"><div><span className="kicker">{lang==='fr'?'ACTIVITÉ SÉLECTIONNÉE':'SELECTED ACTIVITY'}</span><h3>{lang==='fr'?chosen.fr:chosen.en}</h3><p>{chosen.duration}{chosen.duration?' · ':''}{chosen.price||chosen.note}</p>{chosen.note&&chosen.price&&<p className={chosen.unavailable?'alert':'note'}>{chosen.note}</p>}</div><a className="activity-detail-link" href={bookingWhatsApp} target="_blank" rel="noopener noreferrer">{lang==='fr'?'Se renseigner / réserver':'Enquire / book'}<ArrowUpRight size={19}/></a></div>
- <div className="activity-rest"><p className="kicker">{lang==='fr'?'AUTRES EXPÉRIENCES':'MORE EXPERIENCES'}</p>{activities.slice(5).map(a=><div key={a.id} className="activity-rest-row"><span>{lang==='fr'?a.fr:a.en}</span><span>{a.unavailable?(lang==='fr'?'Indisponible — maintenance':'Unavailable — maintenance'):a.price||a.note}</span></div>)}</div>
- <p className="prototype-notice">{lang==='fr'?'Réservation et paiement en ligne en cours de développement. Pour le moment, demandez votre réservation sur WhatsApp.':'Online booking and payment are in development. For now, request bookings via WhatsApp.'}</p>
+  <p className="prototype-notice">{lang==='fr'?'Réservation et paiement en ligne en cours de développement. Pour le moment, demandez votre réservation sur WhatsApp.':'Online booking and payment are in development. For now, request bookings via WhatsApp.'}</p>
  </section>
  <section id="packages" className="packages"><div className="section-shell"><p className="kicker">03 / AQUAMAZONE</p><h2>{t.packages}</h2><div className="package-list">{[['GLÈLÈ','SOLO','5 000 FCFA / adulte · 3 500 FCFA / enfant'],['GUÉZO','COUPLE','12 000 FCFA'],['TOFFA','FAMILLE',lang==='fr'?'Tarif à confirmer':'Price to confirm'],['BÉHANZIN','GROUPE / VIP','36 000 FCFA']].map(([name,type,price],i)=><div className="package-row" key={name}><span>0{i+1}</span><h3>{name}</h3><span>{type}</span><strong>{price}</strong></div>)}</div></div></section>
  <section id="restaurant" className="restaurant section-shell"><div className="restaurant-photo"><Waves size={52} strokeWidth={1}/><span>{t.placeholder}</span></div><div className="restaurant-copy"><p className="kicker">04 / RESTAURANT & BAR</p><h2>{t.food}</h2><p>Bar braisé · Carpe braisée · Brochettes de poulet</p><p>Riz · Aloco · Légumes sautés · Pommes frites · Pommes sautées · Igname · Patates douces</p><p className="small">{lang==='fr'?'Nous vous recommandons de confirmer votre commande avant votre arrivée.':'We recommend confirming your order before arriving.'}</p></div></section>
@@ -64,6 +74,13 @@ export default function Home(){
  <section id="location" className="location section-shell"><div><p className="kicker">06 / LOCALISATION</p><h2>{t.location}</h2><p>Adounko Village, Route des Pêches, Cotonou, Bénin.</p><p><Clock size={17}/>{t.hours}</p><a className="inline-link" href="https://maps.google.com/?q=Togbin+Plage+AQUAMAZONE" target="_blank" rel="noopener noreferrer"><MapPin size={18}/> Google Maps <ArrowUpRight size={18}/></a></div><div className="map-placeholder"><MapPin size={45}/><span>{lang==='fr'?'Carte à intégrer après vérification du point exact':'Map to be added after pin verification'}</span></div></section>
  </main>
  <footer className="footer"><div className="section-shell"><div className="footer-top"><div><h2>AQUAMAZONE <small>ADVENTURE</small></h2><p>Base de loisirs nautiques au Village Adounko.</p><em>« La détente au fil de l’eau. »</em></div><div><h3>Contact</h3><a href="tel:+2290154284444">+229 01 54 28 44 44</a><a href="mailto:aquamazone229@gmail.com">aquamazone229@gmail.com</a><a href="https://wa.me/2290154284444">WhatsApp</a></div><div><h3>Réseaux</h3><a href="https://www.youtube.com/@aquamazoneadventure229" target="_blank" rel="noopener noreferrer">YouTube</a><span>Instagram · TikTok · Facebook : liens à confirmer</span></div></div><div className="footer-bottom">© 2026 AQUAMAZONE Adventure. Tous droits réservés.</div></div></footer>
+ {preview&&<div className="activity-lightbox" role="presentation" onClick={()=>setPreview(null)}>
+  <div className="activity-lightbox-dialog" role="dialog" aria-modal="true" aria-label={lang==='fr'?'Aperçu photo':'Image preview'} onClick={event=>event.stopPropagation()}>
+    <button className="activity-lightbox-close" type="button" onClick={()=>setPreview(null)} aria-label={lang==='fr'?'Fermer l’image':'Close image'}><X size={22}/></button>
+    <img src={activityVisuals[preview]} alt={lang==='fr'?'Photographie illustrative de paysage (pas une photo d’Aquamazone)':'Illustrative landscape photo (not Aquamazone)'} />
+    <p>{lang==='fr'?'Photographie illustrative · Visuel officiel Aquamazone à venir':'Illustrative photography · Official Aquamazone image coming soon'}</p>
+  </div>
+ </div>}
  <button className="chat-launcher" aria-label={chat?t.close:t.ask} aria-expanded={chat} onClick={()=>setChat(!chat)}>{chat?<X size={23}/>:<MessageCircle size={24}/>}</button>
  {chat&&<aside className="chat-panel" aria-label={t.chat}><div className="chat-head"><span><Waves size={19}/>{t.chat}</span><button aria-label={t.close} onClick={()=>setChat(false)}><X size={21}/></button></div><div className="chat-body"><p className="bot-bubble">{t.chatWelcome}</p><div className="suggestions">{t.chatQuestions.map((q,i)=><button onClick={()=>setQuestion(i)} key={q}>{q}<ArrowUpRight size={15}/></button>)}</div>{question!==null&&<><p className="user-bubble">{t.chatQuestions[question]}</p><p className="bot-bubble">{responses[question]}</p></>}<p className="chat-disclaimer">{lang==='fr'?'Aperçu de réponses vérifiées. L’IA conversationnelle sera connectée ultérieurement.':'Preview of verified answers. Conversational AI will be connected later.'}</p><a className="inline-link" href="https://wa.me/2290154284444" target="_blank" rel="noopener noreferrer">WhatsApp <ArrowUpRight size={16}/></a></div></aside>}
  </>}
