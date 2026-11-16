@@ -1,5 +1,6 @@
 'use client';
 import {useEffect,useState} from 'react';
+import ImmersiveGallery from './ImmersiveGallery';
 import {ArrowDown,ArrowUpRight,ArrowRight,Menu,X,Plus,Minus,MapPin,Clock,MessageCircle,Waves,ZoomIn} from 'lucide-react';
 
 type Lang='fr'|'en';
@@ -161,7 +162,7 @@ export default function Home(){
     </div>
   </div>
 </section>
-<section id="gallery" className="gallery section-shell"><p className="kicker">05 / GALERIE</p><h2>{t.gallery}</h2><div className="gallery-grid"><div className="gallery-placeholder wide">{t.placeholder}</div><div className="gallery-placeholder">{t.placeholder}</div><div className="gallery-placeholder video">{lang==='fr'?'Vidéo Aquamazone à intégrer':'Aqu​amazone video to be added'}</div></div></section>
+<ImmersiveGallery lang={lang}/>
  <section id="location" className="location section-shell"><div><p className="kicker">06 / LOCALISATION</p><h2>{t.location}</h2><p>Adounko Village, Route des Pêches, Cotonou, Bénin.</p><p><Clock size={17}/>{t.hours}</p><a className="inline-link" href="https://maps.google.com/?q=Togbin+Plage+AQUAMAZONE" target="_blank" rel="noopener noreferrer"><MapPin size={18}/> Google Maps <ArrowUpRight size={18}/></a></div><div className="map-placeholder"><MapPin size={45}/><span>{lang==='fr'?'Carte à intégrer après vérification du point exact':'Map to be added after pin verification'}</span></div></section>
  </main>
  <footer className="footer"><div className="section-shell"><div className="footer-top"><div><h2>AQUAMAZONE <small>ADVENTURE</small></h2><p>Base de loisirs nautiques au Village Adounko.</p><em>« La détente au fil de l’eau. »</em></div><div><h3>Contact</h3><a href="tel:+2290154284444">+229 01 54 28 44 44</a><a href="mailto:aquamazone229@gmail.com">aquamazone229@gmail.com</a><a href="https://wa.me/2290154284444">WhatsApp</a></div><div><h3>Réseaux</h3><a href="https://www.youtube.com/@aquamazoneadventure229" target="_blank" rel="noopener noreferrer">YouTube</a><span>Instagram · TikTok · Facebook : liens à confirmer</span></div></div><div className="footer-bottom">© 2026 AQUAMAZONE Adventure. Tous droits réservés.</div></div></footer>
