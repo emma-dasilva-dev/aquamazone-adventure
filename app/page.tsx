@@ -127,8 +127,41 @@ export default function Home(){
    <p className="packages-v4-footnote">{lang==='fr'?'Les traversées déjà incluses dans un forfait ne sont pas facturées une seconde fois. Réservations actuellement prises en charge via WhatsApp.':'Crossings included in a package are not charged a second time. Bookings are currently handled via WhatsApp.'}</p>
  </div>
  </section>
- <section id="restaurant" className="restaurant section-shell"><div className="restaurant-photo"><Waves size={52} strokeWidth={1}/><span>{t.placeholder}</span></div><div className="restaurant-copy"><p className="kicker">04 / RESTAURANT & BAR</p><h2>{t.food}</h2><p>Bar braisé · Carpe braisée · Brochettes de poulet</p><p>Riz · Aloco · Légumes sautés · Pommes frites · Pommes sautées · Igname · Patates douces</p><p className="small">{lang==='fr'?'Nous vous recommandons de confirmer votre commande avant votre arrivée.':'We recommend confirming your order before arriving.'}</p></div></section>
- <section id="gallery" className="gallery section-shell"><p className="kicker">05 / GALERIE</p><h2>{t.gallery}</h2><div className="gallery-grid"><div className="gallery-placeholder wide">{t.placeholder}</div><div className="gallery-placeholder">{t.placeholder}</div><div className="gallery-placeholder video">{lang==='fr'?'Vidéo Aquamazone à intégrer':'Aqu​amazone video to be added'}</div></div></section>
+ <section id="restaurant" className="restaurant-v9" aria-labelledby="restaurant-title">
+  <div className="restaurant-v9-shell">
+    <div className="restaurant-v9-intro">
+      <p className="kicker">{lang==='fr'?'RESTAURANT & BAR':'RESTAURANT & BAR'} <span aria-hidden="true">/ 04</span></p>
+      <h2 id="restaurant-title">{lang==='fr'?<>Une pause gourmande <em>au bord de l’eau.</em></>:<>A delicious break <em>by the water.</em></>}</h2>
+      <p>{lang==='fr'?'Après les activités, prenez le temps de savourer un bon repas dans un cadre paisible au bord de l’eau.':'After your activities, take time to enjoy a good meal in a peaceful waterfront setting.'}</p>
+    </div>
+    <div className="restaurant-v9-grid">
+      <div className="restaurant-v9-visual">
+        <div className="restaurant-v9-photo" role="img" aria-label={lang==='fr'?'Photographie culinaire illustrative, pas une photo du restaurant Aquamazone':'Illustrative food photography, not an Aquamazone restaurant photograph'}/>
+        <div className="restaurant-v9-photo-caption"><span>{lang==='fr'?'Une pause au bord de l’eau':'A break by the water'}</span><span>{lang==='fr'?'Photo illustrative · À remplacer':'Illustrative photo · To replace'}</span></div>
+      </div>
+      <div className="restaurant-v9-menu">
+        <div className="restaurant-v9-menu-top"><span>{lang==='fr'?'À LA CARTE':'ON THE MENU'}</span><span>ADOUNKO · BÉNIN</span></div>
+        <div className="restaurant-v9-menu-group">
+          <h3>{lang==='fr'?'Nos grillades':'From the grill'}</h3>
+          <ul><li>{lang==='fr'?'Bar braisé':'Grilled sea bass'}</li><li>{lang==='fr'?'Carpe braisée':'Grilled carp'}</li><li>{lang==='fr'?'Brochettes de poulet':'Chicken skewers'}</li></ul>
+        </div>
+        <div className="restaurant-v9-menu-group">
+          <h3>{lang==='fr'?'Accompagnements':'Sides'}</h3>
+          <ul><li>{lang==='fr'?'Riz':'Rice'}</li><li>Aloco</li><li>{lang==='fr'?'Légumes sautés':'Sautéed vegetables'}</li><li>{lang==='fr'?'Pommes frites':'French fries'}</li><li>{lang==='fr'?'Pommes sautées':'Sautéed potatoes'}</li><li>{lang==='fr'?'Igname':'Yam'}</li><li>{lang==='fr'?'Patates douces':'Sweet potatoes'}</li></ul>
+        </div>
+        <div className="restaurant-v9-menu-group restaurant-v9-menu-drinks">
+          <h3>{lang==='fr'?'Boissons':'Drinks'}</h3>
+          <p>{lang==='fr'?'Plusieurs boissons fraîches disponibles.':'A selection of chilled drinks is available.'}</p>
+        </div>
+        <div className="restaurant-v9-footer">
+          <p>{lang==='fr'?'Pour faciliter la préparation de votre repas, nous vous recommandons de confirmer votre commande avant votre arrivée.':'For a smoother dining experience, we recommend confirming your order before you arrive.'}</p>
+          <a href="https://wa.me/2290154284444?text=Bonjour%2C%20je%20souhaite%20me%20renseigner%20sur%20le%20restaurant%20Aquamazone." target="_blank" rel="noopener noreferrer">{lang==='fr'?'Contacter le restaurant':'Contact the restaurant'} <ArrowUpRight size={18}/></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="gallery" className="gallery section-shell"><p className="kicker">05 / GALERIE</p><h2>{t.gallery}</h2><div className="gallery-grid"><div className="gallery-placeholder wide">{t.placeholder}</div><div className="gallery-placeholder">{t.placeholder}</div><div className="gallery-placeholder video">{lang==='fr'?'Vidéo Aquamazone à intégrer':'Aqu​amazone video to be added'}</div></div></section>
  <section id="location" className="location section-shell"><div><p className="kicker">06 / LOCALISATION</p><h2>{t.location}</h2><p>Adounko Village, Route des Pêches, Cotonou, Bénin.</p><p><Clock size={17}/>{t.hours}</p><a className="inline-link" href="https://maps.google.com/?q=Togbin+Plage+AQUAMAZONE" target="_blank" rel="noopener noreferrer"><MapPin size={18}/> Google Maps <ArrowUpRight size={18}/></a></div><div className="map-placeholder"><MapPin size={45}/><span>{lang==='fr'?'Carte à intégrer après vérification du point exact':'Map to be added after pin verification'}</span></div></section>
  </main>
  <footer className="footer"><div className="section-shell"><div className="footer-top"><div><h2>AQUAMAZONE <small>ADVENTURE</small></h2><p>Base de loisirs nautiques au Village Adounko.</p><em>« La détente au fil de l’eau. »</em></div><div><h3>Contact</h3><a href="tel:+2290154284444">+229 01 54 28 44 44</a><a href="mailto:aquamazone229@gmail.com">aquamazone229@gmail.com</a><a href="https://wa.me/2290154284444">WhatsApp</a></div><div><h3>Réseaux</h3><a href="https://www.youtube.com/@aquamazoneadventure229" target="_blank" rel="noopener noreferrer">YouTube</a><span>Instagram · TikTok · Facebook : liens à confirmer</span></div></div><div className="footer-bottom">© 2026 AQUAMAZONE Adventure. Tous droits réservés.</div></div></footer>
