@@ -45,7 +45,6 @@ export default function Home(){
  <div className="hero-v3-bottom"><div><MapPin size={20}/><span>Adounko Village<br/>Route des Pêches, Cotonou</span></div><div><Clock size={20}/><span>{lang==='fr'?'Sam. · Dim. · Jours fériés':'Sat. · Sun. · Public holidays'}<br/>11h – 18h</span></div><div><MessageCircle size={20}/><span>{lang==='fr'?'Groupes en semaine':'Weekday groups'}<br/>{lang==='fr'?'Dès 6 personnes — WhatsApp':'6+ visitors — WhatsApp'}</span></div></div>
  <span className="image-disclosure">{lang==='fr'?'Photo d’illustration · Visuels officiels à venir':'Illustrative photo · Official media coming soon'}</span>
  </section>
- <section className="intro section-shell"><p className="kicker">01 / {t.eyebrow}</p><h2>{t.intro}</h2><p>{t.desc}</p></section>
  <section id="activities" className="activities activities-v3 section-shell">
  <div className="activity-v3-heading"><div><p className="kicker">{lang==='fr'?'NOS ACTIVITÉS':'OUR ACTIVITIES'}</p><h2>{lang==='fr'?'Des expériences uniques sur l’eau':'Unforgettable moments on the water'}</h2></div><p>{lang==='fr'?'Pédalo, kayak, paddle et bien plus encore. Trouvez l’expérience qui vous ressemble.':'Pedal boats, kayaks, paddleboards and more. Find your kind of adventure.'}</p></div>
  <p className="visual-warning">{lang==='fr'?'Photographies d’illustration — elles ne représentent pas le site Aquamazone.':'Illustrative stock photography — not images of the Aquamazone location.'}</p>
