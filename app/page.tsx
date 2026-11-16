@@ -130,7 +130,7 @@ export default function Home(){
  <section id="restaurant" className="restaurant-v9" aria-labelledby="restaurant-title">
   <div className="restaurant-v9-shell">
     <div className="restaurant-v9-intro">
-      <p className="kicker">{lang==='fr'?'RESTAURANT & BAR':'RESTAURANT & BAR'} <span aria-hidden="true">/ 04</span></p>
+      <p className="kicker"><span aria-hidden="true">04 / </span>{lang==='fr'?'RESTAURANT & BAR':'RESTAURANT & BAR'}</p>
       <h2 id="restaurant-title">{lang==='fr'?<>Une pause gourmande <em>au bord de l’eau.</em></>:<>A delicious break <em>by the water.</em></>}</h2>
       <p>{lang==='fr'?'Après les activités, prenez le temps de savourer un bon repas dans un cadre paisible au bord de l’eau.':'After your activities, take time to enjoy a good meal in a peaceful waterfront setting.'}</p>
     </div>
