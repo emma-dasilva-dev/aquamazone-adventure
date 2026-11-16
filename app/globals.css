@@ -381,3 +381,22 @@ body{overflow-x:clip}
 @media(max-width:850px){.packages-v6-featured .package-experience{min-height:345px}.packages-v6-featured .package-experience-end{flex-direction:column;align-items:stretch}.packages-v6-featured .package-experience-end a{align-self:stretch}}
 @media(max-width:520px){.packages-v6-featured .package-experience{min-height:400px}.package-v6-prices strong{font-size:18px}}
 @media(max-width:350px){.package-v6-prices strong{font-size:16px}}
+
+
+/* V0.8: deliberately distinct forfait identities.
+   GLÈLÈ = water blue; GUÉZO = soft coral; TOFFA = lush green; BÉHANZIN = golden sun.
+   All retain Aquamazone's deep navy for typography and action buttons. */
+.package-experience-couple{background:#FFF0EB}
+.package-experience-couple .package-experience-art{background:#E99183}
+.package-experience-couple .package-art-sun{background:#FFD9C8;top:13%;left:7%}
+.package-experience-couple .package-art-wave-one{background:#E26F77}
+.package-experience-couple .package-art-wave-two{background:#062B60}
+.package-experience-couple .package-experience-eyebrow,
+.package-experience-couple .package-experience-top{color:#74495B}
+.package-experience-family{background:#E1F1DF}
+.package-experience-family .package-experience-art{background:#4DAF80}
+.package-experience-family .package-art-sun{background:#C7EAC5;top:12%;left:5%}
+.package-experience-family .package-art-wave-one{background:#008D42}
+.package-experience-family .package-art-wave-two{background:#075F58}
+.package-experience-family .package-experience-eyebrow,
+.package-experience-family .package-experience-top{color:#316B54}
