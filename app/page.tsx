@@ -88,9 +88,28 @@ export default function Home(){
        <div className="package-feature-foot"><div className="package-pricing"><span>{lang==='fr'?'Le couple':'Per couple'} <strong>12 000 FCFA</strong></span></div><a href={bookingWhatsApp} target="_blank" rel="noopener noreferrer" aria-label={lang==='fr'?'Demander le forfait GUÉZO':'Enquire about GUÉZO'}>{lang==='fr'?'Choisir GUÉZO':'Choose GUÉZO'}<ArrowUpRight size={18}/></a></div>
      </article>
    </div>
-   <div className="packages-v4-secondary">
-     <article className="package-secondary"><div className="package-secondary-name"><span>03 / 04 · {lang==='fr'?'FAMILLE · 2 ADULTES + 2 ENFANTS':'FAMILY · 2 ADULTS + 2 CHILDREN'}</span><h3>TOFFA</h3></div><div className="package-secondary-description"><p>{lang==='fr'?'Une sortie en famille au bord de l’eau.':'A family outing by the water.'}</p><p className="package-review-note">{lang==='fr'?'Tarif et activités incluses à confirmer auprès de l’équipe.':'Price and included activities to be confirmed by staff.'}</p></div><div className="package-secondary-action"><strong>{lang==='fr'?'Tarif à confirmer':'Price to confirm'}</strong><a href={bookingWhatsApp} target="_blank" rel="noopener noreferrer">{lang==='fr'?'Se renseigner':'Ask for details'}<ArrowUpRight size={16}/></a></div></article>
-     <article className="package-secondary"><div className="package-secondary-name"><span>04 / 04 · {lang==='fr'?'GROUPE · 4 ADULTES':'GROUP · 4 ADULTS'}</span><h3>BÉHANZIN</h3></div><div className="package-secondary-description"><p>{lang==='fr'?'Traversée aller-retour, canoë double, balade sur le lac, pédalo et eau offerte.':'Return crossing, double canoe, lake tour, pedalo and complimentary water.'}</p></div><div className="package-secondary-action"><strong>36 000 FCFA</strong><a href={bookingWhatsApp} target="_blank" rel="noopener noreferrer">{lang==='fr'?'Se renseigner':'Ask for details'}<ArrowUpRight size={16}/></a></div></article>
+   <div className="packages-v5-extras" aria-label={lang==='fr'?'Forfaits famille et groupe':'Family and group packages'}>
+     <article className="package-experience package-experience-family">
+       <div className="package-experience-art" aria-hidden="true"><span className="package-art-sun"/><span className="package-art-wave package-art-wave-one"/><span className="package-art-wave package-art-wave-two"/><span className="package-art-label">04 <span>PERSONNES</span></span></div>
+       <div className="package-experience-body">
+         <div className="package-experience-top"><span>03 / 04</span><span>{lang==='fr'?'FAMILLE · 2 ADULTES + 2 ENFANTS':'FAMILY · 2 ADULTS + 2 CHILDREN'}</span></div>
+         <p className="package-experience-eyebrow">{lang==='fr'?'Des souvenirs ensemble':'Make memories together'}</p>
+         <h3>TOFFA</h3>
+         <p className="package-experience-intro">{lang==='fr'?'Une journée à partager en famille, au rythme de l’eau.':'A family day out, enjoyed at your own pace.'}</p>
+         <div className="package-experience-end"><div><span className="package-experience-small">{lang==='fr'?'Tarif et activités':'Price and activities'}</span><strong>{lang==='fr'?'À confirmer':'To confirm'}</strong><span className="package-experience-muted">{lang==='fr'?'Confirmation auprès de l’équipe':'Please confirm with our team'}</span></div><a href={bookingWhatsApp} target="_blank" rel="noopener noreferrer">{lang==='fr'?'Découvrir le forfait':'Explore this package'}<ArrowUpRight size={18}/></a></div>
+       </div>
+     </article>
+     <article className="package-experience package-experience-group">
+       <div className="package-experience-art" aria-hidden="true"><span className="package-art-sun"/><span className="package-art-wave package-art-wave-one"/><span className="package-art-wave package-art-wave-two"/><span className="package-art-label">04 <span>PERSONNES</span></span></div>
+       <div className="package-experience-body">
+         <div className="package-experience-top"><span>04 / 04</span><span>{lang==='fr'?'GROUPE · 4 ADULTES':'GROUP · 4 ADULTS'}</span></div>
+         <p className="package-experience-eyebrow">{lang==='fr'?'L’aventure à plusieurs':'Adventure together'}</p>
+         <h3>BÉHANZIN</h3>
+         <p className="package-experience-intro">{lang==='fr'?'Une expérience complète à vivre entre amis.':'A complete water adventure with friends.'}</p>
+         <div className="package-experience-included">{lang==='fr'?'Traversée A/R · Canoë double · Balade sur le lac · Pédalo · Eau offerte':'Return crossing · Double canoe · Lake tour · Pedalo · Complimentary water'}</div>
+         <div className="package-experience-end"><div><span className="package-experience-small">{lang==='fr'?'Pour 4 adultes':'For 4 adults'}</span><strong>36 000 <small>FCFA</small></strong></div><a href={bookingWhatsApp} target="_blank" rel="noopener noreferrer">{lang==='fr'?'Choisir BÉHANZIN':'Choose BÉHANZIN'}<ArrowUpRight size={18}/></a></div>
+       </div>
+     </article>
    </div>
    <p className="packages-v4-footnote">{lang==='fr'?'Les traversées déjà incluses dans un forfait ne sont pas facturées une seconde fois. Réservations actuellement prises en charge via WhatsApp.':'Crossings included in a package are not charged a second time. Bookings are currently handled via WhatsApp.'}</p>
  </div>
