@@ -42,7 +42,7 @@ export default function Home(){
   <p className="hero-v3-description">{lang==='fr'?'Activités nautiques, détente et découvertes naturelles à Adounko, Cotonou.':'Water activities, relaxation and nature discovery in Adounko, Cotonou.'}</p>
   <div className="hero-v3-actions"><a className="yellow-button" href={bookingWhatsApp} target="_blank" rel="noopener noreferrer">{lang==='fr'?'Demander une réservation':'Request a booking'}<ArrowUpRight size={18}/></a><a className="hero-secondary" href="#activities">{t.explore}<ArrowDown size={17}/></a></div>
  </div>
- <div className="hero-v3-bottom"><div><MapPin size={20}/><span>Adounko Village<br/>Route des Pêches, Cotonou</span></div><div><Clock size={20}/><span>{lang==='fr'?'Sam. · Dim. · Jours fériés':'Sat. · Sun. · Public holidays'}<br/>11h – 18h</span></div><div><MessageCircle size={20}/><span>{lang==='fr'?'Groupes en semaine':'Weekday groups'}<br/>{lang==='fr'?'Dès 6 personnes — WhatsApp':'6+ visitors — WhatsApp'}</span></div></div>
+ <div className="hero-v3-bottom"><div><MapPin size={20}/><span>Adounko Village<br/>Route des Pêches, Cotonou</span></div><div><Clock size={20}/><span>{lang==='fr'?'Sam. · Dim. · Jours fériés':'Sat. · Sun. · Public holidays'}<br/>11h – 18h</span></div><div><MessageCircle size={20}/><span>{lang==='fr'?'Bar & Restaurant':'Bar & Restaurant'}<br/>{lang==='fr'?'Ouvert les week-ends et jours fériés':'Open weekends & public holidays'}</span></div></div>
  <span className="image-disclosure">{lang==='fr'?'Photo d’illustration · Visuels officiels à venir':'Illustrative photo · Official media coming soon'}</span>
  </section>
  <section id="activities" className="activities activities-v3 section-shell">
