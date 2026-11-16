@@ -25,7 +25,7 @@ const activityVisuals:Record<string,string>={
  ball:'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=1100&q=80&auto=format&fit=crop'
 };
 export default function Home(){
- const [lang,setLang]=useState<Lang>('fr');const [menu,setMenu]=useState(false);const [active,setActive]=useState('pedalo');const [chat,setChat]=useState(false);const [question,setQuestion]=useState<number|null>(null);const [preview,setPreview]=useState<string|null>(null);const t=copy[lang];const chosen=activities.find(a=>a.id===active)!;
+ const [lang,setLang]=useState<Lang>('fr');const [menu,setMenu]=useState(false);const [chat,setChat]=useState(false);const [question,setQuestion]=useState<number|null>(null);const [preview,setPreview]=useState<string|null>(null);const t=copy[lang];
  useEffect(()=>{document.documentElement.lang=lang;},[lang]);
  useEffect(()=>{document.body.style.overflow=menu||preview?'hidden':'';return()=>{document.body.style.overflow='';};},[menu,preview]);
  useEffect(()=>{if(!preview)return;const close=(event:KeyboardEvent)=>{if(event.key==='Escape')setPreview(null)};window.addEventListener('keydown',close);return()=>window.removeEventListener('keydown',close)},[preview]);
