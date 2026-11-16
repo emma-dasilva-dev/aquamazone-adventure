@@ -1,26 +1,43 @@
-# AQUAMAZONE ADVENTURE — Mobile-first prototype
+# Aquamazone Adventure — Website Prototype
 
-## Start locally
+## Current stage: V0.3 — Photography-led homepage
 
-Requires Node.js 20.9+.
+This private project is the evolving mobile-first website for Aquamazone Adventure, Benin.
+
+### Run locally
+
+Requires Node.js 20.9+ and npm.
 
 ```bash
+git switch design/mobile-first
+git pull
 npm install
 npm run dev
 ```
 
-Open http://localhost:3000.
+Visit http://localhost:3000.
 
-## Included
-- Responsive, full-viewport photographic hero **placeholder** (no fake photos)
-- French/English toggle, mobile navigation
-- Tap-driven activity explorer with official prices and restrictions
-- Forfaits, restaurant, gallery, location, footer
-- Floating **FAQ demonstration**, not an AI connection
+### Implemented
 
-## Not yet implemented
-- Official logo/photos/videos; real booking, payment, OTP, staff dashboard or AI backend
-- Live inventory and real-time availability
-- Exact location pin and missing social profile links
+- Responsive editorial hero with booking enquiry and exploration CTAs
+- Mobile navigation, FR/EN language toggle
+- Touch-friendly activity photography carousel with verified prices and a live selected-activity detail view
+- Package, restaurant, gallery, location and contact sections from the earlier prototype
+- Fixed customer FAQ preview (not a connected AI assistant)
+- WhatsApp enquiry handoff while online booking is unavailable
 
-This is a visual interaction prototype. The activity enquiry link goes to the confirmed business WhatsApp. No payments or bookings are created. Verify all operational data before public launch.
+### Important: illustrative photos only
+
+The current hero and activity images are **third-party illustrative stock photographs**.
+They **do not depict Aquamazone**. Every visible design preview is labeled accordingly.
+Replace them with authorized official business photography before launch. Do not publish the prototype as though these are authentic venue photos.
+
+### Still to implement
+
+- Official logo, actual Aquamazone photos/videos and verified exact map location
+- Secure reservation backend, inventory limits, payment verification, OTP and staff dashboard
+- AI chat backend and knowledge retrieval
+- Full translation pass, accessibility audit and mobile device/browser testing
+- Confirmation of any remaining uncertain packages/prices
+
+No online reservations or MTN collections are active. The yellow booking CTA currently opens WhatsApp.
