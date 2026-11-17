@@ -37,10 +37,10 @@ function estimate(id:string,adults:number,children:number){
 export default function ReservationPlanner({lang}:{lang:Lang}){
  const [now,setNow]=useState<Date|null>(null);
  useEffect(()=>{const refresh=()=>setNow(new Date());refresh();const timer=setInterval(refresh,60000);return ()=>clearInterval(timer);},[]);
- const window=now?bookingWindow(now):null;
+ const schedule=now?bookingWindow(now):null;
  const windowCheck=now?checkBookingWindow(date,now):null;
- const saturdayOpen=now?checkBookingWindow(window!.saturday,now).ok:false;
- const sundayOpen=now?checkBookingWindow(window!.sunday,now).ok:false;
+ const saturdayOpen=now?checkBookingWindow(schedule!.saturday,now).ok:false;
+ const sundayOpen=now?checkBookingWindow(schedule!.sunday,now).ok:false;
  const [id,setId]=useState('pedalo');
  const [date,setDate]=useState('');
  const [time,setTime]=useState('12:00');
@@ -62,9 +62,9 @@ export default function ReservationPlanner({lang}:{lang:Lang}){
   eyebrow:'09 / PLAN A VISIT',heading:<>Your next adventure <em>starts here.</em></>,desc:'Plan your visit in a few steps. Our team will confirm availability and arrangements.',kind:'CHOOSE AN EXPERIENCE',activity:'Activity',pack:'Package',date:'PREFERRED DATE',time:'PREFERRED TIME',people:'GUESTS',adult:'Adults',child:'Children under 12',choose:'CHOOSE ONE ACTIVITY',canoe:'Single canoe',pedalo:'Single pedal boat',summary:'YOUR SUMMARY',price:'Estimate',unknown:'Price to be confirmed',cross:'Return crossing included',crossSeparate:'Return crossing added to price',contact:'Send enquiry on WhatsApp',notice:'This is an enquiry, not a confirmed booking. No payment is collected on this website.',serverError:'We could not validate your request right now. Please try again or contact our team directly.',validation:'Choose an eligible date for the upcoming weekend and meet the package guest requirements.',weekday:'Weekday visits must be arranged with our team in advance. Contact us on WhatsApp before travelling.',costNote:'Prices are estimates based on your choices. Availability remains subject to confirmation.',help:'Information and enquiries: +229 01 54 28 44 44'
  };
  const bookingNotice=lang==='fr'?
-  (!window?'Chargement du calendrier…':!saturdayOpen&&!sundayOpen?'Réservations clôturées. Réouverture lundi.':
+  (!schedule?'Chargement du calendrier…':!saturdayOpen&&!sundayOpen?'Réservations clôturées. Réouverture lundi.':
    'Ouverture lundi pour le week-end à venir. Samedi : jusqu’au vendredi 22h. Dimanche : jusqu’au samedi 22h (heure du Bénin).'):
-  (!window?'Loading booking dates…':!saturdayOpen&&!sundayOpen?'Bookings are closed. Reopening Monday.':
+  (!schedule?'Loading booking dates…':!saturdayOpen&&!sundayOpen?'Bookings are closed. Reopening Monday.':
    'Bookings open Monday for the upcoming weekend. Saturday: until Friday 10pm. Sunday: until Saturday 10pm (Benin time).');
  const dateNotice=date&&!dateValid?(lang==='fr'?
    'Cette date ne peut pas être demandée en ligne. Choisissez un jour encore ouvert ou contactez-nous sur WhatsApp.':
@@ -120,17 +120,17 @@ export default function ReservationPlanner({lang}:{lang:Lang}){
      <div className="az-reservation-window" role="status">
        <strong>{lang==='fr'?'Calendrier des réservations':'Booking calendar'}</strong>
        <p>{bookingNotice}</p>
-       {window&&<div className="az-reservation-window-days">
-         <button type="button" disabled={!saturdayOpen} aria-pressed={date===window.saturday} onClick={()=>setDate(window.saturday)}>
-           {lang==='fr'?'Samedi':'Saturday'} · {window.saturday} <small>{saturdayOpen?(lang==='fr'?'Réservations ouvertes':'Booking open'):(lang==='fr'?'Clôturé':'Closed')}</small>
+       {schedule&&<div className="az-reservation-window-days">
+         <button type="button" disabled={!saturdayOpen} aria-pressed={date===schedule.saturday} onClick={()=>setDate(schedule.saturday)}>
+           {lang==='fr'?'Samedi':'Saturday'} · {schedule.saturday} <small>{saturdayOpen?(lang==='fr'?'Réservations ouvertes':'Booking open'):(lang==='fr'?'Clôturé':'Closed')}</small>
          </button>
-         <button type="button" disabled={!sundayOpen} aria-pressed={date===window.sunday} onClick={()=>setDate(window.sunday)}>
-           {lang==='fr'?'Dimanche':'Sunday'} · {window.sunday} <small>{sundayOpen?(lang==='fr'?'Réservations ouvertes':'Booking open'):(lang==='fr'?'Clôturé':'Closed')}</small>
+         <button type="button" disabled={!sundayOpen} aria-pressed={date===schedule.sunday} onClick={()=>setDate(schedule.sunday)}>
+           {lang==='fr'?'Dimanche':'Sunday'} · {schedule.sunday} <small>{sundayOpen?(lang==='fr'?'Réservations ouvertes':'Booking open'):(lang==='fr'?'Clôturé':'Closed')}</small>
          </button>
        </div>}
      </div>
      <div className="reservation-v15-two">
-      <label>{text.date}<span><CalendarDays size={17} aria-hidden="true"/><input type="date" min={window?.saturday??nextDay()} max={window?.sunday} value={date} onChange={e=>setDate(e.target.value)} required/></span></label>
+      <label>{text.date}<span><CalendarDays size={17} aria-hidden="true"/><input type="date" min={schedule?.saturday??nextDay()} max={schedule?.sunday} value={date} onChange={e=>setDate(e.target.value)} required/></span></label>
       <label>{text.time}<span><Clock3 size={17} aria-hidden="true"/><select value={time} onChange={e=>setTime(e.target.value)}>{slots.map(slot=><option key={slot} value={slot}>{slot}</option>)}</select></span></label>
      </div>
      <fieldset className="reservation-v15-people"><legend>{text.people}</legend>{([['adult',text.adult,adults],['child',text.child,children]] as const).map(([type,label,n])=><div key={type} className="reservation-v15-counter"><span>{label}</span><div><button aria-label={(lang==='fr'?'Diminuer ':'Decrease ')+label} disabled={n===0} onClick={()=>updateCount(type,-1)} type="button"><Minus size={17}/></button><output aria-live="polite">{n}</output><button aria-label={(lang==='fr'?'Augmenter ':'Increase ')+label} disabled={n===20} onClick={()=>updateCount(type,1)} type="button"><Plus size={17}/></button></div></div>)}</fieldset>
