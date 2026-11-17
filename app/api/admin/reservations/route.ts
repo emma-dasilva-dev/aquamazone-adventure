@@ -44,7 +44,7 @@ export async function POST(request:NextRequest){
     adults:Number(form.get('adults')),
     children:Number(form.get('children'))
   });
-  if(!selectionResult.ok)return go(request,selectionResult.code==='empty'?'empty':'rules');
+  if(!selectionResult.ok)return go(request,selectionResult.code);
   const {primary,selection,quoteAmount}=selectionResult;
   // The legacy experience column records the first selection; the structured
   // JSON field is authoritative for full multi-activity or forfait details.
