@@ -193,6 +193,43 @@ export default function Home(){
     </div>
   </div>
 </section>
+
+<section id="visit" className="visit-v12" aria-labelledby="visit-title">
+  <div className="visit-v12-shell">
+    <div className="visit-v12-lead">
+      <p className="visit-v12-eyebrow">07 / {lang==='fr'?'PRÉPARER VOTRE VISITE':'PLAN YOUR VISIT'}</p>
+      <h2 id="visit-title">{lang==='fr'?<>Le bon moment <em>pour s’évader.</em></>:<>The perfect time <em>to get away.</em></>}</h2>
+      <p className="visit-v12-intro">{lang==='fr'?'Les informations essentielles pour profiter pleinement de votre journée au bord de l’eau.':'Everything you need to know before spending your day by the water.'}</p>
+    </div>
+    <div className="visit-v12-grid">
+      <div className="visit-v12-hours">
+        <span className="visit-v12-overline">{lang==='fr'?'HORAIRES D’OUVERTURE':'OPENING HOURS'}</span>
+        <div className="visit-v12-bigtime"><span>11<span className="visit-v12-unit">h</span></span><span className="visit-v12-dash" aria-hidden="true">—</span><span>18<span className="visit-v12-unit">h</span></span></div>
+        <p className="visit-v12-days">{lang==='fr'?'Samedi · Dimanche · Jours fériés':'Saturday · Sunday · Public holidays'}</p>
+        <p className="visit-v12-hours-note">{lang==='fr'?'Un week-end, un jour férié, une envie de prendre le large.':'Weekends, public holidays, and a chance to unwind.'}</p>
+      </div>
+      <div className="visit-v12-groups">
+        <span className="visit-v12-overline">{lang==='fr'?'VISITES EN SEMAINE':'WEEKDAY VISITS'}</span>
+        <div className="visit-v12-group-figure"><strong>06<span>+</span></strong><span>{lang==='fr'?'personnes':'people'}</span></div>
+        <h3>{lang==='fr'?'L’aventure se partage.':'Better together.'}</h3>
+        <p>{lang==='fr'?'En semaine, nous accueillons les groupes de 6 personnes minimum, sur réservation préalable. Une formule de 4 activités par personne est prévue.':'On weekdays, we welcome groups of at least 6 people with advance booking. A package of 4 activities per person applies.'}</p>
+        <a href="https://wa.me/2290154284444?text=Bonjour%2C%20je%20souhaite%20organiser%20une%20visite%20de%20groupe%20en%20semaine." target="_blank" rel="noopener noreferrer" className="visit-v12-link">{lang==='fr'?'Organiser une sortie en groupe':'Plan a group visit'}<ArrowUpRight size={18}/></a>
+      </div>
+    </div>
+    <div className="visit-v12-practical">
+      <div className="visit-v12-practical-heading"><span className="visit-v12-overline">{lang==='fr'?'BON À SAVOIR':'GOOD TO KNOW'}</span><h3>{lang==='fr'?'Avant de nous rejoindre':'Before you arrive'}</h3></div>
+      <div className="visit-v12-practical-list">
+        <div className="visit-v12-practical-item"><span className="visit-v12-num">01</span><div><h4>{lang==='fr'?'Traversée aller-retour':'Return boat crossing'}</h4><p>{lang==='fr'?'Adulte : 1 500 FCFA · Enfant de moins de 12 ans : 500 FCFA. La traversée est déjà incluse dans nos forfaits.':'Adult: 1,500 FCFA · Child under 12: 500 FCFA. The crossing is already included in our packages.'}</p></div></div>
+        <div className="visit-v12-practical-item"><span className="visit-v12-num">02</span><div><h4>{lang==='fr'?'Restaurant & Bar':'Restaurant & Bar'}</h4><p>{lang==='fr'?'Pensez à confirmer votre commande avant votre arrivée afin de faciliter votre accueil.':'Please confirm your food order before arriving so we can better prepare for your visit.'}</p></div></div>
+        <div className="visit-v12-practical-item"><span className="visit-v12-num">03</span><div><h4>{lang==='fr'?'Une question avant de venir ?':'Any questions before your visit?'}</h4><p>{lang==='fr'?'Notre équipe vous renseigne sur les activités, les forfaits et l’organisation de votre journée.':'Our team can help with activities, packages, and planning your day.'}</p></div></div>
+      </div>
+    </div>
+    <div className="visit-v12-bottom">
+      <div><span>{lang==='fr'?'BESOIN D’UN RENSEIGNEMENT ?':'NEED MORE INFORMATION?'}</span><strong>+229 01 54 28 44 44</strong></div>
+      <a href="https://wa.me/2290154284444?text=Bonjour%2C%20je%20souhaite%20des%20informations%20pour%20ma%20visite%20%C3%A0%20Aquamazone." target="_blank" rel="noopener noreferrer">{lang==='fr'?'Nous écrire sur WhatsApp':'Message us on WhatsApp'}<ArrowUpRight size={19}/></a>
+    </div>
+  </div>
+</section>
  </main>
  <footer className="footer"><div className="section-shell"><div className="footer-top"><div><h2>AQUAMAZONE <small>ADVENTURE</small></h2><p>Base de loisirs nautiques au Village Adounko.</p><em>« La détente au fil de l’eau. »</em></div><div><h3>Contact</h3><a href="tel:+2290154284444">+229 01 54 28 44 44</a><a href="mailto:aquamazone229@gmail.com">aquamazone229@gmail.com</a><a href="https://wa.me/2290154284444">WhatsApp</a></div><div><h3>Réseaux</h3><a href="https://www.youtube.com/@aquamazoneadventure229" target="_blank" rel="noopener noreferrer">YouTube</a><span>Instagram · TikTok · Facebook : liens à confirmer</span></div></div><div className="footer-bottom">© 2026 AQUAMAZONE Adventure. Tous droits réservés.</div></div></footer>
  {preview&&<div className="activity-lightbox" role="presentation" onClick={()=>setPreview(null)}>
