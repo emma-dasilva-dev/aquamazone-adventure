@@ -1,6 +1,7 @@
 'use client';
 import {useEffect,useState} from 'react';
 import ImmersiveGallery from './ImmersiveGallery';
+import AquamazoneAssistant from './AquamazoneAssistant';
 import {ArrowDown,ArrowUpRight,ArrowRight,Menu,X,Plus,Minus,MapPin,Clock,MessageCircle,Waves,ZoomIn} from 'lucide-react';
 
 type Lang='fr'|'en';
@@ -38,11 +39,11 @@ const activityVisuals:Record<string,string>={
  ball:'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=1100&q=80&auto=format&fit=crop'
 };
 export default function Home(){
- const [lang,setLang]=useState<Lang>('fr');const [menu,setMenu]=useState(false);const [chat,setChat]=useState(false);const [question,setQuestion]=useState<number|null>(null);const [preview,setPreview]=useState<string|null>(null);const t=copy[lang];
+ const [lang,setLang]=useState<Lang>('fr');const [menu,setMenu]=useState(false);const [preview,setPreview]=useState<string|null>(null);const t=copy[lang];
  useEffect(()=>{document.documentElement.lang=lang;},[lang]);
  useEffect(()=>{document.body.style.overflow=menu||preview?'hidden':'';return()=>{document.body.style.overflow='';};},[menu,preview]);
  useEffect(()=>{if(!preview)return;const close=(event:KeyboardEvent)=>{if(event.key==='Escape')setPreview(null)};window.addEventListener('keydown',close);return()=>window.removeEventListener('keydown',close)},[preview]);
- const responses=lang==='fr'?['Nous sommes ouverts de 11h à 18h les samedis, dimanches et jours fériés.','Nous sommes à Adounko Village, Route des Pêches, Cotonou, Bénin.','Le pédalo coûte 3 000 FCFA par personne pour 30 minutes.']:['We open 11am–6pm on Saturdays, Sundays and public holidays.','We are in Adounko Village, Route des Pêches, Cotonou, Benin.','Pedal boating costs 3,000 FCFA per person for 30 minutes.'];
+
  return <>
  <header className="site-header"><a className="wordmark" href="#top" aria-label="Aquamazone Adventure — accueil"><span>AQUAMAZONE</span><small>ADVENTURE <span aria-hidden="true">/</span> BENIN</small></a><nav className="desktop-nav" aria-label={lang==='fr'?'Navigation principale':'Main navigation'}>{sections.map((section,i)=><a href={'#'+section} key={section}>{t.nav[i]}</a>)}</nav><div className="header-actions"><button className="lang" onClick={()=>setLang(lang==='fr'?'en':'fr')} aria-label={lang==='fr'?'Switch to English':'Passer en français'}><span className="lang-current">{lang.toUpperCase()}</span><span aria-hidden="true" className="lang-divider">/</span><span className="lang-alternate">{lang==='fr'?'EN':'FR'}</span></button><a className="header-book" href={bookingWhatsApp} target="_blank" rel="noopener noreferrer">{t.book} <ArrowUpRight size={17}/></a><button className="menu-toggle" onClick={()=>setMenu(!menu)} aria-expanded={menu} aria-controls="mobile-menu" aria-label={menu?t.close:t.menu}>{menu?<X/>:<Menu/>}</button></div></header>
  {menu&&<nav id="mobile-menu" className="mobile-nav" aria-label={lang==='fr'?'Navigation mobile':'Mobile navigation'}>{sections.map((s,i)=><a onClick={()=>setMenu(false)} href={'#'+s} key={s}><span>0{i+1}</span>{t.nav[i]}<ArrowUpRight size={20}/></a>)}<a href={bookingWhatsApp} target="_blank" rel="noopener noreferrer" onClick={()=>setMenu(false)}>{t.book}<ArrowRight/></a></nav>}
@@ -272,6 +273,5 @@ export default function Home(){
     <p>{lang==='fr'?'Photographie illustrative · Visuel officiel Aquamazone à venir':'Illustrative photography · Official Aquamazone image coming soon'}</p>
   </div>
  </div>}
- <button className="chat-launcher" aria-label={chat?t.close:t.ask} aria-expanded={chat} onClick={()=>setChat(!chat)}>{chat?<X size={23}/>:<MessageCircle size={24}/>}</button>
- {chat&&<aside className="chat-panel" aria-label={t.chat}><div className="chat-head"><span><Waves size={19}/>{t.chat}</span><button aria-label={t.close} onClick={()=>setChat(false)}><X size={21}/></button></div><div className="chat-body"><p className="bot-bubble">{t.chatWelcome}</p><div className="suggestions">{t.chatQuestions.map((q,i)=><button onClick={()=>setQuestion(i)} key={q}>{q}<ArrowUpRight size={15}/></button>)}</div>{question!==null&&<><p className="user-bubble">{t.chatQuestions[question]}</p><p className="bot-bubble">{responses[question]}</p></>}<p className="chat-disclaimer">{lang==='fr'?'Aperçu de réponses vérifiées. L’IA conversationnelle sera connectée ultérieurement.':'Preview of verified answers. Conversational AI will be connected later.'}</p><a className="inline-link" href="https://wa.me/2290154284444" target="_blank" rel="noopener noreferrer">WhatsApp <ArrowUpRight size={16}/></a></div></aside>}
+ <AquamazoneAssistant lang={lang}/>
  </>}
