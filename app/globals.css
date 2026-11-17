@@ -586,3 +586,32 @@ body{overflow-x:clip}
 @media(max-width:850px){.visit-v12-grid{grid-template-columns:1fr}.visit-v12-hours{padding-right:0;border-right:0;border-bottom:1px solid #cfd7d9}.visit-v12-groups{padding-left:0}.visit-v12-bigtime{font-size:clamp(76px,16vw,130px)}.visit-v12-practical{grid-template-columns:1fr;gap:36px}.visit-v12-practical-heading h3{max-width:450px}.visit-v12-bottom{align-items:flex-start;flex-direction:column}.visit-v12-bottom>a{width:100%}}
 @media(max-width:520px){.visit-v12-shell{padding:75px 21px}.visit-v12-lead{margin-bottom:33px}.visit-v12-lead h2{font-size:clamp(43px,11vw,61px)}.visit-v12-intro{font-size:14px}.visit-v12-hours,.visit-v12-groups{padding:35px 0}.visit-v12-bigtime{font-size:clamp(63px,16vw,90px);gap:12px;margin-top:30px}.visit-v12-days{font-size:18px}.visit-v12-group-figure strong{font-size:93px}.visit-v12-practical{padding:62px 0 48px}.visit-v12-practical-item{grid-template-columns:29px minmax(0,1fr);gap:10px}.visit-v12-bottom{padding:25px 22px}.visit-v12-bottom>div strong{font-size:22px}}
 @media(prefers-reduced-motion:reduce){.visit-v12-bottom>a{transition:none}}
+
+
+/* V1.3 — Editorial, accessible FAQ */
+.faq-v13{background:#fff;color:#062047}
+.faq-v13-shell{max-width:1360px;margin:0 auto;padding:clamp(82px,10vw,142px) clamp(24px,5vw,78px);display:grid;grid-template-columns:minmax(280px,.82fr) minmax(0,1.18fr);column-gap:clamp(50px,7vw,120px);align-items:start}
+.faq-v13-intro{position:sticky;top:clamp(36px,10vh,95px)}
+.faq-v13-eyebrow{color:#0055a4;font-size:11px;font-weight:800;letter-spacing:.2em;margin:0 0 22px}
+.faq-v13-intro h2{font-family:Georgia,'Times New Roman',serif;font-size:clamp(45px,5vw,72px);font-weight:400;letter-spacing:-.065em;line-height:1.06;margin:0}
+.faq-v13-intro h2 em{color:#008d9a;font-weight:400}
+.faq-v13-intro>p:not(.faq-v13-eyebrow){font-size:14px;line-height:1.8;color:#5b7180;max-width:390px;margin:22px 0 0}
+.faq-v13-contact{display:flex;flex-direction:column;gap:13px;margin-top:50px}
+.faq-v13-contact span{font-size:10px;font-weight:800;letter-spacing:.17em;color:#69828b}
+.faq-v13-contact a{display:inline-flex;gap:14px;align-items:center;width:max-content;max-width:100%;border-bottom:2px solid #ffd326;padding-bottom:9px;font-size:14px;font-weight:800}
+.faq-v13-questions{border-top:1px solid #cbd9dd}
+.faq-v13-item{border-bottom:1px solid #cbd9dd}
+.faq-v13-item summary{display:grid;grid-template-columns:34px minmax(0,1fr) 34px;align-items:start;gap:16px;cursor:pointer;padding:27px 0 28px;list-style:none}
+.faq-v13-item summary::-webkit-details-marker{display:none}
+.faq-v13-index{font-size:11px;font-weight:800;letter-spacing:.08em;color:#008d9a;padding-top:6px;font-variant-numeric:tabular-nums}
+.faq-v13-question{font-size:clamp(17px,1.6vw,22px);font-weight:600;line-height:1.42;letter-spacing:-.025em}
+.faq-v13-toggle{width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:#062047;border:1px solid #b5c9d0;border-radius:50%;transition:transform .22s ease,border-color .22s ease}
+.faq-v13-item[open] .faq-v13-toggle{transform:rotate(45deg);border-color:#008d9a}
+.faq-v13-answer{margin-left:50px;padding:0 55px 29px 0}
+.faq-v13-answer p{font-size:14px;line-height:1.82;color:#526b79;margin:0;max-width:570px}
+.faq-v13-item summary:hover .faq-v13-question{color:#0055a4}
+.faq-v13-item summary:focus-visible{outline:3px solid #008d9a;outline-offset:3px}
+.faq-v13-footnote{font-size:12px;line-height:1.7;color:#69818a;margin:23px 0 0}
+@media(max-width:900px){.faq-v13-shell{grid-template-columns:1fr;row-gap:42px}.faq-v13-intro{position:static}.faq-v13-intro h2{max-width:700px}.faq-v13-contact{margin-top:25px}}
+@media(max-width:550px){.faq-v13-shell{padding:78px 21px}.faq-v13-intro h2{font-size:clamp(43px,11vw,60px)}.faq-v13-questions{margin-top:0}.faq-v13-item summary{grid-template-columns:25px minmax(0,1fr) 29px;gap:10px;padding:22px 0}.faq-v13-question{font-size:17px}.faq-v13-index{font-size:10px}.faq-v13-toggle{width:28px;height:28px}.faq-v13-answer{margin-left:35px;padding:0 12px 24px 0}.faq-v13-answer p{font-size:13px}.faq-v13-contact{margin-top:26px}}
+@media(prefers-reduced-motion:reduce){.faq-v13-toggle{transition:none}}
