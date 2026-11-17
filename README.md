@@ -107,3 +107,18 @@ The query accepts a date, time and duration. It uses `Africa/Porto-Novo` and com
 The application intentionally does **not** yet have `DATABASE_URL` or a PostgreSQL connection client: the deployment's database service, credentials, access method and role permissions must be established first. The UI continues to use the existing server-validated WhatsApp enquiry; live availability, stored bookings, and payments are not activated.
 
 Next build step once the database is provisioned: add a pooled server-only PostgreSQL adapter, run migrations, test connectivity and permissions, then implement transactional holds and expiry cleanup, and finally staff-only lifecycle actions. Never enable booking confirmation merely because a read-only availability query reports free equipment.
+
+## Neon provisioning status — 17 November 2026
+
+Neon was connected and an isolated PostgreSQL database named `aquamazone` was created within the existing Neon project `my-first-project` (`old-smoke-56391833`), on its default `production` branch. The initial `neondb` database was left untouched.
+
+- Applied the statements from `db/migrations/0001_reservations.sql` and `0002_equipment_lifecycle.sql` to the **new** `aquamazone` database in one transaction.
+- Verified four tables: `reservation_assets`, `reservations`, `reservation_allocations`, `reservation_events`, plus the `occupied_equipment` view.
+- Verified the equipment seed contains 14 units: 2 single pédalos, 2 double pédalos, 4 single canoes, 4 double canoes, and 2 four-seat pedal boats.
+- Verified the `reservation_allocations_asset_id_usage_period_excl` exclusion constraint exists.
+- At provisioning, both reservations and allocations counts were zero.
+- Read-only verification SQL: `db/queries/verify-setup.sql`.
+
+**Backend is not yet wired to Neon.** Do not publish a database connection string or copy it to `NEXT_PUBLIC_*`. The existing Next.js application requires a server-only PostgreSQL driver and runtime connection setup. Use a pooled runtime connection, a direct connection for migrations, and a least-privilege database role before implementing any customer write endpoint. The existing `package-lock.json` must be updated along with `package.json` when installing the driver.
+
+**Never turn the public quotation endpoint into a booking-creation endpoint without authentication/OTP, abuse controls, transactional allocation, and payment/state verification.** No paid booking capabilities are enabled yet.
