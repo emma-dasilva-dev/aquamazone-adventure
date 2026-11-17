@@ -17,7 +17,7 @@ const statusLabels:Record<string,string>={
   inquiry:'Demande reçue',pending_review:'À examiner',awaiting_payment:'Paiement attendu',
   confirmed:'Confirmée',cancelled:'Annulée',completed:'Terminée',expired:'Expirée',
   unpaid:'Non payé',pending:'En attente',verified:'Vérifié',failed:'Échec',refunded:'Remboursé',
-  delivered:'Envoyée',retry:'Nouvel essai',sending:'En cours',
+  accepted:'Acceptée par le fournisseur',retry:'Nouvel essai',sending:'En cours',
   reservation_created:'Nouvelle demande',reservation_status_changed:'Changement de réservation',
   payment_status_changed:'Changement de paiement'
 };
