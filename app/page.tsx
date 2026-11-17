@@ -16,6 +16,18 @@ const activities=[
 ];
 const copy={fr:{nav:['Activités','Forfaits','Restaurant','Galerie','Localisation'],book:'Réserver',hero:'La détente au fil de l’eau.',explore:'Explorer les activités',eyebrow:'VOTRE PROCHAINE ÉVASION',intro:'L’aventure commence ici.',desc:'Des expériences nautiques, des moments à partager et un cadre naturel à découvrir.',activity:'Choisissez votre aventure',activitySub:'Découvrez les activités et leurs tarifs. Les photographies officielles seront ajoutées prochainement.',featured:'À DÉCOUVRIR',packages:'Nos forfaits expériences',food:'Une pause gourmande au bord de l’eau',gallery:'Des souvenirs à vivre',location:'Comment nous trouver',hours:'Samedi, dimanche et jours fériés · 11h00–18h00',cta:'Préparer ma visite',placeholder:'Photographie Aquamazone à intégrer',ask:'Une question ?',chat:'Assistant Aquamazone',chatWelcome:'Bonjour ! Je peux vous renseigner sur nos horaires, tarifs et notre localisation.',chatQuestions:['Quels sont vos horaires ?','Où êtes-vous situés ?','Combien coûte le pédalo ?'],close:'Fermer',menu:'Ouvrir le menu'},en:{nav:['Activities','Packages','Restaurant','Gallery','Location'],book:'Book',hero:'Relaxation by the water.',explore:'Explore activities',eyebrow:'YOUR NEXT ESCAPE',intro:'Adventure starts here.',desc:'Water activities, moments together and a natural setting to discover.',activity:'Choose your adventure',activitySub:'Explore activities and prices. Official photos will be added soon.',featured:'EXPLORE',packages:'Experience packages',food:'A delicious break by the water',gallery:'Memories in the making',location:'Find us',hours:'Saturday, Sunday and public holidays · 11am–6pm',cta:'Plan my visit',placeholder:'Aqu​amazone photo to be added',ask:'Need help?',chat:'Aquamazone Assistant',chatWelcome:'Hello! I can help with our opening hours, prices and location.',chatQuestions:['What are your opening hours?','Where are you located?','How much is pedal boating?'],close:'Close',menu:'Open menu'}};
 const sections=['activities','packages','restaurant','gallery','location'];
+
+const faqItems=[
+ {q:{fr:'Quels sont vos jours et horaires d’ouverture ?',en:'When are you open?'},a:{fr:'Nous sommes ouverts les samedis, dimanches et jours fériés, de 11h à 18h.',en:'We are open on Saturdays, Sundays and public holidays, from 11am to 6pm.'}},
+ {q:{fr:'Peut-on venir en semaine ?',en:'Can we visit during the week?'},a:{fr:'Oui, les visites en semaine sont possibles pour les groupes de 6 personnes minimum, sur réservation préalable, avec une formule de 4 activités par personne. Contactez-nous sur WhatsApp pour organiser votre sortie.',en:'Yes. Weekday visits are available for groups of at least 6 people by advance reservation, with a package of 4 activities per person. Contact us on WhatsApp to arrange your visit.'}},
+ {q:{fr:'Où se trouve AQUAMAZONE ADVENTURE ?',en:'Where is AQUAMAZONE ADVENTURE located?'},a:{fr:'Au Village Adounko, sur la Route des Pêches à Cotonou, au Bénin. Depuis le Carrefour Club des Rois, continuez vers le grand Carrefour Togbin Plage, passez la station JBP puis suivez les panneaux AQUAMAZONE vers le lac et l’embarcadère.',en:'In Adounko Village on the Route des Pêches in Cotonou, Benin. From Carrefour Club des Rois, continue towards the large Togbin Plage junction, pass the JBP station, then follow the AQUAMAZONE signs towards the lake and landing.'}},
+ {q:{fr:'La traversée en pirogue est-elle payante ?',en:'Is the return boat crossing charged separately?'},a:{fr:'La traversée aller-retour coûte 1 500 FCFA par adulte et 500 FCFA par enfant de moins de 12 ans. Elle est déjà incluse dans les forfaits : vous ne la payez pas une deuxième fois.',en:'The return crossing costs 1,500 FCFA per adult and 500 FCFA per child under 12. It is already included in our packages, so you do not pay for it twice.'}},
+ {q:{fr:'Quelles activités peut-on faire sur place ?',en:'What activities are available?'},a:{fr:'Nous proposons notamment le pédalo, le canoë-kayak, le paddle, le bateau à pédales, la bulle gonflable, ainsi que des balades sur le lac et la découverte des mangroves. Le jet-ski est actuellement indisponible pour maintenance.',en:'Our experiences include pedal boats, canoeing and kayaking, stand-up paddle, pedal-powered boats, inflatable water balls, lake outings and mangrove discovery. Jet skiing is currently unavailable due to maintenance.'}},
+ {q:{fr:'Comment choisir un forfait sans confusion ?',en:'How do I know exactly what a package includes?'},a:{fr:'Chaque forfait indique le nombre de participants, son tarif et les activités incluses. Pour le forfait solo GLÈLÈ, choisissez une seule activité : canoë simple OU pédalo simple (30 min). La traversée est incluse. Pour toute précision sur un autre forfait, contactez notre équipe.',en:'Each package states the number of guests, the price and the included activities. The GLÈLÈ solo package includes ONE 30-minute activity: a single canoe OR a single pedal boat. The crossing is included. Contact our team to confirm details of other packages.'}},
+ {q:{fr:'Peut-on manger au restaurant ?',en:'Is food available at the restaurant?'},a:{fr:'Oui, notre Restaurant & Bar propose notamment des poissons braisés, des brochettes de poulet, des accompagnements et des boissons fraîches. Nous vous recommandons de confirmer votre commande avant votre arrivée.',en:'Yes. Our Restaurant & Bar offers grilled fish, chicken skewers, sides and cold drinks. We recommend confirming your order before you arrive.'}},
+ {q:{fr:'Comment réserver ou poser une question ?',en:'How can I book or ask a question?'},a:{fr:'Écrivez-nous sur WhatsApp au +229 01 54 28 44 44 pour organiser votre visite ou vérifier les disponibilités. La réservation avec paiement directement sur le site n’est pas encore active.',en:'Message us on WhatsApp at +229 01 54 28 44 44 to plan your visit or check availability. Online booking and payment through this website are not yet active.'}}
+] as const;
+
 const bookingWhatsApp='https://wa.me/2290154284444?text=Bonjour%2C%20je%20souhaite%20r%C3%A9server%20une%20activit%C3%A9%20%C3%A0%20Aquamazone.';
 // Temporary stock photography. Replace with verified Aquamazone-owned photographs before launch.
 const activityVisuals:Record<string,string>={
@@ -229,6 +241,27 @@ export default function Home(){
       <a href="https://wa.me/2290154284444?text=Bonjour%2C%20je%20souhaite%20des%20informations%20pour%20ma%20visite%20%C3%A0%20Aquamazone." target="_blank" rel="noopener noreferrer">{lang==='fr'?'Nous écrire sur WhatsApp':'Message us on WhatsApp'}<ArrowUpRight size={19}/></a>
     </div>
   </div>
+</section>
+
+<section id="faq" className="faq-v13" aria-labelledby="faq-title">
+ <div className="faq-v13-shell">
+  <div className="faq-v13-intro">
+   <p className="faq-v13-eyebrow">08 / {lang==='fr'?'QUESTIONS FRÉQUENTES':'FREQUENTLY ASKED QUESTIONS'}</p>
+   <h2 id="faq-title">{lang==='fr'?<>Tout savoir <em>avant de venir.</em></>:<>Everything to know <em>before you visit.</em></>}</h2>
+   <p>{lang==='fr'?'Les réponses essentielles pour organiser votre expérience au bord de l’eau, en toute simplicité.':'The essentials for planning your day by the water, without the guesswork.'}</p>
+   <div className="faq-v13-contact">
+    <span>{lang==='fr'?'UNE AUTRE QUESTION ?':'SOMETHING ELSE?'}</span>
+    <a href="https://wa.me/2290154284444?text=Bonjour%2C%20j%27ai%20une%20question%20sur%20Aquamazone%20Adventure." target="_blank" rel="noopener noreferrer">{lang==='fr'?'Parlons sur WhatsApp':'Chat on WhatsApp'}<ArrowUpRight size={18} aria-hidden="true"/></a>
+   </div>
+  </div>
+  <div className="faq-v13-questions">
+   {faqItems.map((item,i)=><details className="faq-v13-item" key={i} name="aquamazone-faq" >
+    <summary><span className="faq-v13-index">{String(i+1).padStart(2,'0')}</span><span className="faq-v13-question">{item.q[lang]}</span><span className="faq-v13-toggle" aria-hidden="true"><Plus size={19}/></span></summary>
+    <div className="faq-v13-answer"><p>{item.a[lang]}</p></div>
+   </details>)}
+   <p className="faq-v13-footnote">{lang==='fr'?'Pour les détails particuliers à votre sortie, contactez directement notre équipe.':'For details specific to your visit, please contact our team directly.'}</p>
+  </div>
+ </div>
 </section>
  </main>
  <footer className="footer"><div className="section-shell"><div className="footer-top"><div><h2>AQUAMAZONE <small>ADVENTURE</small></h2><p>Base de loisirs nautiques au Village Adounko.</p><em>« La détente au fil de l’eau. »</em></div><div><h3>Contact</h3><a href="tel:+2290154284444">+229 01 54 28 44 44</a><a href="mailto:aquamazone229@gmail.com">aquamazone229@gmail.com</a><a href="https://wa.me/2290154284444">WhatsApp</a></div><div><h3>Réseaux</h3><a href="https://www.youtube.com/@aquamazoneadventure229" target="_blank" rel="noopener noreferrer">YouTube</a><span>Instagram · TikTok · Facebook : liens à confirmer</span></div></div><div className="footer-bottom">© 2026 AQUAMAZONE Adventure. Tous droits réservés.</div></div></footer>
