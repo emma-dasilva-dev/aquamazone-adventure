@@ -24,6 +24,26 @@ const statusLabels:Record<string,string>={
   payment_status_changed:'Changement de paiement'
 };
 const label=(value:string)=>statusLabels[value]||value.replaceAll('_',' ');
+const intakeErrorMessages:Record<string,string>={
+  not_configured:'La connexion privée de saisie n’est pas configurée.',
+  empty:'Choisissez au moins une activité ou un forfait.',
+  activities:'Sélection des activités invalide ou activité sélectionnée plusieurs fois.',
+  package:'Forfait inconnu. Choisissez un forfait dans la liste.',
+  choice:'Pour GLÈLÈ, choisissez le canoë simple ou le pédalo simple.',
+  unknown_experience:'Activité ou forfait non reconnu.',
+  invalid_date:'La date choisie est invalide.',
+  too_soon:'La date doit être à partir de demain. Les demandes pour le jour même ne sont pas acceptées dans ce formulaire.',
+  special_day:'Ce formulaire accepte actuellement uniquement les samedis et dimanches. Les jours fériés et demandes en semaine nécessitent une prise en charge spécifique.',
+  invalid_time:'Choisissez un créneau horaire entre 12 h et 17 h.',
+  invalid_guests:'Le nombre d’adultes et d’enfants doit être un entier positif ou nul.',
+  guest_limit:'Choisissez entre 1 et 20 participants.',
+  package_guests:'Participants incompatibles avec le forfait : GLÈLÈ = 1 personne ; GUÉZO = 2 adultes ; TOFFA = 2 adultes et 2 enfants ; BÉHANZIN = 4 adultes.',
+  capacity:'Le bateau à pédales accepte actuellement 2 à 4 personnes par demande.',
+  activity_choice:'Pour GLÈLÈ, choisissez une seule activité incluse : canoë simple ou pédalo simple.',
+  invalid:'Vérifiez le nom, le téléphone et les informations de la demande.',
+  database_error:'La demande n’a pas été enregistrée. Vérifiez la connexion de saisie ou contactez l’administratrice.',
+  rules:'Vérifiez les activités, le forfait, la date et les participants.'
+};
 
 export default async function AdminDashboard({searchParams}:{searchParams:Promise<{intake?:string}>}){
   if(!await isAdminAuthenticated())redirect('/admin/login');
@@ -85,7 +105,7 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
         <div className="az-admin-panel-header"><h2 id="az-admin-intake-title">Enregistrer une demande WhatsApp</h2><p>Création d'une demande non confirmée uniquement</p></div>
         <div className="az-admin-intake-content">
           {notice==='created'&&<p className="az-admin-success" role="status">La demande a été enregistrée. Des notifications email et WhatsApp ont été mises en attente dans la base.</p>}
-          {notice && notice!=='created'&&<p className="az-admin-form-error" role="alert">{notice==='not_configured'?'La connexion privée de saisie n’est pas configurée.':notice==='empty'?'Choisissez au moins une activité ou un forfait.':notice==='rules'?'Vérifiez les activités, le forfait, la date, les participants et les règles applicables.':'Enregistrement impossible. Vérifiez les coordonnées et la connexion.'}</p>}
+          {notice && notice!=='created'&&<p className="az-admin-form-error" role="alert">{intakeErrorMessages[notice]||'Enregistrement impossible. Vérifiez les informations et la connexion.'}</p>}
           <form action="/api/admin/reservations" method="post" className="az-admin-intake-form">
             <label>Nom du client<input name="contactName" required maxLength={100} autoComplete="off" placeholder="Nom et prénom"/></label>
             <label>Téléphone du client<input name="contactPhone" required maxLength={24} autoComplete="off" inputMode="tel" placeholder="+229 ..."/></label>
