@@ -26,9 +26,19 @@ const noStore = { 'Cache-Control': 'no-store' };
 export async function POST(request: NextRequest) {
   const language = request.headers.get('accept-language')?.startsWith('en') ? 'en' : 'fr';
   const origin = request.headers.get('origin');
-  // Browsers supply Origin on POST. Never accept cross-origin requests to the paid API.
-  if (!origin || origin !== request.nextUrl.origin) {
-    return NextResponse.json({ error: 'Origin not allowed' }, { status: 403, headers: noStore });
+  // Validate against the actual incoming HTTP authority. request.nextUrl.origin
+  // can resolve to localhost behind a proxy or when visited from a phone via LAN IP.
+  const authority = request.headers.get('host');
+  let sameOrigin = false;
+  try {
+    if (origin && authority) {
+      const parsed = new URL(origin);
+      sameOrigin = (parsed.protocol === 'https:' || parsed.protocol === 'http:') &&
+        parsed.host.toLowerCase() === authority.toLowerCase();
+    }
+  } catch { /* Reject invalid origins. */ }
+  if (!sameOrigin) {
+    return NextResponse.json({ error: 'origin_rejected', mode: 'error' }, { status: 403, headers: noStore });
   }
   const type = request.headers.get('content-type') || '';
   if (!type.toLowerCase().startsWith('application/json')) {
@@ -61,7 +71,7 @@ export async function POST(request: NextRequest) {
   const uncertainty = /(?:je (?:ne |n['’])?(?:peux|suis pas en mesure de) (?:pas )?confirm|je n['’]ai pas (?:d['’])?information|i (?:cannot|can't|can not) confirm|i (?:do not|don't) have (?:enough )?(?:verified )?information|je vous (?:invite|recommande) à contacter|contact(?:ez)? (?:notre |the )?(?:équipe|team) (?:pour|to) (?:confirmer|confirm))/i;
 
   if (!process.env.OPENAI_API_KEY) {
-    return NextResponse.json({ reply: guide.reply, mode: 'guide', unavailable: true }, { headers: noStore });
+    return NextResponse.json({ reply: guide.reply, mode: 'guide', unavailable: true, reason: 'no_api_key' }, { headers: noStore });
   }
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 12_000);
@@ -97,7 +107,7 @@ export async function POST(request: NextRequest) {
     });
     if (!res.ok) {
       console.error('Aquamazone assistant provider request failed', res.status);
-      return NextResponse.json({ reply: guide.reply, mode: 'guide', unavailable: true }, { headers: noStore });
+      return NextResponse.json({ reply: guide.reply, mode: 'guide', unavailable: true, reason: 'provider_unavailable' }, { headers: noStore });
     }
     const result = await res.json() as { output?: Array<{ content?: Array<{ type?: string; text?: string }> }> };
     const reply = result.output?.flatMap(item=>item.content || []).filter(item=>item.type === 'output_text').map(item=>item.text || '').join('\n').trim();
