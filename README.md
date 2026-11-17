@@ -122,3 +122,17 @@ Neon was connected and an isolated PostgreSQL database named `aquamazone` was cr
 **Backend is not yet wired to Neon.** Do not publish a database connection string or copy it to `NEXT_PUBLIC_*`. The existing Next.js application requires a server-only PostgreSQL driver and runtime connection setup. Use a pooled runtime connection, a direct connection for migrations, and a least-privilege database role before implementing any customer write endpoint. The existing `package-lock.json` must be updated along with `package.json` when installing the driver.
 
 **Never turn the public quotation endpoint into a booking-creation endpoint without authentication/OTP, abuse controls, transactional allocation, and payment/state verification.** No paid booking capabilities are enabled yet.
+
+## V1.5D — Next.js read-only Neon adapter
+
+The database is provisioned, and a scoped `aquamazone_app_read` role was created in Neon. Its SELECT access to the inventory was verified. The Next.js server adapter lives at `lib/db/equipment-availability.ts`, using the official `@neondatabase/serverless` HTTP client with parameterized SQL. No database password is stored in this repository.
+
+**Local connection setup:**
+
+1. In the [Neon console](https://console.neon.tech/app/projects/old-smoke-56391833), choose the **production** branch, database **aquamazone**, and role **aquamazone_app_read**. Copy that role's **pooled** connection string; keep it private.
+2. Add `DATABASE_URL_READONLY=postgresql://...` to your existing local `.env.local` (do not replace your OpenAI variables). `.env.local` is gitignored.
+3. After pulling these commits, run `npm install` once to install the new `@neondatabase/serverless` dependency and refresh `package-lock.json`. The lockfile could not be regenerated in the authoring environment, so it must be refreshed before any `npm ci` or production deployment.
+4. Start your local Next.js server and visit `http://localhost:3000/api/internal/database-status`. A successful read-only response shows `connected: true`, `activeEquipmentUnits: 14` and `categories: 5`. It returns 404 in production, does not reveal secrets or identify customers, and does not create a reservation.
+5. Add the same **private, read-only** environment variable to your production hosting settings only when enabling a production read feature. Never use `NEXT_PUBLIC_DATABASE_URL_READONLY` or an owner/admin database URL.
+
+**Not yet enabled:** Public live availability, transactional booking creation, payments, confirmation, OTP, and staff dashboard. The existing quote and WhatsApp enquiry workflows continue as before. A second, tightly restricted reservation-writer role must be designed before any write endpoint is introduced.
