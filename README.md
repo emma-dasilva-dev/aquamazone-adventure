@@ -90,3 +90,20 @@ Before enabling bookings:
 5. Only after the above, expose authenticated staff administration and a customer reservation endpoint. Never report a booking as confirmed or paid without an audited authorized action.
 
 No MTN MoMo transaction or booking confirmation occurs in V1.5C.
+
+## V1.5D — Database integration preparation
+
+Added PostgreSQL migration `db/migrations/0002_equipment_lifecycle.sql` and read-only parameterized query `db/queries/equipment-availability.sql`.
+
+The migration provides:
+- `occupied_equipment` view for physical units recorded in active allocation rows
+- `release_reservation_allocations(uuid)` for clearing allocations **only after** an authorized cancellation or expiry
+- Conservative capacity handling: an expired allocation still occupies equipment until transactional cleanup. This avoids falsely advertising availability while the exclusion constraint still blocks it.
+
+The query accepts a date, time and duration. It uses `Africa/Porto-Novo` and computes total versus currently unallocated physical units. This query is a *snapshot*, not a reservation hold; the per-asset GiST exclusion constraint remains the concurrency guard.
+
+**Database setup is required before live usage.** Provision PostgreSQL with TLS, backups and restricted credentials; then apply `0001` followed by `0002` using a migration/owner role. Do not run these migrations against an existing production database without review. Do not use an administrative database login in the public website.
+
+The application intentionally does **not** yet have `DATABASE_URL` or a PostgreSQL connection client: the deployment's database service, credentials, access method and role permissions must be established first. The UI continues to use the existing server-validated WhatsApp enquiry; live availability, stored bookings, and payments are not activated.
+
+Next build step once the database is provisioned: add a pooled server-only PostgreSQL adapter, run migrations, test connectivity and permissions, then implement transactional holds and expiry cleanup, and finally staff-only lifecycle actions. Never enable booking confirmation merely because a read-only availability query reports free equipment.
