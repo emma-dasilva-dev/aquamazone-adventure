@@ -39,9 +39,9 @@ SELECT
 FROM reservation_allocations a
 JOIN reservations r ON r.id=a.reservation_id
 JOIN reservation_assets e ON e.id=a.asset_id
-WHERE r.status IN ('pending_review','awaiting_payment','confirmed')
-  AND e.active = true
-  AND (r.expires_at IS NULL OR r.expires_at > now() OR r.status='confirmed');
+WHERE e.active = true;
+-- Conservative by design: every persisted allocation occupies its unit until
+-- explicitly removed in a transaction, including after a hold expires.
 
 -- Keep the exclusion constraint in 0001 as the authoritative concurrency
 -- control: the view only reports occupancy and is NOT a booking lock.
