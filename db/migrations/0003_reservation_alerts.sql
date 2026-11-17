@@ -10,14 +10,14 @@ CREATE TABLE IF NOT EXISTS reservation_notification_outbox (
   channel text NOT NULL CHECK (channel IN ('email','whatsapp')),
   event_type text NOT NULL CHECK (event_type IN ('reservation_created','reservation_status_changed','payment_status_changed')),
   payload jsonb NOT NULL,
-  status text NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','sending','delivered','retry','failed')),
+  status text NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','sending','accepted','retry','failed')),
   attempt_count integer NOT NULL DEFAULT 0 CHECK (attempt_count >= 0),
   next_attempt_at timestamptz NOT NULL DEFAULT now(),
   locked_until timestamptz,
   lease_token uuid,
   provider_message_id text,
   last_error text,
-  delivered_at timestamptz,
+  accepted_at timestamptz,
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now(),
   UNIQUE(event_id,channel)
@@ -106,17 +106,17 @@ $claim$;
 
 -- Lease-token guarded acknowledgement: another worker cannot finish an old lease.
 CREATE OR REPLACE FUNCTION finish_reservation_alert(
-  p_id uuid, p_lease uuid, p_delivered boolean, p_provider_id text, p_error text
+  p_id uuid, p_lease uuid, p_accepted boolean, p_provider_id text, p_error text
 ) RETURNS boolean LANGUAGE plpgsql SECURITY INVOKER AS $finish$
 DECLARE changed integer;
 BEGIN
   UPDATE reservation_notification_outbox
-  SET status=CASE WHEN p_delivered THEN 'delivered'
+  SET status=CASE WHEN p_accepted THEN 'accepted'
                   WHEN attempt_count>=8 THEN 'failed' ELSE 'retry' END,
-      delivered_at=CASE WHEN p_delivered THEN now() ELSE NULL END,
-      provider_message_id=CASE WHEN p_delivered THEN left(coalesce(p_provider_id,''),255) ELSE NULL END,
-      last_error=CASE WHEN p_delivered THEN NULL ELSE left(coalesce(p_error,'Delivery failed'),400) END,
-      next_attempt_at=CASE WHEN p_delivered THEN next_attempt_at
+      accepted_at=CASE WHEN p_accepted THEN now() ELSE NULL END,
+      provider_message_id=CASE WHEN p_accepted THEN left(coalesce(p_provider_id,''),255) ELSE NULL END,
+      last_error=CASE WHEN p_accepted THEN NULL ELSE left(coalesce(p_error,'Delivery failed'),400) END,
+      next_attempt_at=CASE WHEN p_accepted THEN next_attempt_at
         ELSE now()+LEAST(3600,30*power(2,LEAST(attempt_count,7))) * interval '1 second' END,
       lease_token=NULL,locked_until=NULL,updated_at=now()
   WHERE id=p_id AND lease_token=p_lease AND status='sending';
