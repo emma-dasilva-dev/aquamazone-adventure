@@ -47,3 +47,15 @@ The 20 gallery entries are in `app/ImmersiveGallery.tsx` in the `slides` array. 
 - Implement secure reservation, phone OTP, MTN MoMo verification and staff booking management separately.
 
 Do not publish the prototype as if its example imagery were official photos or if online bookings were already operational.
+
+## V1.5B — Validated reservation enquiries
+
+The reservation planner now requests server-side validation from `POST /api/reservation/quote` before preparing a WhatsApp message. Shared rules live in `lib/reservation-rules.ts` and cover:
+
+- Current date and booking cutoff in `Africa/Porto-Novo` timezone (no same-day requests)
+- Standard Saturday/Sunday slots from 12:00 to 17:00; holidays and weekday groups require direct team contact
+- Valid guest counts and exact requirements for GLÈLÈ, GUÉZO, TOFFA, BÉHANZIN and pedal-powered boats
+- Indicative FCFA totals, without double-charging the included crossing
+- Unknown rates (TOFFA, lake and mangrove) explicitly returned as pending confirmation
+
+**This endpoint does not store customers or reservations, lock inventory, guarantee a time slot, process a payment, or issue a booking reference.** The response explicitly returns `bookingConfirmed: false`, `paymentCollected: false`, and `availabilityChecked: false`. WhatsApp remains the customer-to-staff channel. Do not treat quote responses as proof of availability or payment. A future version needs authenticated staff workflows and durable transactional storage.
