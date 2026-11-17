@@ -71,7 +71,7 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
         FROM reservations`;
     databaseStep='reservations_list';
     const bookings=await sql`SELECT reference,experience,visit_date::text,requested_time::text,adults,children,
-        quote_amount_xof,status,payment_status,contact_name,contact_phone,experience_selection,created_at::text,expires_at::text
+        quote_amount_xof,CASE WHEN status='awaiting_payment' AND expires_at<=now() THEN 'expired' ELSE status END AS status,payment_status,contact_name,contact_phone,experience_selection,created_at::text,expires_at::text
         FROM reservations ORDER BY created_at DESC LIMIT 40`;
     databaseStep='notifications_list';
     const notifications=await sql`SELECT o.id::text,o.event_type,o.channel,o.status,o.attempt_count,o.created_at::text,
@@ -186,7 +186,7 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
             <td><span className="az-admin-pill" data-status={row.status}>{label(row.status)}</span></td>
             <td><span className="az-admin-pill" data-status={row.payment_status}>{label(row.payment_status)}</span></td>
             <td>{row.status==='awaiting_payment'&&row.expires_at?
-              <span className="az-admin-hold-expiry">Retenue jusqu’au {dateTime(row.expires_at)}. Paiement non activé.</span>:
+              <span className="az-admin-hold-expiry">Retenue jusqu’au {dateTime(row.expires_at)}. Aucun paiement lancé.</span>:
               ['inquiry','pending_review'].includes(row.status)&&Boolean(row.quote_amount_xof)&&
               (row.experience==='glele'&&Number(row.adults)+Number(row.children)===1||
                ['canoe','pedalo'].includes(row.experience)&&Number(row.adults)+Number(row.children)<=2||
