@@ -776,3 +776,15 @@ img,video,iframe{max-width:100%}
 @media(max-width:960px){.reservation-v15-layout{grid-template-columns:1fr}.reservation-v15-summary{position:static;max-width:none}.reservation-v15-bottom{align-items:flex-start;flex-direction:column}}
 @media(max-width:560px){.reservation-v15-shell{padding:78px 21px}.reservation-v15-heading{margin-bottom:35px}.reservation-v15-heading h2{font-size:clamp(43px,11vw,61px)}.reservation-v15-heading>span{font-size:13px}.reservation-v15-fields{gap:26px}.reservation-v15-options{grid-template-columns:1fr}.reservation-v15-options button{min-height:55px}.reservation-v15-two{gap:12px}.reservation-v15-two label>span{padding:0 8px;gap:5px}.reservation-v15-two input,.reservation-v15-two select{font-size:16px}.reservation-v15-summary{padding:27px 23px}.reservation-v15-bottom{margin-top:42px}}
 @media(prefers-reduced-motion:reduce){.reservation-v15-options button{transition:none}}
+
+/* Weekly public enquiry calendar; no inventory counts exposed to visitors. */
+.az-reservation-window{border:1px solid #d6e5ec;background:#f3f9fc;padding:19px 20px;margin:0 0 24px}
+.az-reservation-window>strong{display:block;color:#062047;font-size:13px;font-weight:700;letter-spacing:.01em}
+.az-reservation-window>p{margin:8px 0 15px;color:#36566e;font-size:13px;line-height:1.6}
+.az-reservation-window-days{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.az-reservation-window-days button{display:flex;flex-direction:column;gap:6px;text-align:left;align-items:flex-start;border:1px solid #b8d2e1;background:white;color:#062047;padding:13px 15px;font-weight:700;font-size:13px;min-width:0}
+.az-reservation-window-days button small{font-size:11px;font-weight:600;color:#1f6a48}
+.az-reservation-window-days button[aria-pressed="true"]{border:2px solid #0055a4;padding:12px 14px;background:#e6f5ff}
+.az-reservation-window-days button:disabled{opacity:.63;cursor:not-allowed;background:#e9edf0;border-color:#d5dfe5}
+.az-reservation-window-days button:disabled small{color:#687b89}
+@media(max-width:480px){.az-reservation-window{padding:15px}.az-reservation-window-days{grid-template-columns:1fr}}
