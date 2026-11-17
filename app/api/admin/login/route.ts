@@ -32,7 +32,7 @@ export async function POST(req:NextRequest) {
   attempts.delete(client);
   const response=NextResponse.redirect(new URL('/admin',req.url),{status:303});
   response.cookies.set(ADMIN_COOKIE,createAdminSession(),{
-    httpOnly:true,sameSite:'strict',secure:process.env.NODE_ENV==='production',path:'/admin',maxAge:8*60*60
+    httpOnly:true,sameSite:'strict',secure:process.env.NODE_ENV==='production',path:'/',maxAge:8*60*60
   });
   response.headers.set('Cache-Control','no-store');
   return response;
