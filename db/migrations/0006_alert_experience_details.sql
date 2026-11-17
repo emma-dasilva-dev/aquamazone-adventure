@@ -1,7 +1,7 @@
 -- Upgrade notifications to report full multi-activity / optional-forfait selection.
 -- Applied after 0005. Non-destructive replacement preserves existing triggers.
 CREATE OR REPLACE FUNCTION enqueue_reservation_alerts()
-RETURNS trigger LANGUAGE plpgsql AS $outbox$
+RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp AS $outbox$
 DECLARE
   event_name text;
   notification_event uuid;
