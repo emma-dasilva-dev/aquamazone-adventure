@@ -32,8 +32,9 @@ const intakeErrorMessages:Record<string,string>={
   choice:'Pour GLÈLÈ, choisissez le canoë simple ou le pédalo simple.',
   unknown_experience:'Activité ou forfait non reconnu.',
   invalid_date:'La date choisie est invalide.',
-  too_soon:'La date doit être à partir de demain. Les demandes pour le jour même ne sont pas acceptées dans ce formulaire.',
-  special_day:'Ce formulaire accepte actuellement uniquement les samedis et dimanches. Les jours fériés et demandes en semaine nécessitent une prise en charge spécifique.',
+  past_date:'La date ne peut pas être dans le passé. Pour une demande ancienne, utilisez le suivi historique lorsqu’il sera disponible.',
+  too_soon:'Choisissez une date valide pour cette demande.',
+  special_day:'Cette date nécessite une vérification manuelle des conditions d’accueil.',
   invalid_time:'Choisissez un créneau horaire entre 12 h et 17 h.',
   invalid_guests:'Le nombre d’adultes et d’enfants doit être un entier positif ou nul.',
   guest_limit:'Choisissez entre 1 et 20 participants.',
@@ -102,7 +103,7 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
         <div className="az-admin-stat"><small>Alertes en échec (40 dernières)</small><strong>{failedAlerts}</strong></div>
       </section>
       <section className="az-admin-panel" aria-labelledby="az-admin-intake-title">
-        <div className="az-admin-panel-header"><h2 id="az-admin-intake-title">Enregistrer une demande WhatsApp</h2><p>Création d'une demande non confirmée uniquement</p></div>
+        <div className="az-admin-panel-header"><h2 id="az-admin-intake-title">Enregistrer une demande WhatsApp</h2><p>Une demande en semaine ou pour aujourd'hui peut être enregistrée, sans confirmation de disponibilité</p></div>
         <div className="az-admin-intake-content">
           {notice==='created'&&<p className="az-admin-success" role="status">La demande a été enregistrée. Des notifications email et WhatsApp ont été mises en attente dans la base.</p>}
           {notice && notice!=='created'&&<p className="az-admin-form-error" role="alert">{intakeErrorMessages[notice]||'Enregistrement impossible. Vérifiez les informations et la connexion.'}</p>}
