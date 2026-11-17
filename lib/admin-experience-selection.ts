@@ -61,7 +61,7 @@ export function validateAdminExperienceSelection(input:{
   // requests. Public online bookings remain restricted to future weekends.
   const date=input.date;
   const parsedDate=new Date(date+'T00:00:00Z');
-  if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(date) ||
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(date) ||
      Number.isNaN(parsedDate.valueOf()) ||
      parsedDate.toISOString().slice(0,10)!==date)return {ok:false,code:'invalid_date'};
   const today=new Intl.DateTimeFormat('en-CA',{
