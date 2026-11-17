@@ -1,6 +1,7 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { bookingWindow, checkBookingWindow } from '../lib/reservation-rules';
 import { ArrowUpRight, CalendarDays, Clock3, Minus, Plus, UsersRound } from 'lucide-react';
 
 type Lang='fr'|'en';
@@ -34,6 +35,12 @@ function estimate(id:string,adults:number,children:number){
  return {total:count*3000+adults*1500+children*500,crossingIncluded:false};
 }
 export default function ReservationPlanner({lang}:{lang:Lang}){
+ const [now,setNow]=useState<Date|null>(null);
+ useEffect(()=>{const refresh=()=>setNow(new Date());refresh();const timer=setInterval(refresh,60000);return ()=>clearInterval(timer);},[]);
+ const window=now?bookingWindow(now):null;
+ const windowCheck=now?checkBookingWindow(date,now):null;
+ const saturdayOpen=now?checkBookingWindow(window!.saturday,now).ok:false;
+ const sundayOpen=now?checkBookingWindow(window!.sunday,now).ok:false;
  const [id,setId]=useState('pedalo');
  const [date,setDate]=useState('');
  const [time,setTime]=useState('12:00');
@@ -44,16 +51,24 @@ export default function ReservationPlanner({lang}:{lang:Lang}){
  const [serverError,setServerError]=useState('');
  const selected=options.find(o=>o.id===id)!;
  const count=adults+children;
- const dateValid=date>=nextDay()&&isWeekend(date);
+ const dateValid=Boolean(windowCheck?.ok);
  const groupValid=count>0 && (id==='guezo'?adults===2&&children===0:id==='behanzin'?adults===4&&children===0:id==='toffa'?adults===2&&children===2:id==='glele'?count===1:id==='pedalboat'?count>=2&&count<=4:true);
  const quote=useMemo(()=>estimate(id,adults,children),[id,adults,children]);
  const okay=dateValid&&groupValid&&Boolean(time);
  const activityLabel=selected[lang];
  const text=lang==='fr'?{
-  eyebrow:'09 / PRÉPARER UNE VISITE',heading:<>Votre prochaine aventure <em>commence ici.</em></>,desc:'Composez votre visite en quelques étapes. Notre équipe confirmera ensuite les disponibilités et les modalités.',kind:'CHOISIR UNE EXPÉRIENCE',activity:'Activité',pack:'Forfait',date:'DATE SOUHAITÉE',time:'HEURE SOUHAITÉE',people:'PARTICIPANTS',adult:'Adultes',child:'Enfants de moins de 12 ans',choose:'ACTIVITÉ AU CHOIX',canoe:'Canoë simple',pedalo:'Pédalo simple',summary:'RÉCAPITULATIF',price:'Estimation',unknown:'Tarif à confirmer',cross:'Traversée aller-retour incluse',crossSeparate:'Traversée aller-retour ajoutée au tarif',contact:'Envoyer ma demande sur WhatsApp',notice:'Ceci est une demande, pas une réservation confirmée. Aucun paiement n’est effectué sur ce site.',serverError:'Impossible de vérifier votre demande pour le moment. Réessayez ou contactez notre équipe directement.',validation:'Choisissez un samedi ou un dimanche à partir de demain et respectez le nombre de participants du forfait.',weekday:'Pour les jours fériés et les groupes en semaine, contactez directement notre équipe.',costNote:'Les tarifs sont indicatifs selon le choix et la composition du groupe. Les disponibilités restent à confirmer.',help:'Informations et réservation : +229 01 54 28 44 44'
+  eyebrow:'09 / PRÉPARER UNE VISITE',heading:<>Votre prochaine aventure <em>commence ici.</em></>,desc:'Composez votre visite en quelques étapes. Notre équipe confirmera ensuite les disponibilités et les modalités.',kind:'CHOISIR UNE EXPÉRIENCE',activity:'Activité',pack:'Forfait',date:'DATE SOUHAITÉE',time:'HEURE SOUHAITÉE',people:'PARTICIPANTS',adult:'Adultes',child:'Enfants de moins de 12 ans',choose:'ACTIVITÉ AU CHOIX',canoe:'Canoë simple',pedalo:'Pédalo simple',summary:'RÉCAPITULATIF',price:'Estimation',unknown:'Tarif à confirmer',cross:'Traversée aller-retour incluse',crossSeparate:'Traversée aller-retour ajoutée au tarif',contact:'Envoyer ma demande sur WhatsApp',notice:'Ceci est une demande, pas une réservation confirmée. Aucun paiement n’est effectué sur ce site.',serverError:'Impossible de vérifier votre demande pour le moment. Réessayez ou contactez notre équipe directement.',validation:'Sélectionnez une date ouverte du week-end à venir et respectez les conditions du forfait.',weekday:'En semaine, les visites nécessitent une organisation préalable avec notre équipe. Contactez-nous sur WhatsApp avant tout déplacement.',costNote:'Les tarifs sont indicatifs selon le choix et la composition du groupe. Les disponibilités restent à confirmer.',help:'Informations et réservation : +229 01 54 28 44 44'
  }:{
-  eyebrow:'09 / PLAN A VISIT',heading:<>Your next adventure <em>starts here.</em></>,desc:'Plan your visit in a few steps. Our team will confirm availability and arrangements.',kind:'CHOOSE AN EXPERIENCE',activity:'Activity',pack:'Package',date:'PREFERRED DATE',time:'PREFERRED TIME',people:'GUESTS',adult:'Adults',child:'Children under 12',choose:'CHOOSE ONE ACTIVITY',canoe:'Single canoe',pedalo:'Single pedal boat',summary:'YOUR SUMMARY',price:'Estimate',unknown:'Price to be confirmed',cross:'Return crossing included',crossSeparate:'Return crossing added to price',contact:'Send enquiry on WhatsApp',notice:'This is an enquiry, not a confirmed booking. No payment is collected on this website.',serverError:'We could not validate your request right now. Please try again or contact our team directly.',validation:'Select a Saturday or Sunday from tomorrow onward and match the package guest requirements.',weekday:'For public holidays and weekday groups, please contact our team directly.',costNote:'Prices are estimates based on your choices. Availability remains subject to confirmation.',help:'Information and enquiries: +229 01 54 28 44 44'
+  eyebrow:'09 / PLAN A VISIT',heading:<>Your next adventure <em>starts here.</em></>,desc:'Plan your visit in a few steps. Our team will confirm availability and arrangements.',kind:'CHOOSE AN EXPERIENCE',activity:'Activity',pack:'Package',date:'PREFERRED DATE',time:'PREFERRED TIME',people:'GUESTS',adult:'Adults',child:'Children under 12',choose:'CHOOSE ONE ACTIVITY',canoe:'Single canoe',pedalo:'Single pedal boat',summary:'YOUR SUMMARY',price:'Estimate',unknown:'Price to be confirmed',cross:'Return crossing included',crossSeparate:'Return crossing added to price',contact:'Send enquiry on WhatsApp',notice:'This is an enquiry, not a confirmed booking. No payment is collected on this website.',serverError:'We could not validate your request right now. Please try again or contact our team directly.',validation:'Choose an eligible date for the upcoming weekend and meet the package guest requirements.',weekday:'Weekday visits must be arranged with our team in advance. Contact us on WhatsApp before travelling.',costNote:'Prices are estimates based on your choices. Availability remains subject to confirmation.',help:'Information and enquiries: +229 01 54 28 44 44'
  };
+ const bookingNotice=lang==='fr'?
+  (!window?'Chargement du calendrier…':!saturdayOpen&&!sundayOpen?'Réservations clôturées. Réouverture lundi.':
+   'Ouverture lundi pour le week-end à venir. Samedi : jusqu’au vendredi 22h. Dimanche : jusqu’au samedi 22h (heure du Bénin).'):
+  (!window?'Loading booking dates…':!saturdayOpen&&!sundayOpen?'Bookings are closed. Reopening Monday.':
+   'Bookings open Monday for the upcoming weekend. Saturday: until Friday 10pm. Sunday: until Saturday 10pm (Benin time).');
+ const dateNotice=date&&!dateValid?(lang==='fr'?
+   'Cette date ne peut pas être demandée en ligne. Choisissez un jour encore ouvert ou contactez-nous sur WhatsApp.':
+   'This date cannot be requested online. Choose an open date or message us on WhatsApp.'):null;
  const onRequest=async()=>{
   if(!okay || checking)return;
   setChecking(true);
@@ -102,8 +117,20 @@ export default function ReservationPlanner({lang}:{lang:Lang}){
    <div className="reservation-v15-layout">
     <div className="reservation-v15-fields">
      <fieldset><legend>{text.kind}</legend><div className="reservation-v15-categories">{(['activity','package'] as const).map(kind=><button key={kind} type="button" className={selected.kind===kind?'active':''} aria-pressed={selected.kind===kind} onClick={()=>{setId(kind==='activity'?'pedalo':'glele');setAdults(kind==='activity'?2:1);setChildren(0);}}>{kind==='activity'?text.activity:text.pack}</button>)}</div><div className="reservation-v15-options">{options.filter(o=>o.kind===selected.kind).map(o=><button type="button" key={o.id} className={id===o.id?'selected':''} aria-pressed={id===o.id} onClick={()=>{setId(o.id);if(o.id==='glele'){setAdults(1);setChildren(0);}if(o.id==='guezo'){setAdults(2);setChildren(0);}if(o.id==='behanzin'){setAdults(4);setChildren(0);}if(o.id==='toffa'){setAdults(2);setChildren(2);}}}><span>{o[lang]}</span>{o.duration&&<small>{o.duration}</small>}</button>)}</div></fieldset>
+     <div className="az-reservation-window" role="status">
+       <strong>{lang==='fr'?'Calendrier des réservations':'Booking calendar'}</strong>
+       <p>{bookingNotice}</p>
+       {window&&<div className="az-reservation-window-days">
+         <button type="button" disabled={!saturdayOpen} aria-pressed={date===window.saturday} onClick={()=>setDate(window.saturday)}>
+           {lang==='fr'?'Samedi':'Saturday'} · {window.saturday} <small>{saturdayOpen?(lang==='fr'?'Réservations ouvertes':'Booking open'):(lang==='fr'?'Clôturé':'Closed')}</small>
+         </button>
+         <button type="button" disabled={!sundayOpen} aria-pressed={date===window.sunday} onClick={()=>setDate(window.sunday)}>
+           {lang==='fr'?'Dimanche':'Sunday'} · {window.sunday} <small>{sundayOpen?(lang==='fr'?'Réservations ouvertes':'Booking open'):(lang==='fr'?'Clôturé':'Closed')}</small>
+         </button>
+       </div>}
+     </div>
      <div className="reservation-v15-two">
-      <label>{text.date}<span><CalendarDays size={17} aria-hidden="true"/><input type="date" min={nextDay()} value={date} onChange={e=>setDate(e.target.value)} required/></span></label>
+      <label>{text.date}<span><CalendarDays size={17} aria-hidden="true"/><input type="date" min={window?.saturday??nextDay()} max={window?.sunday} value={date} onChange={e=>setDate(e.target.value)} required/></span></label>
       <label>{text.time}<span><Clock3 size={17} aria-hidden="true"/><select value={time} onChange={e=>setTime(e.target.value)}>{slots.map(slot=><option key={slot} value={slot}>{slot}</option>)}</select></span></label>
      </div>
      <fieldset className="reservation-v15-people"><legend>{text.people}</legend>{([['adult',text.adult,adults],['child',text.child,children]] as const).map(([type,label,n])=><div key={type} className="reservation-v15-counter"><span>{label}</span><div><button aria-label={(lang==='fr'?'Diminuer ':'Decrease ')+label} disabled={n===0} onClick={()=>updateCount(type,-1)} type="button"><Minus size={17}/></button><output aria-live="polite">{n}</output><button aria-label={(lang==='fr'?'Augmenter ':'Increase ')+label} disabled={n===20} onClick={()=>updateCount(type,1)} type="button"><Plus size={17}/></button></div></div>)}</fieldset>
@@ -114,7 +141,7 @@ export default function ReservationPlanner({lang}:{lang:Lang}){
      <h3>{activityLabel}</h3><div className="reservation-v15-summary-detail"><div><span>{text.date}</span><strong>{date||'—'}</strong></div><div><span>{text.time}</span><strong>{time}</strong></div><div><span>{text.people}</span><strong>{adults} + {children}</strong></div></div>
      <div className="reservation-v15-total"><span>{text.price}</span><strong>{quote?format(quote.total):text.unknown}</strong><small>{selected.kind==='package'?text.cross:text.crossSeparate}</small></div>
      <p className="reservation-v15-hint">{text.costNote}</p>
-     {!okay&&<p className="reservation-v15-error" role="status">{text.validation}</p>}
+     {!okay&&<p className="reservation-v15-error" role="status">{dateNotice||text.validation}</p>}
      {serverError&&<p className="reservation-v15-error" role="alert">{serverError} <a href={WA} target="_blank" rel="noopener noreferrer">WhatsApp</a></p>}
      <button className="reservation-v15-cta" type="button" onClick={onRequest} disabled={!okay||checking}>{checking?(lang==='fr'?'Vérification…':'Checking…'):text.contact}<ArrowUpRight size={19}/></button>
      <p className="reservation-v15-disclaimer">{text.notice}</p>
