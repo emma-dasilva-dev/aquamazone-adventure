@@ -23,16 +23,16 @@ Open http://localhost:3000.
 
 ## Enable conversational AI
 
-The visitor assistant uses `app/api/assistant/route.ts` and `lib/aquamazone-knowledge.ts`. It defaults to the economical `gpt-6-luna` model through the OpenAI Responses API.
+The visitor assistant uses `app/api/assistant/route.ts`, `lib/aquamazone-knowledge.ts`, and `lib/visitor-guide.ts` for the non-AI verified fallback. It defaults to the economical `gpt-4.1-mini` model through the OpenAI Responses API.
 
 1. Create `.env.local` locally using `.env.example` as the template.
 2. Set `OPENAI_API_KEY` to a valid server-side API key. Never place it in `NEXT_PUBLIC_*` variables or commit it to Git.
 3. Optionally set `OPENAI_ASSISTANT_MODEL`.
 4. Restart your dev server. Add these settings to your production host before deployment.
 
-Without the key, the assistant transparently falls back to WhatsApp. The web app **does not** book visits, collect payment or check inventory. The assistant cannot confirm availability, a reservation, or MTN MoMo payment.
+Without the key, the assistant uses a clearly labeled **verified information guide** for supported questions and refers unknown matters to WhatsApp. It is not a conversational AI model until a valid key is configured. The web app **does not** book visits, collect payment or check inventory. The assistant cannot confirm availability, a reservation, or MTN MoMo payment.
 
-**Security status:** API body validation, bounded history, server-only credentials, provider timeout and a best-effort per-process rate limit are implemented. For a public production deployment, add **distributed** rate limiting / a WAF and abuse monitoring; per-process limits are not sufficient across serverless instances. Perform prompt-injection, bilingual and mobile accessibility testing before going live. Responses from an LLM should still be treated as fallible.
+**Status:** Source integration is complete, but there has been no authenticated live API test; configure a valid key and verify billing/model access. A ChatGPT subscription does not supply an API key or API credits.\n\n**Security status:** API body validation, bounded history, server-only credentials, provider timeout and a best-effort per-process rate limit are implemented. For a public production deployment, add **distributed** rate limiting / a WAF and abuse monitoring; per-process limits are not sufficient across serverless instances. Perform prompt-injection, bilingual and mobile accessibility testing before going live. Responses from an LLM should still be treated as fallible.
 
 ## Gallery assets
 
