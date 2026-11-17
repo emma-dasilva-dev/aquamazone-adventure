@@ -23,11 +23,6 @@ function limited(id: string): boolean {
   return entry.count > MAX_REQUESTS;
 }
 const noStore = { 'Cache-Control': 'no-store' };
-const fallback = {
-  fr: 'Je ne peux pas confirmer cette information pour le moment. Notre équipe peut vous renseigner sur WhatsApp au +229 01 54 28 44 44.',
-  en: 'I cannot confirm that information right now. Our team can help you on WhatsApp at +229 01 54 28 44 44.'
-} as const;
-
 export async function POST(request: NextRequest) {
   const language = request.headers.get('accept-language')?.startsWith('en') ? 'en' : 'fr';
   const origin = request.headers.get('origin');
@@ -98,10 +93,10 @@ export async function POST(request: NextRequest) {
     }
     const result = await res.json() as { output?: Array<{ content?: Array<{ type?: string; text?: string }> }> };
     const reply = result.output?.flatMap(item=>item.content || []).filter(item=>item.type === 'output_text').map(item=>item.text || '').join('\n').trim();
-    if (!reply) return NextResponse.json({ reply: fallback[lang], unavailable: true }, { status: 502, headers: noStore });
+    if (!reply) return NextResponse.json({ reply: guide.reply, mode: 'guide', unavailable: true }, { headers: noStore });
     return NextResponse.json({ reply: reply.slice(0, 1800), mode: 'ai', unavailable: false }, { headers: noStore });
   } catch (error) {
     console.error('Aquamazone assistant request error', error instanceof Error ? error.name : 'unknown');
-    return NextResponse.json({ reply: fallback[lang], unavailable: true }, { status: 502, headers: noStore });
+    return NextResponse.json({ reply: guide.reply, mode: 'guide', unavailable: true }, { headers: noStore });
   } finally { clearTimeout(timeout); }
 }
