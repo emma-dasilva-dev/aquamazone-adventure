@@ -70,7 +70,7 @@ export function bookingWindow(now:Date=new Date()):{saturday:string;sunday:strin
   const local=new Date(today+'T00:00:00Z');
   const weekday=local.getUTCDay();
   // Sunday belongs to a closed booking window. The next booking week begins Monday.
-  const untilSaturday=(6-weekday+7)%7||7;
+  const untilSaturday=(6-weekday+7)%7;
   local.setUTCDate(local.getUTCDate()+untilSaturday);
   const saturday=local.toISOString().slice(0,10);
   local.setUTCDate(local.getUTCDate()+1);
