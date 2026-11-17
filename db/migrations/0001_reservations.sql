@@ -74,11 +74,11 @@ CREATE INDEX IF NOT EXISTS reservation_events_by_reservation_idx ON reservation_
 
 -- Events are write-once. Future staff corrections must append compensating events.
 CREATE OR REPLACE FUNCTION reject_reservation_event_mutation()
-RETURNS trigger LANGUAGE plpgsql AS $
+RETURNS trigger LANGUAGE plpgsql AS $$
 BEGIN
   RAISE EXCEPTION 'Reservation history is immutable; append a new event instead';
 END;
-$;
+$$;
 DROP TRIGGER IF EXISTS reservation_events_immutable ON reservation_events;
 CREATE TRIGGER reservation_events_immutable
 BEFORE UPDATE OR DELETE ON reservation_events
