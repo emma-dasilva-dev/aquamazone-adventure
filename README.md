@@ -136,3 +136,64 @@ The database is provisioned, and a scoped `aquamazone_app_read` role was created
 5. Add the same **private, read-only** environment variable to your production hosting settings only when enabling a production read feature. Never use `NEXT_PUBLIC_DATABASE_URL_READONLY` or an owner/admin database URL.
 
 **Not yet enabled:** Public live availability, transactional booking creation, payments, confirmation, OTP, and staff dashboard. The existing quote and WhatsApp enquiry workflows continue as before. A second, tightly restricted reservation-writer role must be designed before any write endpoint is introduced.
+
+## Single-administrator dashboard and reservation alerts (in progress)
+
+**The only user role is the Aquamazone owner/administrator.** There are no staff accounts. The dashboard route is `/admin`; a login gate redirects unauthenticated visitors to `/admin/login`. The dashboard shows the newest 40 reservations and alert events, including statuses, payment markers and contact details. It also includes a **manual WhatsApp enquiry intake form** because a normal WhatsApp conversation is not automatically a website booking.
+
+### Provisioned in Neon
+
+Migrations `0003_reservation_alerts.sql` and `0004_single_admin_intake.sql` were applied to the dedicated `aquamazone` database in project `old-smoke-56391833` on `production`.
+
+- The `reservation_notification_outbox` table creates two queued jobs atomically on reservation insert and status/payment changes: **email** + **WhatsApp**.
+- Notifications contain only operational metadata. Neither the outbox nor alert messages contain customer contact details, passwords or transaction credentials.
+- Jobs have lock leases, retry backoff, a maximum of eight attempts, and separate provider acceptance/failure states. **Accepted does not mean delivered**. A WhatsApp retry may send a duplicate when a previous request succeeded but timed out.
+- The `reservation_events` table is append-only and now logs inserts and status/payment changes in a database trigger.
+- `aquamazone_alert_worker` has SELECT/UPDATE rights on the outbox only; cannot edit reservation records.
+- `aquamazone_intake` is granted only limited INSERT columns and selected identifiers on `reservations`. It cannot insert a verified payment, confirm bookings, update existing reservations, or modify queued alerts. The privileged database owner handles trigger writes.
+- `aquamazone_app_read` remains a separate read-only connection.
+
+### Enable administrator login locally
+
+After pulling the branch, run:
+
+```bash
+npm run setup:admin
+```
+
+This local interactive script asks for an administrator password (16+ characters) **without echoing it**, generates a salted scrypt password hash and random signing/scheduler secrets, and writes them to your already-existing gitignored `.env.local` without removing your OpenAI or database values. It refuses to overwrite existing administrator credentials.
+
+Restart Next.js; browse to `http://localhost:3000/admin/login`. Login credentials must also be provisioned separately in the production host's **server-only** environment. Limit who can access these credentials and use HTTPS for production. Authentication is intentionally disabled until `ADMIN_AUTH_ENABLED=true`, `ADMIN_PASSWORD_SCRYPT`, and `ADMIN_SESSION_SECRET` are configured. All pages/APIs fail closed without a valid session.
+
+This version uses a single password with signed, eight-hour HTTP-only cookies. **Before exposing the dashboard publicly** add multi-factor authentication, distributed login throttling, session revocation, security monitoring and anti-abuse protection. In-process login limits alone are not a production security boundary.
+
+### Configure separate database connections
+
+In Neon Console → Connection Details → select branch `production`, database `aquamazone` and the named role. Use its **pooled** connection string. Set each value privately in your local `.env.local`; never paste passwords in chat or source files.
+
+- `DATABASE_URL_READONLY`: existing `aquamazone_app_read` connection used by the dashboard.
+- `DATABASE_URL_INTAKE`: `aquamazone_intake` for authenticated manual enquiry creation.
+- `DATABASE_URL_ALERTS`: `aquamazone_alert_worker` for queue dispatch.
+
+Only the private admin form writes inquiries; the public reservation planner still sends WhatsApp enquiries without creating records or claiming equipment. **Manual intake does not check real-time capacity or confirm a booking.** Holiday/weekday enquiries currently need manual follow-up because the existing standard-weekend validation applies.
+
+### Configure alert providers
+
+The alert sender in `lib/notifications/dispatch.ts` supports these provider settings, all server-only:
+
+**Email (Resend):** `RESEND_API_KEY`, `ALERT_EMAIL_FROM` (verified sender/domain), `ALERT_EMAIL_TO` (administrator inbox). Emails use a stable idempotency key to reduce duplicate sends.
+
+**WhatsApp (Meta Cloud API):** `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_ADMIN_TO` (administrator's WhatsApp number in international digits, no plus), `WHATSAPP_ALERT_TEMPLATE_NAME`, `WHATSAPP_ALERT_TEMPLATE_LANGUAGE=fr`. You must set up a supported Meta WhatsApp Business Platform account and an approved **utility** template with exactly two body parameters: reservation reference and event/status. Ordinary WhatsApp links and the standard WhatsApp Business app do not supply this API by themselves.
+
+**Background dispatch:** Deploy `GET /api/internal/alerts/dispatch` behind a trusted scheduler that supplies `Authorization: Bearer <ALERT_CRON_SECRET>` (the script generates a secret locally). A scheduler is **not** installed by this code. The route claims at most five jobs per invocation and returns no customer details. For prompt alerts use a compatible production scheduler at an appropriate cadence, with a robust WAF/rate limit. Ensure the same credentials and schedule are configured in the deployment, not just on a laptop.
+
+**Real notification delivery is NOT active until the providers, secure database worker connection and scheduler are configured and tested end to end.** Trigger creation and database queueing work independently of providers. Never claim a notification was delivered solely because a provider accepted an API request.
+
+### What still requires testing and hardening
+
+- Live production build and admin login smoke tests (desktop/mobile).
+- Administrator intake from the dashboard → database audit event → both outbox jobs, using test data in an isolated test environment.
+- Provider delivery/retry integration; Meta template approval and WhatsApp delivery webhooks; Resend delivery feedback.
+- Hosted recurring scheduler, error monitoring and alerts for undelivered/failed jobs.
+- Stronger administrator authentication (MFA, login controls and session revocation).
+- Customer OTP, transactional capacity allocation, MTN MoMo verification, and public booking creation. **Unverified enquiries are NOT reservations confirmed or paid.**
