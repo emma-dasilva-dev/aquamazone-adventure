@@ -63,7 +63,8 @@ export default function AquamazoneAssistant({lang}:{lang:Lang}) {
   useEffect(()=>{if(open){scrollRef.current?.scrollTo({top:scrollRef.current.scrollHeight,behavior:'smooth'});}},[messages,open]);
   useEffect(()=>{
     if(!open)return;
-    inputRef.current?.focus();
+    // Opening the chat should not summon the iOS keyboard or trigger Safari focus zoom.
+    if (window.matchMedia('(min-width: 601px)').matches) inputRef.current?.focus();
     const handleKey=(event:KeyboardEvent)=>{
       if(event.key==='Escape'){setOpen(false);launcherRef.current?.focus();}
       if(event.key==='Tab' && panelRef.current){
@@ -76,6 +77,13 @@ export default function AquamazoneAssistant({lang}:{lang:Lang}) {
     };
     document.addEventListener('keydown',handleKey);
     return()=>document.removeEventListener('keydown',handleKey);
+  },[open]);
+
+  useEffect(()=>{
+    if(!open || !window.matchMedia('(max-width: 600px)').matches)return;
+    const oldOverflow=document.body.style.overflow;
+    document.body.style.overflow='hidden';
+    return ()=>{document.body.style.overflow=oldOverflow;};
   },[open]);
 
   const send=async(text:string)=>{
@@ -99,7 +107,8 @@ export default function AquamazoneAssistant({lang}:{lang:Lang}) {
     } finally {
       pendingRef.current=false;
       setPending(false);
-      inputRef.current?.focus();
+      // Keep mobile keyboard behavior under the visitor's control.
+      if (window.matchMedia('(min-width: 601px)').matches) inputRef.current?.focus();
     }
   };
   const submit=(event:FormEvent<HTMLFormElement>)=>{event.preventDefault();void send(draft);};
