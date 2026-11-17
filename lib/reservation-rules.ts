@@ -51,6 +51,44 @@ export function isNormalOpeningDay(date: string): boolean {
   const weekday = new Date(date + 'T00:00:00Z').getUTCDay();
   return weekday === 0 || weekday === 6;
 }
+/**
+ * Public online enquiry calendar: only the NEXT weekend, opening each Monday.
+ * Benin local time is authoritative, including the 22:00 cutoffs.
+ * This is NOT a capacity check or a payment authorization.
+ */
+export type BookingWindowResult =
+  | {ok:true; saturday:string; sunday:string}
+  | {ok:false; code:'booking_closed'|'outside_booking_weekend'|'saturday_cutoff'|'sunday_cutoff'; saturday:string; sunday:string};
+
+export function bookingWindow(now:Date=new Date()):{saturday:string;sunday:string;weekday:number;hour:number;minute:number}{
+  const parts=new Intl.DateTimeFormat('en-GB',{
+    timeZone:'Africa/Porto-Novo',year:'numeric',month:'2-digit',day:'2-digit',
+    hour:'2-digit',minute:'2-digit',hourCycle:'h23'
+  }).formatToParts(now);
+  const value=(key:string)=>parts.find(p=>p.type===key)?.value??'';
+  const today=`${value('year')}-${value('month')}-${value('day')}`;
+  const local=new Date(today+'T00:00:00Z');
+  const weekday=local.getUTCDay();
+  // Sunday belongs to a closed booking window. The next booking week begins Monday.
+  const untilSaturday=(6-weekday+7)%7||7;
+  local.setUTCDate(local.getUTCDate()+untilSaturday);
+  const saturday=local.toISOString().slice(0,10);
+  local.setUTCDate(local.getUTCDate()+1);
+  return {saturday,sunday:local.toISOString().slice(0,10),weekday,
+    hour:Number(value('hour')),minute:Number(value('minute'))};
+}
+export function checkBookingWindow(date:string,now:Date=new Date()):BookingWindowResult{
+  const window=bookingWindow(now);
+  const dates={saturday:window.saturday,sunday:window.sunday};
+  if(window.weekday===0||(window.weekday===6&&window.hour>=22))
+    return {ok:false,code:'booking_closed',...dates};
+  if(date!==window.saturday&&date!==window.sunday)
+    return {ok:false,code:'outside_booking_weekend',...dates};
+  if(date===window.saturday&&(window.weekday===6||window.weekday===5&&window.hour>=22))
+    return {ok:false,code:'saturday_cutoff',...dates};
+  return {ok:true,...dates};
+}
+
 export type ValidationResult =
   | { ok: true; reservation: ReservationRequest; quote: ReservationQuote }
   | { ok: false; code: string; message: string };
@@ -65,10 +103,15 @@ export function validateReservation(input: unknown, now: Date = new Date()): Val
   const experience = obj.experience as ReservationId;
   if (typeof obj.date !== 'string' || !isValidCalendarDate(obj.date))
     return error('invalid_date','Please choose a valid date.');
-  if (obj.date < nextBookableDay(now))
-    return error('too_soon','Same-day or past-date enquiries are unavailable.');
   if (!isNormalOpeningDay(obj.date))
-    return error('special_day','For weekdays or public holidays, please contact the team directly.');
+    return error('special_day','Weekday visits require advance coordination through WhatsApp.');
+  const window=checkBookingWindow(obj.date,now);
+  if(!window.ok) return error(window.code,{
+    booking_closed:'Online enquiries reopen Monday for the next weekend.',
+    outside_booking_weekend:'Please choose a date in the upcoming weekend.',
+    saturday_cutoff:'Saturday bookings close Friday at 22:00, Benin time.',
+    sunday_cutoff:'Sunday bookings close Saturday at 22:00, Benin time.'
+  }[window.code]);
   if (typeof obj.time !== 'string' || !(RESERVATION_SLOTS as readonly string[]).includes(obj.time))
     return error('invalid_time','Choose a displayed time slot.');
   if (!Number.isInteger(obj.adults) || !Number.isInteger(obj.children) || (obj.adults as number) < 0 || (obj.children as number) < 0)
