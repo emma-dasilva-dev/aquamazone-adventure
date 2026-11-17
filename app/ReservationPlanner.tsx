@@ -41,6 +41,8 @@ export default function ReservationPlanner({lang}:{lang:Lang}){
  const [adults,setAdults]=useState(2);
  const [children,setChildren]=useState(0);
  const [choice,setChoice]=useState<'canoe'|'pedalo'>('canoe');
+ const [checking,setChecking]=useState(false);
+ const [serverError,setServerError]=useState('');
  const selected=options.find(o=>o.id===id)!;
  const count=adults+children;
  const dateValid=date>=nextDay()&&isWeekend(date);
@@ -49,29 +51,47 @@ export default function ReservationPlanner({lang}:{lang:Lang}){
  const okay=dateValid&&groupValid&&Boolean(time);
  const activityLabel=selected[lang];
  const text=lang==='fr'?{
-  eyebrow:'09 / PRÉPARER UNE VISITE',heading:<>Votre prochaine aventure <em>commence ici.</em></>,desc:'Composez votre visite en quelques étapes. Notre équipe confirmera ensuite les disponibilités et les modalités.',kind:'CHOISIR UNE EXPÉRIENCE',activity:'Activité',pack:'Forfait',date:'DATE SOUHAITÉE',time:'HEURE SOUHAITÉE',people:'PARTICIPANTS',adult:'Adultes',child:'Enfants de moins de 12 ans',choose:'ACTIVITÉ AU CHOIX',canoe:'Canoë simple',pedalo:'Pédalo simple',summary:'RÉCAPITULATIF',price:'Estimation',unknown:'Tarif à confirmer',cross:'Traversée aller-retour incluse',crossSeparate:'Traversée aller-retour ajoutée au tarif',contact:'Envoyer ma demande sur WhatsApp',notice:'Ceci est une demande, pas une réservation confirmée. Aucun paiement n’est effectué sur ce site.',validation:'Choisissez un samedi ou un dimanche à partir de demain et respectez le nombre de participants du forfait.',weekday:'Pour les jours fériés et les groupes en semaine, contactez directement notre équipe.',costNote:'Les tarifs sont indicatifs selon le choix et la composition du groupe. Les disponibilités restent à confirmer.',help:'Informations et réservation : +229 01 54 28 44 44'
+  eyebrow:'09 / PRÉPARER UNE VISITE',heading:<>Votre prochaine aventure <em>commence ici.</em></>,desc:'Composez votre visite en quelques étapes. Notre équipe confirmera ensuite les disponibilités et les modalités.',kind:'CHOISIR UNE EXPÉRIENCE',activity:'Activité',pack:'Forfait',date:'DATE SOUHAITÉE',time:'HEURE SOUHAITÉE',people:'PARTICIPANTS',adult:'Adultes',child:'Enfants de moins de 12 ans',choose:'ACTIVITÉ AU CHOIX',canoe:'Canoë simple',pedalo:'Pédalo simple',summary:'RÉCAPITULATIF',price:'Estimation',unknown:'Tarif à confirmer',cross:'Traversée aller-retour incluse',crossSeparate:'Traversée aller-retour ajoutée au tarif',contact:'Envoyer ma demande sur WhatsApp',notice:'Ceci est une demande, pas une réservation confirmée. Aucun paiement n’est effectué sur ce site.',serverError:'Impossible de vérifier votre demande pour le moment. Réessayez ou contactez notre équipe directement.',validation:'Choisissez un samedi ou un dimanche à partir de demain et respectez le nombre de participants du forfait.',weekday:'Pour les jours fériés et les groupes en semaine, contactez directement notre équipe.',costNote:'Les tarifs sont indicatifs selon le choix et la composition du groupe. Les disponibilités restent à confirmer.',help:'Informations et réservation : +229 01 54 28 44 44'
  }:{
-  eyebrow:'09 / PLAN A VISIT',heading:<>Your next adventure <em>starts here.</em></>,desc:'Plan your visit in a few steps. Our team will confirm availability and arrangements.',kind:'CHOOSE AN EXPERIENCE',activity:'Activity',pack:'Package',date:'PREFERRED DATE',time:'PREFERRED TIME',people:'GUESTS',adult:'Adults',child:'Children under 12',choose:'CHOOSE ONE ACTIVITY',canoe:'Single canoe',pedalo:'Single pedal boat',summary:'YOUR SUMMARY',price:'Estimate',unknown:'Price to be confirmed',cross:'Return crossing included',crossSeparate:'Return crossing added to price',contact:'Send enquiry on WhatsApp',notice:'This is an enquiry, not a confirmed booking. No payment is collected on this website.',validation:'Select a Saturday or Sunday from tomorrow onward and match the package guest requirements.',weekday:'For public holidays and weekday groups, please contact our team directly.',costNote:'Prices are estimates based on your choices. Availability remains subject to confirmation.',help:'Information and enquiries: +229 01 54 28 44 44'
+  eyebrow:'09 / PLAN A VISIT',heading:<>Your next adventure <em>starts here.</em></>,desc:'Plan your visit in a few steps. Our team will confirm availability and arrangements.',kind:'CHOOSE AN EXPERIENCE',activity:'Activity',pack:'Package',date:'PREFERRED DATE',time:'PREFERRED TIME',people:'GUESTS',adult:'Adults',child:'Children under 12',choose:'CHOOSE ONE ACTIVITY',canoe:'Single canoe',pedalo:'Single pedal boat',summary:'YOUR SUMMARY',price:'Estimate',unknown:'Price to be confirmed',cross:'Return crossing included',crossSeparate:'Return crossing added to price',contact:'Send enquiry on WhatsApp',notice:'This is an enquiry, not a confirmed booking. No payment is collected on this website.',serverError:'We could not validate your request right now. Please try again or contact our team directly.',validation:'Select a Saturday or Sunday from tomorrow onward and match the package guest requirements.',weekday:'For public holidays and weekday groups, please contact our team directly.',costNote:'Prices are estimates based on your choices. Availability remains subject to confirmation.',help:'Information and enquiries: +229 01 54 28 44 44'
  };
- const onRequest=()=>{
-  if(!okay)return;
-  const lines=lang==='fr'?[
-    'Bonjour AQUAMAZONE, je souhaite demander une réservation.',
-    'Expérience : '+activityLabel,
-    'Date : '+date, 'Heure souhaitée : '+time,
-    'Adultes : '+adults,'Enfants (<12 ans) : '+children,
-    ...(id==='glele'?['Activité choisie : '+(choice==='canoe'?'Canoë simple':'Pédalo simple')]:[]),
-    'Estimation affichée : '+(quote?format(quote.total):'À confirmer'),
-    'Merci de confirmer les disponibilités, le prix final et les étapes de réservation.'
-  ]:[
-    'Hello AQUAMAZONE, I would like to enquire about a booking.',
-    'Experience: '+activityLabel,'Date: '+date,'Preferred time: '+time,
-    'Adults: '+adults,'Children (under 12): '+children,
-    ...(id==='glele'?['Chosen activity: '+(choice==='canoe'?'Single canoe':'Single pedal boat')]:[]),
-    'Displayed estimate: '+(quote?format(quote.total):'To be confirmed'),
-    'Please confirm availability, final pricing and booking details.'
-  ];
-  window.open(WA+'?text='+encodeURIComponent(lines.join('\n')),'_blank','noopener,noreferrer');
+ const onRequest=async()=>{
+  if(!okay || checking)return;
+  setChecking(true);
+  setServerError('');
+  try {
+   const response=await fetch('/api/reservation/quote',{
+     method:'POST',
+     headers:{'Content-Type':'application/json'},
+     body:JSON.stringify({experience:id,date,time,adults,children,...(id==='glele'?{choice}:{})})
+   });
+   const result=await response.json() as {
+     ok:boolean;code?:string;
+     quote?:{total:number|null;bookingConfirmed:false;paymentCollected:false;availabilityChecked:false};
+   };
+   if(!response.ok||!result.ok||!result.quote)throw new Error(result.code||'invalid_response');
+   const validated=result.quote;
+   const lines=lang==='fr'?[
+     'Bonjour AQUAMAZONE, je souhaite demander une réservation.',
+     'Expérience : '+activityLabel,
+     'Date : '+date,'Heure souhaitée : '+time,
+     'Adultes : '+adults,'Enfants (<12 ans) : '+children,
+     ...(id==='glele'?['Activité choisie : '+(choice==='canoe'?'Canoë simple':'Pédalo simple')]:[]),
+     'Estimation indicative : '+(validated.total===null?'À confirmer':format(validated.total)),
+     'Ceci est une demande non confirmée. Merci de vérifier la disponibilité et le prix final.'
+   ]:[
+     'Hello AQUAMAZONE, I would like to enquire about a booking.',
+     'Experience: '+activityLabel,'Date: '+date,'Preferred time: '+time,
+     'Adults: '+adults,'Children (under 12): '+children,
+     ...(id==='glele'?['Chosen activity: '+(choice==='canoe'?'Single canoe':'Single pedal boat')]:[]),
+     'Indicative estimate: '+(validated.total===null?'To be confirmed':format(validated.total)),
+     'This is an unconfirmed enquiry. Please verify availability and final pricing.'
+   ];
+   // Navigate in the current tab to avoid mobile popup blocking after fetch.
+   window.location.assign(WA+'?text='+encodeURIComponent(lines.join('\\n')));
+  } catch {
+   setServerError(text.serverError);
+  } finally {setChecking(false);}
  };
  const updateCount=(type:'adult'|'child',change:number)=>{
   if(type==='adult')setAdults(n=>Math.min(20,Math.max(0,n+change)));
@@ -96,7 +116,8 @@ export default function ReservationPlanner({lang}:{lang:Lang}){
      <div className="reservation-v15-total"><span>{text.price}</span><strong>{quote?format(quote.total):text.unknown}</strong><small>{selected.kind==='package'?text.cross:text.crossSeparate}</small></div>
      <p className="reservation-v15-hint">{text.costNote}</p>
      {!okay&&<p className="reservation-v15-error" role="status">{text.validation}</p>}
-     <button className="reservation-v15-cta" type="button" onClick={onRequest} disabled={!okay}>{text.contact}<ArrowUpRight size={19}/></button>
+     {serverError&&<p className="reservation-v15-error" role="alert">{serverError} <a href={WA} target="_blank" rel="noopener noreferrer">WhatsApp</a></p>}
+     <button className="reservation-v15-cta" type="button" onClick={onRequest} disabled={!okay||checking}>{checking?(lang==='fr'?'Vérification…':'Checking…'):text.contact}<ArrowUpRight size={19}/></button>
      <p className="reservation-v15-disclaimer">{text.notice}</p>
     </aside>
    </div>
