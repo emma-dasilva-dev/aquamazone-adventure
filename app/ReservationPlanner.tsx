@@ -1,0 +1,106 @@
+'use client';
+
+import { useMemo, useState } from 'react';
+import { ArrowUpRight, CalendarDays, Clock3, Minus, Plus, UsersRound } from 'lucide-react';
+
+type Lang='fr'|'en';
+type Option={id:string;fr:string;en:string;kind:'activity'|'package';duration?:string;note?:string};
+const options:Option[]=[
+ {id:'pedalo',fr:'Pédalo',en:'Pedal boat',kind:'activity',duration:'30 min'},
+ {id:'canoe',fr:'Canoë / Kayak',en:'Canoe / Kayak',kind:'activity',duration:'30 min'},
+ {id:'paddle',fr:'Paddle / Stand Up',en:'Stand-up paddle',kind:'activity',duration:'30 min'},
+ {id:'waterball',fr:'Bulle gonflable / Water Ball',en:'Inflatable Water Ball',kind:'activity',duration:'20 min'},
+ {id:'pedalboat',fr:'Bateau à pédales',en:'Pedal-powered boat',kind:'activity',duration:'30 min'},
+ {id:'lake',fr:'Balade sur le lac',en:'Lake outing',kind:'activity'},
+ {id:'mangrove',fr:'Découverte des mangroves',en:'Mangrove discovery',kind:'activity'},
+ {id:'glele',fr:'GLÈLÈ — Solo',en:'GLÈLÈ — Solo',kind:'package'},
+ {id:'guezo',fr:'GUÉZO — Couple',en:'GUÉZO — Couple',kind:'package'},
+ {id:'toffa',fr:'TOFFA — Famille',en:'TOFFA — Family',kind:'package'},
+ {id:'behanzin',fr:'BÉHANZIN — Groupe',en:'BÉHANZIN — Group',kind:'package'}
+];
+const slots=['12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00'];
+const WA='https://wa.me/2290154284444';
+const format=(n:number)=>new Intl.NumberFormat('fr-FR').format(n)+' FCFA';
+function localDate(d:Date){return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');}
+function nextDay(){const d=new Date();d.setDate(d.getDate()+1);return localDate(d);}
+function isWeekend(date:string){if(!date)return false;const parts=date.split('-').map(Number);if(parts.length!==3)return false;const d=new Date(parts[0],parts[1]-1,parts[2]);return d.getFullYear()===parts[0]&&d.getMonth()===parts[1]-1&&d.getDate()===parts[2]&&[0,6].includes(d.getDay());}
+function estimate(id:string,adults:number,children:number){
+ const count=adults+children;
+ if(!count)return null;
+ if(id==='glele')return {total:adults*5000+children*3500,crossingIncluded:true};
+ if(id==='guezo')return adults===2&&children===0?{total:12000,crossingIncluded:true}:null;
+ if(id==='behanzin')return adults===4&&children===0?{total:36000,crossingIncluded:true}:null;
+ if(id==='toffa'||id==='lake'||id==='mangrove')return null;
+ if(id==='pedalboat')return count>=2&&count<=4?{total:count*(count===2?5000:3000)+adults*1500+children*500,crossingIncluded:false}:null;
+ return {total:count*3000+adults*1500+children*500,crossingIncluded:false};
+}
+export default function ReservationPlanner({lang}:{lang:Lang}){
+ const [id,setId]=useState('pedalo');
+ const [date,setDate]=useState('');
+ const [time,setTime]=useState('12:00');
+ const [adults,setAdults]=useState(2);
+ const [children,setChildren]=useState(0);
+ const [choice,setChoice]=useState<'canoe'|'pedalo'>('canoe');
+ const selected=options.find(o=>o.id===id)!;
+ const count=adults+children;
+ const dateValid=date>=nextDay()&&isWeekend(date);
+ const groupValid=count>0 && (id==='guezo'?adults===2&&children===0:id==='behanzin'?adults===4&&children===0:id==='toffa'?adults===2&&children===2:id==='glele'?count===1:id==='pedalboat'?count>=2&&count<=4:true);
+ const quote=useMemo(()=>estimate(id,adults,children),[id,adults,children]);
+ const okay=dateValid&&groupValid&&Boolean(time);
+ const activityLabel=selected[lang];
+ const text=lang==='fr'?{
+  eyebrow:'09 / PRÉPARER UNE VISITE',heading:<>Votre prochaine aventure <em>commence ici.</em></>,desc:'Composez votre visite en quelques étapes. Notre équipe confirmera ensuite les disponibilités et les modalités.',kind:'CHOISIR UNE EXPÉRIENCE',activity:'Activité',pack:'Forfait',date:'DATE SOUHAITÉE',time:'HEURE SOUHAITÉE',people:'PARTICIPANTS',adult:'Adultes',child:'Enfants de moins de 12 ans',choose:'ACTIVITÉ AU CHOIX',canoe:'Canoë simple',pedalo:'Pédalo simple',summary:'RÉCAPITULATIF',price:'Estimation',unknown:'Tarif à confirmer',cross:'Traversée aller-retour incluse',crossSeparate:'Traversée aller-retour ajoutée au tarif',contact:'Envoyer ma demande sur WhatsApp',notice:'Ceci est une demande, pas une réservation confirmée. Aucun paiement n’est effectué sur ce site.',validation:'Choisissez un samedi ou un dimanche à partir de demain et respectez le nombre de participants du forfait.',weekday:'Pour les jours fériés et les groupes en semaine, contactez directement notre équipe.',costNote:'Les tarifs sont indicatifs selon le choix et la composition du groupe. Les disponibilités restent à confirmer.',help:'Informations et réservation : +229 01 54 28 44 44'
+ }:{
+  eyebrow:'09 / PLAN A VISIT',heading:<>Your next adventure <em>starts here.</em></>,desc:'Plan your visit in a few steps. Our team will confirm availability and arrangements.',kind:'CHOOSE AN EXPERIENCE',activity:'Activity',pack:'Package',date:'PREFERRED DATE',time:'PREFERRED TIME',people:'GUESTS',adult:'Adults',child:'Children under 12',choose:'CHOOSE ONE ACTIVITY',canoe:'Single canoe',pedalo:'Single pedal boat',summary:'YOUR SUMMARY',price:'Estimate',unknown:'Price to be confirmed',cross:'Return crossing included',crossSeparate:'Return crossing added to price',contact:'Send enquiry on WhatsApp',notice:'This is an enquiry, not a confirmed booking. No payment is collected on this website.',validation:'Select a Saturday or Sunday from tomorrow onward and match the package guest requirements.',weekday:'For public holidays and weekday groups, please contact our team directly.',costNote:'Prices are estimates based on your choices. Availability remains subject to confirmation.',help:'Information and enquiries: +229 01 54 28 44 44'
+ };
+ const onRequest=()=>{
+  if(!okay)return;
+  const lines=lang==='fr'?[
+    'Bonjour AQUAMAZONE, je souhaite demander une réservation.',
+    'Expérience : '+activityLabel,
+    'Date : '+date, 'Heure souhaitée : '+time,
+    'Adultes : '+adults,'Enfants (<12 ans) : '+children,
+    ...(id==='glele'?['Activité choisie : '+(choice==='canoe'?'Canoë simple':'Pédalo simple')]:[]),
+    'Estimation affichée : '+(quote?format(quote.total):'À confirmer'),
+    'Merci de confirmer les disponibilités, le prix final et les étapes de réservation.'
+  ]:[
+    'Hello AQUAMAZONE, I would like to enquire about a booking.',
+    'Experience: '+activityLabel,'Date: '+date,'Preferred time: '+time,
+    'Adults: '+adults,'Children (under 12): '+children,
+    ...(id==='glele'?['Chosen activity: '+(choice==='canoe'?'Single canoe':'Single pedal boat')]:[]),
+    'Displayed estimate: '+(quote?format(quote.total):'To be confirmed'),
+    'Please confirm availability, final pricing and booking details.'
+  ];
+  window.open(WA+'?text='+encodeURIComponent(lines.join('\n')),'_blank','noopener,noreferrer');
+ };
+ const updateCount=(type:'adult'|'child',change:number)=>{
+  if(type==='adult')setAdults(n=>Math.min(20,Math.max(0,n+change)));
+  else setChildren(n=>Math.min(20,Math.max(0,n+change)));
+ };
+ return <section id="reservation" className="reservation-v15" aria-labelledby="reservation-title">
+  <div className="reservation-v15-shell">
+   <div className="reservation-v15-heading"><p>{text.eyebrow}</p><h2 id="reservation-title">{text.heading}</h2><span>{text.desc}</span></div>
+   <div className="reservation-v15-layout">
+    <div className="reservation-v15-fields">
+     <fieldset><legend>{text.kind}</legend><div className="reservation-v15-categories">{(['activity','package'] as const).map(kind=><button key={kind} type="button" className={selected.kind===kind?'active':''} aria-pressed={selected.kind===kind} onClick={()=>{setId(kind==='activity'?'pedalo':'glele');setAdults(kind==='activity'?2:1);setChildren(0);}}>{kind==='activity'?text.activity:text.pack}</button>)}</div><div className="reservation-v15-options">{options.filter(o=>o.kind===selected.kind).map(o=><button type="button" key={o.id} className={id===o.id?'selected':''} aria-pressed={id===o.id} onClick={()=>{setId(o.id);if(o.id==='glele'){setAdults(1);setChildren(0);}if(o.id==='guezo'){setAdults(2);setChildren(0);}if(o.id==='behanzin'){setAdults(4);setChildren(0);}if(o.id==='toffa'){setAdults(2);setChildren(2);}}}><span>{o[lang]}</span>{o.duration&&<small>{o.duration}</small>}</button>)}</div></fieldset>
+     <div className="reservation-v15-two">
+      <label>{text.date}<span><CalendarDays size={17} aria-hidden="true"/><input type="date" min={nextDay()} value={date} onChange={e=>setDate(e.target.value)} required/></span></label>
+      <label>{text.time}<span><Clock3 size={17} aria-hidden="true"/><select value={time} onChange={e=>setTime(e.target.value)}>{slots.map(slot=><option key={slot} value={slot}>{slot}</option>)}</select></span></label>
+     </div>
+     <fieldset className="reservation-v15-people"><legend>{text.people}</legend>{([['adult',text.adult,adults],['child',text.child,children]] as const).map(([type,label,n])=><div key={type} className="reservation-v15-counter"><span>{label}</span><div><button aria-label={(lang==='fr'?'Diminuer ':'Decrease ')+label} disabled={n===0} onClick={()=>updateCount(type,-1)} type="button"><Minus size={17}/></button><output aria-live="polite">{n}</output><button aria-label={(lang==='fr'?'Augmenter ':'Increase ')+label} disabled={n===20} onClick={()=>updateCount(type,1)} type="button"><Plus size={17}/></button></div></div>)}</fieldset>
+     {id==='glele'&&<fieldset className="reservation-v15-choice"><legend>{text.choose}</legend><label><input type="radio" name="gleleChoice" checked={choice==='canoe'} onChange={()=>setChoice('canoe')}/>{text.canoe}</label><label><input type="radio" name="gleleChoice" checked={choice==='pedalo'} onChange={()=>setChoice('pedalo')}/>{text.pedalo}</label></fieldset>}
+    </div>
+    <aside className="reservation-v15-summary" aria-label={text.summary}>
+     <div className="reservation-v15-summary-top"><span>{text.summary}</span><UsersRound size={22}/></div>
+     <h3>{activityLabel}</h3><div className="reservation-v15-summary-detail"><div><span>{text.date}</span><strong>{date||'—'}</strong></div><div><span>{text.time}</span><strong>{time}</strong></div><div><span>{text.people}</span><strong>{adults} + {children}</strong></div></div>
+     <div className="reservation-v15-total"><span>{text.price}</span><strong>{quote?format(quote.total):text.unknown}</strong><small>{selected.kind==='package'?text.cross:text.crossSeparate}</small></div>
+     <p className="reservation-v15-hint">{text.costNote}</p>
+     {!okay&&<p className="reservation-v15-error" role="status">{text.validation}</p>}
+     <button className="reservation-v15-cta" type="button" onClick={onRequest} disabled={!okay}>{text.contact}<ArrowUpRight size={19}/></button>
+     <p className="reservation-v15-disclaimer">{text.notice}</p>
+    </aside>
+   </div>
+   <div className="reservation-v15-bottom"><p>{text.weekday}</p><a href={WA} target="_blank" rel="noopener noreferrer">{text.help}<ArrowUpRight size={17}/></a></div>
+  </div>
+ </section>;
+}
