@@ -59,3 +59,34 @@ The reservation planner now requests server-side validation from `POST /api/rese
 - Unknown rates (TOFFA, lake and mangrove) explicitly returned as pending confirmation
 
 **This endpoint does not store customers or reservations, lock inventory, guarantee a time slot, process a payment, or issue a booking reference.** The response explicitly returns `bookingConfirmed: false`, `paymentCollected: false`, and `availabilityChecked: false`. WhatsApp remains the customer-to-staff channel. Do not treat quote responses as proof of availability or payment. A future version needs authenticated staff workflows and durable transactional storage.
+
+## V1.5C — PostgreSQL design and inventory foundation (not yet live)
+
+The PostgreSQL schema lives in `db/migrations/0001_reservations.sql`. It defines:
+- `reservation_assets`: actual labeled units for 2 single / 2 double pédalos, 4 single / 4 double canoes, and 2 pedal-powered boats with four seats each
+- `reservations`: visit date, guest breakdown, optional unverified contact fields, price and state transitions
+- `reservation_allocations`: a PostgreSQL GiST exclusion rule preventing simultaneous allocation of the **same physical unit** to overlapping times
+- `reservation_events`: append-only history table for future authorized staff actions
+
+`lib/inventory-allocation.ts` proposes equipment units from a supplied busy-asset snapshot. It treats multi-activity packages and activities with unverified equipment capacity as **manual review**. It supports fixed 30-minute windows for the modeled equipment. The exclusion constraint—not the in-memory planner—is the concurrency safety boundary.
+
+### Run inventory tests
+
+With Node.js 22+ (Node 24 recommended):
+
+```bash
+npm run test:inventory
+```
+
+### Critical next setup
+
+**The database is not provisioned, connected or migrated by these GitHub commits.** There is no database client dependency in the app yet and no endpoint creates bookings. Do not claim the site checks live availability. The existing quote API and WhatsApp flow remain unchanged.
+
+Before enabling bookings:
+1. Provision a private PostgreSQL database with encrypted connections and backups, configure separate migration/runtime users, and apply the migration on the intended database.
+2. Create a server-only database connection (never expose the connection string to the browser). Add connection pooling and a proper transactional reservation workflow.
+3. Within one transaction, select available equipment, insert the reservation and its allocations, and handle exclusion conflicts gracefully. Release allocations on cancellation/expiration; set bounded hold expiry and verify staff payments before confirmation.
+4. Verify real-world inventory, operating restrictions, duration/sequence of each bundled activity, identity/OTP rules, staff roles and cancellation policies with the operator.
+5. Only after the above, expose authenticated staff administration and a customer reservation endpoint. Never report a booking as confirmed or paid without an audited authorized action.
+
+No MTN MoMo transaction or booking confirmation occurs in V1.5C.
