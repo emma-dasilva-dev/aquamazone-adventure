@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { timingSafeEqual } from 'node:crypto';
-import { dispatchAlerts } from '../../../../lib/notifications/dispatch';
+import { dispatchAlerts } from '../../../../../lib/notifications/dispatch';
 
 export const runtime='nodejs';
 export const dynamic='force-dynamic';
