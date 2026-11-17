@@ -16,7 +16,9 @@ const content = {
     send:'Envoyer',
     close:'Fermer',
     open:'Ouvrir l’assistant',
-    helper:'Réponses IA fondées sur les informations officielles. Aucune réservation ni paiement dans ce chat.',
+    helper:'Informations officielles uniquement. Aucune réservation ni paiement dans ce chat.',
+    guideStatus:'Mode informations vérifiées',
+    aiStatus:'Assistant IA actif',
     fallback:'Je ne peux pas confirmer cette information pour le moment. Écrivez-nous sur WhatsApp au +229 01 54 28 44 44.',
     handoff:'Contacter notre équipe',
     handoffLabel:'Une question plus précise ?',
@@ -32,7 +34,9 @@ const content = {
     send:'Send',
     close:'Close',
     open:'Open assistant',
-    helper:'AI answers based on official business information. No bookings or payments in this chat.',
+    helper:'Official information only. No bookings or payments in this chat.',
+    guideStatus:'Verified information mode',
+    aiStatus:'Live AI assistant',
     fallback:'I cannot confirm that information right now. Message us on WhatsApp at +229 01 54 28 44 44.',
     handoff:'Contact our team',
     handoffLabel:'Need more details?',
@@ -45,6 +49,7 @@ export default function AquamazoneAssistant({lang}:{lang:Lang}) {
   const [open,setOpen]=useState(false);
   const [draft,setDraft]=useState('');
   const [pending,setPending]=useState(false);
+  const [mode,setMode]=useState<'unknown'|'ai'|'guide'>('unknown');
   const pendingRef=useRef(false);
   const [messages,setMessages]=useState<Message[]>([]);
   const scrollRef=useRef<HTMLDivElement>(null);
@@ -84,10 +89,12 @@ export default function AquamazoneAssistant({lang}:{lang:Lang}) {
     setDraft('');
     try {
       const response=await fetch('/api/assistant',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:question,language:lang,history})});
-      const data=await response.json() as {reply?:string;unavailable?:boolean};
+      const data=await response.json() as {reply?:string;unavailable?:boolean;mode?:'ai'|'guide'};
       if(typeof data.reply!=='string'||!data.reply.trim())throw new Error('No assistant reply');
+      setMode(data.mode==='ai'?'ai':'guide');
       setMessages(current=>[...current,{id:idRef.current++,role:'assistant',text:data.reply!.trim().slice(0,1800)}]);
     } catch {
+      setMode('guide');
       setMessages(current=>[...current,{id:idRef.current++,role:'assistant',text:t.fallback}]);
     } finally {
       pendingRef.current=false;
@@ -104,8 +111,8 @@ export default function AquamazoneAssistant({lang}:{lang:Lang}) {
     {open&&<aside id="assistant-v14-panel" ref={panelRef} className="assistant-v14-panel" role="dialog" aria-modal="false" aria-label={t.name}>
       <header className="assistant-v14-head">
         <span className="assistant-v14-mark" aria-hidden="true"><Waves size={21}/></span>
-        <div className="assistant-v14-head-copy"><strong>{t.name}</strong><span><i aria-hidden="true"/>{t.status}</span></div>
-        <span className="assistant-v14-preview">{t.badge}</span>
+        <div className="assistant-v14-head-copy"><strong>{t.name}</strong><span><i aria-hidden="true"/>{mode==='guide'?t.guideStatus:mode==='ai'?t.aiStatus:t.status}</span></div>
+        <span className="assistant-v14-preview">{mode==='guide'?(lang==='fr'?'GUIDE':'GUIDE'):t.badge}</span>
         <button type="button" className="assistant-v14-close" onClick={()=>{setOpen(false);launcherRef.current?.focus();}} aria-label={t.close}><X size={21}/></button>
       </header>
       <div className="assistant-v14-content" ref={scrollRef} role="log" aria-live="polite" aria-relevant="additions text">
