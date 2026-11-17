@@ -7,7 +7,7 @@ export const dynamic='force-dynamic';
 type ReservationRow={
   reference:string;experience:string;visit_date:string;requested_time:string;
   adults:number;children:number;quote_amount_xof:number|null;status:string;payment_status:string;
-  created_at:string;
+  created_at:string;contact_name:string|null;contact_phone:string|null;
 };
 type AlertRow={id:string;event_type:string;channel:string;status:string;attempt_count:number;created_at:string;reference:string};
 const dateTime=(value:string)=>{const d=new Date(value);return isNaN(d.getTime())?value:new Intl.DateTimeFormat('fr-FR',{timeZone:'Africa/Porto-Novo',dateStyle:'medium',timeStyle:'short'}).format(d);};
@@ -23,8 +23,9 @@ const statusLabels:Record<string,string>={
 };
 const label=(value:string)=>statusLabels[value]||value.replaceAll('_',' ');
 
-export default async function AdminDashboard(){
+export default async function AdminDashboard({searchParams}:{searchParams:Promise<{intake?:string}>}){
   if(!await isAdminAuthenticated())redirect('/admin/login');
+  const notice=(await searchParams).intake;
   let reservations:ReservationRow[]=[];
   let alerts:AlertRow[]=[];
   let total=0,pending=0,confirmed=0,failedAlerts=0;
@@ -40,7 +41,7 @@ export default async function AdminDashboard(){
         COUNT(*) FILTER (WHERE status='confirmed')::integer AS confirmed
         FROM reservations`,
       sql`SELECT reference,experience,visit_date::text,requested_time::text,adults,children,
-        quote_amount_xof,status,payment_status,created_at::text
+        quote_amount_xof,status,payment_status,contact_name,contact_phone,created_at::text
         FROM reservations ORDER BY created_at DESC LIMIT 40`,
       sql`SELECT o.id::text,o.event_type,o.channel,o.status,o.attempt_count,o.created_at::text,
         r.reference FROM reservation_notification_outbox o
@@ -61,7 +62,7 @@ export default async function AdminDashboard(){
     </header>
     <div className="az-admin-head">
       <div><p>VUE D'ENSEMBLE</p><h1>Réservations</h1><p>Demandes, paiements et alertes — une seule interface.</p></div>
-      <span className="az-admin-status">Données de la base Neon · lecture seule</span>
+      <span className="az-admin-status">Données synchronisées depuis Neon</span>
     </div>
     {databaseError?<div className="az-admin-panel"><p className="az-admin-empty" role="alert">La base de données ou les tables d'alertes sont indisponibles. Vérifiez la configuration et la migration 0003.</p></div>:<>
       <section className="az-admin-stats" aria-label="Statistiques">
@@ -70,12 +71,37 @@ export default async function AdminDashboard(){
         <div className="az-admin-stat"><small>Confirmées</small><strong>{confirmed}</strong></div>
         <div className="az-admin-stat"><small>Alertes en échec (40 dernières)</small><strong>{failedAlerts}</strong></div>
       </section>
+      <section className="az-admin-panel" aria-labelledby="az-admin-intake-title">
+        <div className="az-admin-panel-header"><h2 id="az-admin-intake-title">Enregistrer une demande WhatsApp</h2><p>Création d'une demande non confirmée uniquement</p></div>
+        <div className="az-admin-intake-content">
+          {notice==='created'&&<p className="az-admin-success" role="status">La demande a été enregistrée. Des notifications email et WhatsApp ont été mises en attente dans la base.</p>}
+          {notice && notice!=='created'&&<p className="az-admin-form-error" role="alert">{notice==='not_configured'?'La connexion privée de saisie n’est pas configurée.':notice==='rules'?'Date, activité ou nombre de participants invalide. Vérifiez les règles des forfaits et les jours d’ouverture.':'Enregistrement impossible. Vérifiez les coordonnées et la connexion.'}</p>}
+          <form action="/api/admin/reservations" method="post" className="az-admin-intake-form">
+            <label>Nom du client<input name="contactName" required maxLength={100} autoComplete="off" placeholder="Nom et prénom"/></label>
+            <label>Téléphone du client<input name="contactPhone" required maxLength={24} autoComplete="off" inputMode="tel" placeholder="+229 ..."/></label>
+            <label>Expérience<select name="experience" defaultValue="pedalo" required>
+              <option value="pedalo">Pédalo</option><option value="canoe">Canoë / Kayak</option>
+              <option value="paddle">Paddle</option><option value="waterball">Bulle gonflable</option>
+              <option value="pedalboat">Bateau à pédales</option>
+              <option value="lake">Balade sur le lac</option><option value="mangrove">Mangroves</option>
+              <option value="glele">GLÈLÈ — Solo</option><option value="guezo">GUÉZO — Couple</option>
+              <option value="toffa">TOFFA — Famille</option><option value="behanzin">BÉHANZIN — Groupe</option>
+            </select></label>
+            <label>Date de visite<input name="date" type="date" required/></label>
+            <label>Heure de départ<select name="time" defaultValue="12:00">{['12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00'].map(x=><option value={x} key={x}>{x}</option>)}</select></label>
+            <label>Adultes<input type="number" name="adults" min={0} max={20} defaultValue={2} required/></label>
+            <label>Enfants de moins de 12 ans<input type="number" name="children" min={0} max={20} defaultValue={0} required/></label>
+            <label>Pour GLÈLÈ : une seule activité<select name="choice" defaultValue="canoe"><option value="canoe">Canoë simple</option><option value="pedalo">Pédalo simple</option></select></label>
+            <div className="az-admin-form-footer"><p>Le client et son paiement restent non vérifiés. Aucune place n'est bloquée et aucun encaissement n'est enregistré.</p><button type="submit">Enregistrer la demande ↗</button></div>
+          </form>
+        </div>
+      </section>
       <section className="az-admin-panel" aria-labelledby="az-admin-res-title">
         <div className="az-admin-panel-header"><h2 id="az-admin-res-title">Dernières réservations</h2><p>40 dernières demandes</p></div>
         {reservations.length===0?<p className="az-admin-empty">Aucune demande enregistrée. Les messages WhatsApp ne sont pas automatiquement importés.</p>:<div className="az-admin-scroll"><table className="az-admin-table">
-          <thead><tr><th>Référence</th><th>Expérience</th><th>Date / heure</th><th>Personnes</th><th>Montant</th><th>Réservation</th><th>Paiement</th></tr></thead>
+          <thead><tr><th>Référence</th><th>Client / téléphone</th><th>Expérience</th><th>Date / heure</th><th>Personnes</th><th>Montant</th><th>Réservation</th><th>Paiement</th></tr></thead>
           <tbody>{reservations.map(row=><tr key={row.reference}>
-            <td><strong>{row.reference}</strong></td><td>{row.experience.toUpperCase()}</td>
+            <td><strong>{row.reference}</strong></td><td>{row.contact_name||'—'}<br/><small>{row.contact_phone||'—'}</small></td><td>{row.experience.toUpperCase()}</td>
             <td>{dateOnly(row.visit_date)} · {row.requested_time.slice(0,5)}</td>
             <td>{Number(row.adults)+Number(row.children)}</td><td>{formatMoney(row.quote_amount_xof)}</td>
             <td><span className="az-admin-pill" data-status={row.status}>{label(row.status)}</span></td>
