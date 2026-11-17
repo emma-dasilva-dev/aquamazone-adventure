@@ -2,7 +2,7 @@ import { randomBytes } from 'node:crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { neon } from '@neondatabase/serverless';
 import { isAdminAuthenticated } from '../../../../lib/admin-auth';
-import { validateReservation } from '../../../../lib/reservation-rules';
+import { validateAdminExperienceSelection } from '../../../../lib/admin-experience-selection';
 
 export const runtime='nodejs';
 export const dynamic='force-dynamic';
@@ -35,26 +35,29 @@ export async function POST(request:NextRequest){
   const phone=String(form.get('contactPhone')||'').trim();
   if(name.length<2||name.length>100||/[\x00-\x1f\x7f]/.test(name)||
      !/^[+0-9 ()-]{8,24}$/.test(phone))return go(request,'invalid');
-  const input={
-    experience:form.get('experience'),
+  const selectionResult=validateAdminExperienceSelection({
+    activities:form.getAll('activities'),
+    package:String(form.get('package')??'').trim()||null,
+    choice:form.get('choice'),
     date:form.get('date'),
     time:form.get('time'),
     adults:Number(form.get('adults')),
-    children:Number(form.get('children')),
-    choice:form.get('choice')
-  };
-  const result=validateReservation(input);
-  if(!result.ok)return go(request,'rules');
-  const {reservation,quote}=result;
+    children:Number(form.get('children'))
+  });
+  if(!selectionResult.ok)return go(request,selectionResult.code==='empty'?'empty':'rules');
+  const {primary,selection,quoteAmount}=selectionResult;
+  // The legacy experience column records the first selection; the structured
+  // JSON field is authoritative for full multi-activity or forfait details.
+  const structuredSelection=JSON.stringify(selection);
   // Random 128-bit reference; any uniqueness conflict fails closed and can be retried.
-  const reference='AQ-'+reservation.date.replaceAll('-','')+'-'+randomBytes(16).toString('hex').toUpperCase();
+  const reference='AQ-'+primary.date.replaceAll('-','')+'-'+randomBytes(16).toString('hex').toUpperCase();
   try{
     await db`INSERT INTO reservations
-      (reference,experience,experience_choice,visit_date,requested_time,adults,children,quote_amount_xof,contact_name,contact_phone)
+      (reference,experience,experience_choice,visit_date,requested_time,adults,children,quote_amount_xof,contact_name,contact_phone,experience_selection)
       VALUES (
-        ${reference},${reservation.experience},${reservation.choice??null},
-        ${reservation.date}::date,${reservation.time}::time,${reservation.adults},
-        ${reservation.children},${quote.total},${name},${phone}
+        ${reference},${primary.experience},${primary.choice??null},
+        ${primary.date}::date,${primary.time}::time,${primary.adults},
+        ${primary.children},${quoteAmount},${name},${phone},${structuredSelection}::jsonb
       )`;
     // PostgreSQL triggers write the audit event and BOTH alert jobs in the same transaction.
     // Do NOT confirm payment or allocate equipment during admin intake.
