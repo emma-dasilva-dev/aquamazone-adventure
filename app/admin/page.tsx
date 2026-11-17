@@ -12,6 +12,7 @@ type ReservationRow={
   experience_selection:{activities:string[];package:string|null;choice:string|null}|null;
 };
 type AlertRow={id:string;event_type:string;channel:string;status:string;attempt_count:number;created_at:string;reference:string};
+type CapacityUsageRow={visit_date:string;reservation_count:number;visitor_count:number};
 const dateTime=(value:string)=>{const d=new Date(value);return isNaN(d.getTime())?value:new Intl.DateTimeFormat('fr-FR',{timeZone:'Africa/Porto-Novo',dateStyle:'medium',timeStyle:'short'}).format(d);};
 const dateOnly=(value:string)=>{const date=String(value).slice(0,10);return /^\d{4}-\d{2}-\d{2}$/.test(date)?date:value;};
 const formatMoney=(value:number|null)=>value==null?'À confirmer':new Intl.NumberFormat('fr-FR').format(value)+' FCFA';
@@ -51,6 +52,7 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
   const notice=(await searchParams).intake;
   let reservations:ReservationRow[]=[];
   let alerts:AlertRow[]=[];
+  let usage:CapacityUsageRow[]=[];
   let total=0,pending=0,confirmed=0,failedAlerts=0;
   let capacity={dailyVisitors:70,dailyReservations:40,slotVisitors:10};
   let databaseError=false;
@@ -83,6 +85,19 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
       dailyReservations:Number(policies[0].daily_reservations),
       slotVisitors:Number(policies[0].slot_visitors)
     };
+    databaseStep='capacity_usage';
+    const dailyUsage=await sql`SELECT visit_date::text AS visit_date,
+      sum(reservation_count)::integer AS reservation_count,
+      sum(visitor_count)::integer AS visitor_count
+      FROM reservation_capacity_usage
+      WHERE visit_date >= (now() AT TIME ZONE 'Africa/Porto-Novo')::date
+        AND visit_date <= (now() AT TIME ZONE 'Africa/Porto-Novo')::date + 14
+      GROUP BY visit_date ORDER BY visit_date`;
+    usage=dailyUsage.map(row=>({
+      visit_date:String(row.visit_date),
+      reservation_count:Number(row.reservation_count),
+      visitor_count:Number(row.visitor_count)
+    }));
     databaseStep='transform_results';
     total=Number(summary[0]?.total||0);
     pending=Number(summary[0]?.pending||0);
@@ -120,10 +135,19 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
           <div><small>Visiteurs / créneau</small><strong>{capacity.slotVisitors}</strong></div>
         </div>
         <p className="az-admin-capacity-note">
-          Ces plafonds sont enregistrés. Les demandes non confirmées sont suivies séparément et
-          ne réservent pas automatiquement de places. Le contrôle transactionnel sera activé
-          avant tout paiement ou réservation en ligne.
+          Plafonds appliqués dans la base aux réservations confirmées et aux retenues de paiement encore actives.
+          Les demandes non confirmées ne bloquent pas de places. Le paiement public reste désactivé.
         </p>
+        <div className="az-admin-capacity-usage">
+          <h3>Occupation à venir — 14 jours</h3>
+          {usage.length===0?<p>Aucune réservation confirmée ni retenue active sur cette période.</p>:
+            <div className="az-admin-capacity-usage-list">{usage.map(day=>
+              <div key={day.visit_date}>
+                <strong>{day.visit_date}</strong>
+                <span>{day.visitor_count} / {capacity.dailyVisitors} visiteurs</span>
+                <span>{day.reservation_count} / {capacity.dailyReservations} réservations</span>
+              </div>)}</div>}
+        </div>
       </section>
       <section className="az-admin-panel" aria-labelledby="az-admin-intake-title">
         <div className="az-admin-panel-header"><h2 id="az-admin-intake-title">Enregistrer une demande WhatsApp</h2><p>Une demande en semaine ou pour aujourd'hui peut être enregistrée, sans confirmation de disponibilité</p></div>
