@@ -21,8 +21,7 @@ const options:Option[]=[
 const slots=['12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00'];
 const WA='https://wa.me/2290154284444';
 const format=(n:number)=>new Intl.NumberFormat('fr-FR').format(n)+' FCFA';
-function localDate(d:Date){return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');}
-function nextDay(){const d=new Date();d.setDate(d.getDate()+1);return localDate(d);}
+function nextDay(){const parts=new Intl.DateTimeFormat('en-GB',{timeZone:'Africa/Porto-Novo',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());const get=(type:string)=>parts.find(p=>p.type===type)?.value||'';const today=new Date(get('year')+'-'+get('month')+'-'+get('day')+'T00:00:00Z');today.setUTCDate(today.getUTCDate()+1);return today.toISOString().slice(0,10);}
 function isWeekend(date:string){if(!date)return false;const parts=date.split('-').map(Number);if(parts.length!==3)return false;const d=new Date(parts[0],parts[1]-1,parts[2]);return d.getFullYear()===parts[0]&&d.getMonth()===parts[1]-1&&d.getDate()===parts[2]&&[0,6].includes(d.getDay());}
 function estimate(id:string,adults:number,children:number){
  const count=adults+children;
@@ -88,7 +87,7 @@ export default function ReservationPlanner({lang}:{lang:Lang}){
      'This is an unconfirmed enquiry. Please verify availability and final pricing.'
    ];
    // Navigate in the current tab to avoid mobile popup blocking after fetch.
-   window.location.assign(WA+'?text='+encodeURIComponent(lines.join('\\n')));
+   window.location.assign(WA+'?text='+encodeURIComponent(lines.join('\n')));
   } catch {
    setServerError(text.serverError);
   } finally {setChecking(false);}
