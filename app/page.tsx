@@ -2,6 +2,7 @@
 import {useEffect,useState} from 'react';
 import ImmersiveGallery from './ImmersiveGallery';
 import AquamazoneAssistant from './AquamazoneAssistant';
+import ReservationPlanner from './ReservationPlanner';
 import {ArrowDown,ArrowUpRight,ArrowRight,Menu,X,Plus,Minus,MapPin,Clock,MessageCircle,Waves,ZoomIn} from 'lucide-react';
 
 type Lang='fr'|'en';
@@ -264,6 +265,7 @@ export default function Home(){
   </div>
  </div>
 </section>
+ <ReservationPlanner lang={lang}/>
  </main>
  <footer className="footer footer-v15" aria-label={lang==='fr'?'Pied de page':'Footer'}>
   <div className="footer-v15-inner">
