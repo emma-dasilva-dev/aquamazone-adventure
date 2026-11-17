@@ -95,7 +95,7 @@ export type ValidationResult =
 
 function error(code: string, message: string): ValidationResult { return { ok:false, code, message }; }
 
-export function validateReservation(input: unknown, now: Date = new Date()): ValidationResult {
+export function validateReservation(input: unknown, now: Date = new Date(), options: {manualIntake?:boolean} = {}): ValidationResult {
   if (!input || typeof input !== 'object' || Array.isArray(input)) return error('invalid_request','Invalid request.');
   const obj = input as Record<string,unknown>;
   if (typeof obj.experience !== 'string' || !(RESERVATION_IDS as readonly string[]).includes(obj.experience))
@@ -106,7 +106,7 @@ export function validateReservation(input: unknown, now: Date = new Date()): Val
   if (!isNormalOpeningDay(obj.date))
     return error('special_day','Weekday visits require advance coordination through WhatsApp.');
   const window=checkBookingWindow(obj.date,now);
-  if(!window.ok) return error(window.code,{
+  if(!options.manualIntake&&!window.ok) return error(window.code,{
     booking_closed:'Online enquiries reopen Monday for the next weekend.',
     outside_booking_weekend:'Please choose a date in the upcoming weekend.',
     saturday_cutoff:'Saturday bookings close Friday at 22:00, Benin time.',
