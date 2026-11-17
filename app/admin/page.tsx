@@ -8,7 +8,7 @@ export const dynamic='force-dynamic';
 type ReservationRow={
   reference:string;experience:string;visit_date:string;requested_time:string;
   adults:number;children:number;quote_amount_xof:number|null;status:string;payment_status:string;
-  created_at:string;contact_name:string|null;contact_phone:string|null;
+  created_at:string;expires_at:string|null;contact_name:string|null;contact_phone:string|null;
   experience_selection:{activities:string[];package:string|null;choice:string|null}|null;
 };
 type AlertRow={id:string;event_type:string;channel:string;status:string;attempt_count:number;created_at:string;reference:string};
@@ -47,9 +47,11 @@ const intakeErrorMessages:Record<string,string>={
   rules:'Vérifiez les activités, le forfait, la date et les participants.'
 };
 
-export default async function AdminDashboard({searchParams}:{searchParams:Promise<{intake?:string}>}){
+export default async function AdminDashboard({searchParams}:{searchParams:Promise<{intake?:string;hold?:string}>}){
   if(!await isAdminAuthenticated())redirect('/admin/login');
-  const notice=(await searchParams).intake;
+  const params=await searchParams;
+  const notice=params.intake;
+  const holdNotice=params.hold;
   let reservations:ReservationRow[]=[];
   let alerts:AlertRow[]=[];
   let usage:CapacityUsageRow[]=[];
@@ -69,7 +71,7 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
         FROM reservations`;
     databaseStep='reservations_list';
     const bookings=await sql`SELECT reference,experience,visit_date::text,requested_time::text,adults,children,
-        quote_amount_xof,status,payment_status,contact_name,contact_phone,experience_selection,created_at::text
+        quote_amount_xof,status,payment_status,contact_name,contact_phone,experience_selection,created_at::text,expires_at::text
         FROM reservations ORDER BY created_at DESC LIMIT 40`;
     databaseStep='notifications_list';
     const notifications=await sql`SELECT o.id::text,o.event_type,o.channel,o.status,o.attempt_count,o.created_at::text,
@@ -168,14 +170,34 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
       </section>
       <section className="az-admin-panel" aria-labelledby="az-admin-res-title">
         <div className="az-admin-panel-header"><h2 id="az-admin-res-title">Dernières réservations</h2><p>40 dernières demandes</p></div>
+        {holdNotice&&<p className={holdNotice==='created'?'az-admin-success':'az-admin-form-error'} role="status">
+          {holdNotice==='created'?'Retenue de 10 minutes créée. Aucun paiement n’a été demandé ni encaissé.':
+           holdNotice==='not_configured'?'La connexion Neon dédiée aux retenues n’est pas configurée (DATABASE_URL_HOLDS).':
+           holdNotice==='capacity'?'Le créneau est complet ou le matériel nécessaire est indisponible.':
+           holdNotice==='invalid'?'Référence de réservation invalide.':
+           'Impossible de créer la retenue. Vérifiez la date, le prix ou les conditions de cette expérience.'}
+        </p>}
         {reservations.length===0?<p className="az-admin-empty">Aucune demande enregistrée. Les messages WhatsApp ne sont pas automatiquement importés.</p>:<div className="az-admin-scroll"><table className="az-admin-table">
-          <thead><tr><th>Référence</th><th>Client / téléphone</th><th>Expérience</th><th>Date / heure</th><th>Personnes</th><th>Montant</th><th>Réservation</th><th>Paiement</th></tr></thead>
+          <thead><tr><th>Référence</th><th>Client / téléphone</th><th>Expérience</th><th>Date / heure</th><th>Personnes</th><th>Montant</th><th>Réservation</th><th>Paiement</th><th>Retenue interne</th></tr></thead>
           <tbody>{reservations.map(row=><tr key={row.reference}>
             <td><strong>{row.reference}</strong></td><td>{row.contact_name||'—'}<br/><small>{row.contact_phone||'—'}</small></td><td>{row.experience_selection ? <><strong>{row.experience_selection.package ? row.experience_selection.package.toUpperCase() : 'Sans forfait'}</strong><br/><small>{row.experience_selection.activities.length ? row.experience_selection.activities.map(x=>x.toUpperCase()).join(' · ') : 'Aucune activité ajoutée'}{row.experience_selection.package==='glele'&&row.experience_selection.choice ? ' · GLÈLÈ : '+row.experience_selection.choice.toUpperCase():''}</small></> : row.experience.toUpperCase()}</td>
             <td>{dateOnly(row.visit_date)} · {row.requested_time.slice(0,5)}</td>
             <td>{Number(row.adults)+Number(row.children)}</td><td>{formatMoney(row.quote_amount_xof)}</td>
             <td><span className="az-admin-pill" data-status={row.status}>{label(row.status)}</span></td>
             <td><span className="az-admin-pill" data-status={row.payment_status}>{label(row.payment_status)}</span></td>
+            <td>{row.status==='awaiting_payment'&&row.expires_at?
+              <span className="az-admin-hold-expiry">Retenue jusqu’au {dateTime(row.expires_at)}. Paiement non activé.</span>:
+              ['inquiry','pending_review'].includes(row.status)&&Boolean(row.quote_amount_xof)&&
+              (row.experience==='glele'&&Number(row.adults)+Number(row.children)===1||
+               ['canoe','pedalo'].includes(row.experience)&&Number(row.adults)+Number(row.children)<=2||
+               row.experience==='pedalboat'&&Number(row.adults)+Number(row.children)>=2&&Number(row.adults)+Number(row.children)<=4)&&
+              !(row.experience_selection&&(
+                row.experience_selection.activities.length>1||
+                Boolean(row.experience_selection.package&&row.experience_selection.activities.length)))?
+              <form action="/api/admin/reservations/hold" method="post">
+                <input type="hidden" name="reference" value={row.reference}/>
+                <button type="submit" className="az-admin-hold-action">Tester une retenue de 10 min</button>
+              </form>:<small>Non applicable</small>}</td>
           </tr>)}</tbody>
         </table></div>}
       </section>
@@ -191,6 +213,6 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
         </table></div>}
       </section>
     </>}
-    <p className="az-admin-note">Une demande reçue ne garantit ni disponibilité ni paiement. Seule une vérification indépendante du paiement permettra une confirmation ultérieure. Actualisez cette page pour voir les dernières données.</p>
+    <p className="az-admin-note">Une demande reçue ne garantit ni disponibilité ni paiement. Une retenue est temporaire et ne constitue pas une confirmation ; son expiration libère la capacité. Aucun paiement en ligne n’est actif. Actualisez cette page pour voir les dernières données.</p>
   </main>;
 }
