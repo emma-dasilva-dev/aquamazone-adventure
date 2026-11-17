@@ -19,7 +19,10 @@ const content = {
     helper:'Informations officielles uniquement. Aucune réservation ni paiement dans ce chat.',
     guideStatus:'Mode informations vérifiées',
     aiStatus:'Assistant IA actif',
-    fallback:'Je ne peux pas confirmer cette information pour le moment. Écrivez-nous sur WhatsApp au +229 01 54 28 44 44.',
+    fallback:'Le service de conversation est momentanément inaccessible sur cet appareil. Vérifiez la connexion ou réessayez. Vous pouvez aussi nous écrire sur WhatsApp.',
+    noKey:'Le mode IA n’est pas configuré sur ce serveur. Les informations essentielles restent disponibles via notre guide.',
+    providerError:'Le modèle IA ne répond pas actuellement sur ce serveur. Le guide peut répondre aux questions courantes.',
+    connectionError:'Impossible de joindre le service depuis ce téléphone. Vérifiez que vous utilisez la même adresse du site et rechargez la page.',
     handoff:'Contacter notre équipe',
     handoffLabel:'Une question plus précise ?',
     badge:'ASSISTANT',
@@ -37,7 +40,10 @@ const content = {
     helper:'Official information only. No bookings or payments in this chat.',
     guideStatus:'Verified information mode',
     aiStatus:'Live AI assistant',
-    fallback:'I cannot confirm that information right now. Message us on WhatsApp at +229 01 54 28 44 44.',
+    fallback:'Chat is temporarily unavailable on this device. Check your connection and try again, or contact us on WhatsApp.',
+    noKey:'Live AI is not configured on this server. Our information guide can still answer common questions.',
+    providerError:'The AI model is currently unavailable on this server. Our information guide can answer common questions.',
+    connectionError:'Unable to reach the service from this phone. Check that you are using the same website address and reload.',
     handoff:'Contact our team',
     handoffLabel:'Need more details?',
     badge:'ASSISTANT',
@@ -97,13 +103,16 @@ export default function AquamazoneAssistant({lang}:{lang:Lang}) {
     setDraft('');
     try {
       const response=await fetch('/api/assistant',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:question,language:lang,history})});
-      const data=await response.json() as {reply?:string;unavailable?:boolean;mode?:'ai'|'guide'};
+      const data=await response.json() as {reply?:string;unavailable?:boolean;mode?:'ai'|'guide';reason?:'no_api_key'|'provider_unavailable';error?:string};
+      if (!response.ok) throw new Error(data.error||'request_failed');
       if(typeof data.reply!=='string'||!data.reply.trim())throw new Error('No assistant reply');
       setMode(data.mode==='ai'?'ai':'guide');
-      setMessages(current=>[...current,{id:idRef.current++,role:'assistant',text:data.reply!.trim().slice(0,1800)}]);
-    } catch {
+      const explanation=data.reason==='no_api_key'?t.noKey:data.reason==='provider_unavailable'?t.providerError:'';
+      setMessages(current=>[...current,{id:idRef.current++,role:'assistant',text:data.reply!.trim().slice(0,1800)+(explanation?'\n\n'+explanation:'')}]);
+    } catch (error) {
       setMode('guide');
-      setMessages(current=>[...current,{id:idRef.current++,role:'assistant',text:t.fallback}]);
+      const isOriginError=error instanceof Error&&error.message==='origin_rejected';
+      setMessages(current=>[...current,{id:idRef.current++,role:'assistant',text:isOriginError?t.connectionError:t.fallback}]);
     } finally {
       pendingRef.current=false;
       setPending(false);
