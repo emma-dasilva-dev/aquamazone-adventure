@@ -37,10 +37,6 @@ function estimate(id:string,adults:number,children:number){
 export default function ReservationPlanner({lang}:{lang:Lang}){
  const [now,setNow]=useState<Date|null>(null);
  useEffect(()=>{const refresh=()=>setNow(new Date());refresh();const timer=setInterval(refresh,60000);return ()=>clearInterval(timer);},[]);
- const schedule=now?bookingWindow(now):null;
- const windowCheck=now?checkBookingWindow(date,now):null;
- const saturdayOpen=now?checkBookingWindow(schedule!.saturday,now).ok:false;
- const sundayOpen=now?checkBookingWindow(schedule!.sunday,now).ok:false;
  const [id,setId]=useState('pedalo');
  const [date,setDate]=useState('');
  const [time,setTime]=useState('12:00');
@@ -49,6 +45,10 @@ export default function ReservationPlanner({lang}:{lang:Lang}){
  const [choice,setChoice]=useState<'canoe'|'pedalo'>('canoe');
  const [checking,setChecking]=useState(false);
  const [serverError,setServerError]=useState('');
+ const schedule=now?bookingWindow(now):null;
+ const windowCheck=now?checkBookingWindow(date,now):null;
+ const saturdayOpen=now?checkBookingWindow(schedule!.saturday,now).ok:false;
+ const sundayOpen=now?checkBookingWindow(schedule!.sunday,now).ok:false;
  const selected=options.find(o=>o.id===id)!;
  const count=adults+children;
  const dateValid=Boolean(windowCheck?.ok);
