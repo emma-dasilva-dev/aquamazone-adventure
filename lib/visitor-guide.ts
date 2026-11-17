@@ -13,7 +13,7 @@ const topics: Topic[] = [
   { keys: ['jet ski','jetski'], priority: 12,
     fr: 'Le jet-ski est actuellement indisponible pour maintenance. Il ne peut pas être réservé.',
     en: 'Jet skiing is currently unavailable due to maintenance. It cannot be booked.' },
-  { keys: ['toffa'], priority: 11,
+  { keys: ['toffa','famille','family package'], priority: 11,
     fr: 'TOFFA est notre forfait famille pour 2 adultes et 2 enfants. Le tarif et les modalités exactes doivent être reconfirmés auprès de notre équipe sur WhatsApp avant réservation.',
     en: 'TOFFA is our family package for 2 adults and 2 children. Please confirm its current price and exact inclusions with our WhatsApp team before booking.' },
   { keys: ['glele','solo'], priority: 10,
@@ -46,10 +46,10 @@ const topics: Topic[] = [
   { keys: ['traversee','pirogue','crossing','boat transfer','transport sur le lac'], priority: 8,
     fr: 'La traversée aller-retour est à 1 500 FCFA par adulte et 500 FCFA par enfant de moins de 12 ans (12 ans et plus : tarif adulte). Elle est déjà incluse dans nos forfaits : pas de double paiement.',
     en: 'Return boat crossing is 1,500 FCFA per adult and 500 FCFA per child under 12 (ages 12+ pay adult rate). It is already included in our packages, with no double charge.' },
-  { keys: ['restaurant','manger','mange','repas','plat','poisson','boisson','food','eat','meal','menu','drink','grillade'], priority: 7,
+  { keys: ['restaurant','manger','mange','repas','plat','poisson','boisson','food','eat','meal','menu','drink','grillade','aloco','frites','carpe','braise','igname','accompagnement'], priority: 7,
     fr: 'Notre Restaurant & Bar propose du bar et de la carpe braisés, des brochettes de poulet, des accompagnements et des boissons fraîches. Merci de confirmer votre commande avant votre arrivée. Les prix des plats sont à demander à notre équipe.',
     en: 'Our Restaurant & Bar serves grilled sea bass and carp, chicken skewers, sides and cold drinks. Please confirm your order before arrival. Ask our team for menu prices.' },
-  { keys: ['horaire','heure','ouvert','ouverture','ferme','samedi','dimanche','jour ferie','open','opening','hours','weekend','closing'], priority: 7,
+  { keys: ['horaire','horaires','heure','ouvert','ouverture','ferme','samedi','dimanche','jour ferie','open','opening','hours','weekend','closing','a quelle heure'], priority: 7,
     fr: 'AQUAMAZONE est ouvert les samedis, dimanches et jours fériés de 11h à 18h. Les visites en semaine sont possibles sur réservation pour les groupes de 6 personnes minimum (4 activités par personne).',
     en: 'AQUAMAZONE is open Saturdays, Sundays and public holidays, 11am–6pm. Weekday visits can be arranged in advance for groups of at least 6 people (4 activities per person).' },
   { keys: ['localisation','adresse','situe','ou se trouve','ou etes','itineraire','chemin','venir','route','location','address','direction','where','find you','get there'], priority: 7,
@@ -64,7 +64,7 @@ const topics: Topic[] = [
   { keys: ['forfait','pack','package','prix','tarif','cost','price','combien'], priority: 2,
     fr: 'Nos activités principales coûtent généralement 3 000 FCFA par personne, selon l’activité. Forfaits : GLÈLÈ solo 5 000 FCFA/adulte ou 3 500 FCFA/enfant ; GUÉZO couple 12 000 FCFA ; BÉHANZIN groupe (4 adultes) 36 000 FCFA. Le tarif TOFFA doit être confirmé. Quelle activité ou quel forfait vous intéresse ?',
     en: 'Most core activities cost 3,000 FCFA per person, depending on the activity. Packages: GLÈLÈ solo 5,000 FCFA/adult or 3,500 FCFA/child; GUÉZO couple 12,000 FCFA; BÉHANZIN for 4 adults 36,000 FCFA. The TOFFA price needs confirmation. Which activity or package interests you?' },
-  { keys: ['activite','faire','proposer','activities','activity','things to do','what can'], priority: 1,
+  { keys: ['activite','activites','faire','proposer','proposez','propose','loisir','loisirs','experience','experiences','activities','activity','things to do','what can','offer'], priority: 1,
     fr: 'Nous proposons pédalo, canoë-kayak, paddle, bateau à pédales, Water Ball, balade sur le lac et découverte des mangroves. Le jet-ski est temporairement indisponible. Souhaitez-vous connaître le prix d’une activité ?',
     en: 'We offer pedal boating, canoe-kayak, stand-up paddle, pedal-powered boats, Water Ball, lake outings and mangrove discovery. Jet skiing is temporarily unavailable. Would you like a price for a specific activity?' },
   { keys: ['bonjour','salut','coucou','hello','hi','hey','bonsoir'], priority: 0,
@@ -73,8 +73,8 @@ const topics: Topic[] = [
 ];
 
 const unverified = {
-  fr: 'Je n’ai pas d’information officielle suffisante pour confirmer cela. Pour une réponse précise, écrivez à notre équipe sur WhatsApp au ' + kb.contact.whatsapp + '.',
-  en: 'I don’t have enough verified information to confirm that. Please ask our team on WhatsApp at ' + kb.contact.whatsapp + '.'
+  fr: 'Je peux vous renseigner sur nos activités, tarifs, forfaits, horaires, restaurant et accès. Pouvez-vous préciser ce que vous souhaitez savoir ? Pour une demande particulière, notre équipe est joignable sur WhatsApp au ' + kb.contact.whatsapp + '.',
+  en: 'I can help with activities, prices, packages, opening hours, food and directions. Could you tell me a little more about what you need? Our team is also available on WhatsApp at ' + kb.contact.whatsapp + '.'
 };
 
 export function groundedGuideReply(message: string, lang: VisitorLanguage, history: VisitorTurn[] = []): GuideResult {
