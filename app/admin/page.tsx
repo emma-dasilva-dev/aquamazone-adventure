@@ -32,31 +32,39 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
   let alerts:AlertRow[]=[];
   let total=0,pending=0,confirmed=0,failedAlerts=0;
   let databaseError=false;
+  let databaseStep='connection';
   try{
     const url=process.env.DATABASE_URL_READONLY;
     if(!url)throw Error('Database not configured');
     const sql=neon(url);
-    const [summary,bookings,notifications]=await Promise.all([
-      sql`SELECT
+    databaseStep='reservations_summary';
+    const summary=await sql`SELECT
         COUNT(*)::integer AS total,
         COUNT(*) FILTER (WHERE status IN ('inquiry','pending_review','awaiting_payment'))::integer AS pending,
         COUNT(*) FILTER (WHERE status='confirmed')::integer AS confirmed
-        FROM reservations`,
-      sql`SELECT reference,experience,visit_date::text,requested_time::text,adults,children,
+        FROM reservations`;
+    databaseStep='reservations_list';
+    const bookings=await sql`SELECT reference,experience,visit_date::text,requested_time::text,adults,children,
         quote_amount_xof,status,payment_status,contact_name,contact_phone,experience_selection,created_at::text
-        FROM reservations ORDER BY created_at DESC LIMIT 40`,
-      sql`SELECT o.id::text,o.event_type,o.channel,o.status,o.attempt_count,o.created_at::text,
+        FROM reservations ORDER BY created_at DESC LIMIT 40`;
+    databaseStep='notifications_list';
+    const notifications=await sql`SELECT o.id::text,o.event_type,o.channel,o.status,o.attempt_count,o.created_at::text,
         r.reference FROM reservation_notification_outbox o
         JOIN reservations r ON r.id=o.reservation_id
-        ORDER BY o.created_at DESC LIMIT 40`
-    ]);
+        ORDER BY o.created_at DESC LIMIT 40`;
+    databaseStep='transform_results';
     total=Number(summary[0]?.total||0);
     pending=Number(summary[0]?.pending||0);
     confirmed=Number(summary[0]?.confirmed||0);
     reservations=bookings as unknown as ReservationRow[];
     alerts=notifications as unknown as AlertRow[];
     failedAlerts=alerts.filter(row=>row.status==='failed').length;
-  }catch{databaseError=true;}
+  }catch(error){
+    databaseError=true;
+    // Report diagnostics only to the private server log. Never print SQL URLs or credentials.
+    console.error('[Aquamazone admin] Query stage failed:',databaseStep,
+      error instanceof Error ? error.name : 'UnknownError');
+  }
   return <main className="az-admin-shell">
     <header className="az-admin-top">
       <div><strong>AQUAMAZONE <span style={{color:'#0055a4'}}>ADVENTURE</span></strong><small>ESPACE ADMINISTRATEUR · ACCÈS PRIVÉ</small></div>
@@ -66,7 +74,7 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
       <div><p>VUE D'ENSEMBLE</p><h1>Réservations</h1><p>Demandes, paiements et alertes — une seule interface.</p></div>
       <span className="az-admin-status">Données synchronisées depuis Neon</span>
     </div>
-    {databaseError?<div className="az-admin-panel"><p className="az-admin-empty" role="alert">La base de données ou les tables d'alertes sont indisponibles. Vérifiez la configuration et la migration 0003.</p></div>:<>
+    {databaseError?<div className="az-admin-panel"><p className="az-admin-empty" role="alert">Impossible de charger les données du tableau de bord. Étape : {databaseStep}. Les informations de connexion restent privées.</p></div>:<>
       <section className="az-admin-stats" aria-label="Statistiques">
         <div className="az-admin-stat"><small>Total des demandes</small><strong>{total}</strong></div>
         <div className="az-admin-stat"><small>À traiter</small><strong>{pending}</strong></div>
