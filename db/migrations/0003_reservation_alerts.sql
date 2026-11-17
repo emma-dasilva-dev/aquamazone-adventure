@@ -81,14 +81,15 @@ WHEN (
 EXECUTE FUNCTION enqueue_reservation_alerts();
 
 -- At most one worker can own a row; retry after lease expires.
-CREATE OR REPLACE FUNCTION claim_reservation_alerts(p_limit integer DEFAULT 10)
+CREATE OR REPLACE FUNCTION claim_reservation_alerts(p_limit integer DEFAULT 10, p_channels text[] DEFAULT ARRAY['email','whatsapp'])
 RETURNS SETOF reservation_notification_outbox
 LANGUAGE plpgsql SECURITY INVOKER AS $claim$
 BEGIN
   RETURN QUERY
   WITH due AS (
     SELECT id FROM reservation_notification_outbox
-    WHERE ((status IN ('pending','retry') AND next_attempt_at <= now())
+    WHERE channel = ANY(p_channels)
+      AND ((status IN ('pending','retry') AND next_attempt_at <= now())
       OR (status='sending' AND locked_until < now()))
       AND attempt_count < 8
     ORDER BY created_at
