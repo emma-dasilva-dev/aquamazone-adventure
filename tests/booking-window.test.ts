@@ -1,0 +1,53 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {bookingWindow,checkBookingWindow,validateReservation} from '../lib/reservation-rules.ts';
+
+const request=(date:string)=>({experience:'pedalo',date,time:'12:00',adults:2,children:0});
+const benin=(date:string,time:string)=>new Date(date+'T'+time+':00+01:00');
+
+test('Monday opens only the upcoming weekend',()=>{
+  const monday=benin('2026-11-16','09:00');
+  assert.deepEqual([bookingWindow(monday).saturday,bookingWindow(monday).sunday],['2026-11-21','2026-11-22']);
+  assert.equal(checkBookingWindow('2026-11-21',monday).ok,true);
+  assert.equal(checkBookingWindow('2026-11-22',monday).ok,true);
+  assert.equal(checkBookingWindow('2026-11-28',monday).ok,false);
+});
+
+test('Saturday booking closes at Friday 22h Benin time',()=>{
+  assert.equal(checkBookingWindow('2026-11-21',benin('2026-11-20','21:59')).ok,true);
+  assert.equal(checkBookingWindow('2026-11-21',benin('2026-11-20','22:00')).ok,false);
+  assert.equal(checkBookingWindow('2026-11-22',benin('2026-11-20','22:00')).ok,true);
+});
+
+test('Sunday booking closes at Saturday 22h, Saturday never accepts same-day requests',()=>{
+  assert.equal(checkBookingWindow('2026-11-21',benin('2026-11-21','08:00')).ok,false);
+  assert.equal(checkBookingWindow('2026-11-22',benin('2026-11-21','21:59')).ok,true);
+  assert.equal(checkBookingWindow('2026-11-22',benin('2026-11-21','22:00')).ok,false);
+});
+
+test('Sunday has no new online enquiries; booking reopens on Monday',()=>{
+  assert.equal(checkBookingWindow('2026-11-28',benin('2026-11-22','15:00')).ok,false);
+  assert.equal(checkBookingWindow('2026-11-28',benin('2026-11-23','00:00')).ok,true);
+});
+
+test('Server validation enforces cutoff even if user bypasses calendar',()=>{
+  const friday=benin('2026-11-20','22:00');
+  const blocked=validateReservation(request('2026-11-21'),friday);
+  assert.equal(blocked.ok,false);
+  if(!blocked.ok)assert.equal(blocked.code,'saturday_cutoff');
+  const sunday=validateReservation(request('2026-11-22'),friday);
+  assert.equal(sunday.ok,true);
+});
+
+test('Manual admin intake remains allowed for previously arranged weekday and weekend requests',()=>{
+  const now=benin('2026-11-20','22:30');
+  assert.equal(validateReservation(request('2026-11-21'),now,{manualIntake:true}).ok,true);
+  // Admin helper validates package rules against a future Saturday and stores actual weekday separately.
+});
+
+test('Invalid dates and weekday online requests are rejected',()=>{
+  assert.equal(validateReservation(request('2026-11-31'),benin('2026-11-16','09:00')).ok,false);
+  const weekday=validateReservation(request('2026-11-18'),benin('2026-11-16','09:00'));
+  assert.equal(weekday.ok,false);
+  if(!weekday.ok)assert.equal(weekday.code,'special_day');
+});
