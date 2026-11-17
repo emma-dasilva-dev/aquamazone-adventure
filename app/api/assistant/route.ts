@@ -51,6 +51,7 @@ export async function POST(request: NextRequest) {
   } catch {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400, headers: noStore });
   }
+  if (!body || typeof body !== 'object' || Array.isArray(body)) return NextResponse.json({ error: 'Invalid body' }, { status: 400, headers: noStore });
   const lang = body.language === 'en' ? 'en' : language === 'en' && body.language !== 'fr' ? 'en' : 'fr';
   const message = typeof body.message === 'string' ? body.message.trim() : '';
   if (!message || message.length > 500) return NextResponse.json({ error: 'Invalid message' }, { status: 400, headers: noStore });
