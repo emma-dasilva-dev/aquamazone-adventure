@@ -5,7 +5,8 @@ type Channel = 'email'|'whatsapp';
 type AlertJob = {
   id:string;lease_token:string;event_type:string;channel:Channel;
   payload:{reference:string;experience:string;visitDate:string;requestedTime:string;
-    reservationStatus:string;paymentStatus:string;amountXof:number|null};
+    reservationStatus:string;paymentStatus:string;amountXof:number|null;
+    experienceSelection?:{activities?:string[];package?:string|null;choice?:string|null}|null};
 };
 
 function database(){
@@ -28,10 +29,14 @@ function configuredChannels():Channel[]{
 function textFor(job:AlertJob):string{
   const p=job.payload;
   const amount=p.amountXof==null?'À confirmer':new Intl.NumberFormat('fr-FR').format(p.amountXof)+' FCFA';
+  const selection=p.experienceSelection;
+  const experienceDescription=selection
+    ? 'Forfait : '+(selection.package?.toUpperCase()||'Aucun')+' | Activités : '+(selection.activities?.length?selection.activities.join(', '):'Aucune')+(selection.package==='glele'&&selection.choice?' | GLÈLÈ : '+selection.choice:'')
+    : 'Expérience : '+p.experience;
   return [
     'AQUAMAZONE — '+job.event_type.replaceAll('_',' '),
     'Référence : '+p.reference,
-    'Expérience : '+p.experience,
+    experienceDescription,
     'Date : '+p.visitDate+' à '+p.requestedTime,
     'Montant indicatif : '+amount,
     'Réservation : '+p.reservationStatus,
