@@ -52,6 +52,7 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
   let reservations:ReservationRow[]=[];
   let alerts:AlertRow[]=[];
   let total=0,pending=0,confirmed=0,failedAlerts=0;
+  let capacity={dailyVisitors:70,dailyReservations:40,slotVisitors:10};
   let databaseError=false;
   let databaseStep='connection';
   try{
@@ -73,6 +74,15 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
         r.reference FROM reservation_notification_outbox o
         JOIN reservations r ON r.id=o.reservation_id
         ORDER BY o.created_at DESC LIMIT 40`;
+    databaseStep='capacity_policy';
+    const policies=await sql`SELECT daily_visitors,daily_reservations,slot_visitors
+      FROM reservation_capacity_policy WHERE id=1`;
+    if(policies.length!==1)throw Error('Capacity policy missing');
+    capacity={
+      dailyVisitors:Number(policies[0].daily_visitors),
+      dailyReservations:Number(policies[0].daily_reservations),
+      slotVisitors:Number(policies[0].slot_visitors)
+    };
     databaseStep='transform_results';
     total=Number(summary[0]?.total||0);
     pending=Number(summary[0]?.pending||0);
@@ -101,6 +111,19 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
         <div className="az-admin-stat"><small>À traiter</small><strong>{pending}</strong></div>
         <div className="az-admin-stat"><small>Confirmées</small><strong>{confirmed}</strong></div>
         <div className="az-admin-stat"><small>Alertes en échec (40 dernières)</small><strong>{failedAlerts}</strong></div>
+      </section>
+      <section className="az-admin-panel" aria-labelledby="az-admin-capacity-title">
+        <div className="az-admin-panel-header"><h2 id="az-admin-capacity-title">Limites de réservation</h2><p>Politique enregistrée · contrôle administrateur</p></div>
+        <div className="az-admin-capacity-grid">
+          <div><small>Visiteurs / jour</small><strong>{capacity.dailyVisitors}</strong></div>
+          <div><small>Réservations / jour</small><strong>{capacity.dailyReservations}</strong></div>
+          <div><small>Visiteurs / créneau</small><strong>{capacity.slotVisitors}</strong></div>
+        </div>
+        <p className="az-admin-capacity-note">
+          Ces plafonds sont enregistrés. Les demandes non confirmées sont suivies séparément et
+          ne réservent pas automatiquement de places. Le contrôle transactionnel sera activé
+          avant tout paiement ou réservation en ligne.
+        </p>
       </section>
       <section className="az-admin-panel" aria-labelledby="az-admin-intake-title">
         <div className="az-admin-panel-header"><h2 id="az-admin-intake-title">Enregistrer une demande WhatsApp</h2><p>Une demande en semaine ou pour aujourd'hui peut être enregistrée, sans confirmation de disponibilité</p></div>
