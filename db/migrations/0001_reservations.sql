@@ -72,6 +72,19 @@ CREATE TABLE IF NOT EXISTS reservation_events (
 );
 CREATE INDEX IF NOT EXISTS reservation_events_by_reservation_idx ON reservation_events(reservation_id,occurred_at DESC);
 
+-- Events are write-once. Future staff corrections must append compensating events.
+CREATE OR REPLACE FUNCTION reject_reservation_event_mutation()
+RETURNS trigger LANGUAGE plpgsql AS $
+BEGIN
+  RAISE EXCEPTION 'Reservation history is immutable; append a new event instead';
+END;
+$;
+DROP TRIGGER IF EXISTS reservation_events_immutable ON reservation_events;
+CREATE TRIGGER reservation_events_immutable
+BEFORE UPDATE OR DELETE ON reservation_events
+FOR EACH ROW EXECUTE FUNCTION reject_reservation_event_mutation();
+
+
 -- Inventory from approved equipment counts. Upsert only for idempotent migration.
 INSERT INTO reservation_assets(id,equipment_type,seats) VALUES
  ('PED-S01','pedalo_single',1), ('PED-S02','pedalo_single',1),
