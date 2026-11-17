@@ -98,7 +98,7 @@ async function sendWhatsApp(job:AlertJob):Promise<string>{
 }
 
 /**
- * Consume at most 10 queued jobs per call.
+ * Consume at most 5 queued jobs per call to stay within the two-minute lease.
  * The DB lease avoids concurrent workers using the same job. Resend uses an
  * idempotency key; WhatsApp may duplicate if Meta accepted but HTTP timed out.
  * Accepted means provider API accepted, NOT delivered to the recipient.
@@ -107,8 +107,12 @@ export async function dispatchAlerts(){
   const channels=configuredChannels();
   if(!channels.length)return {configured:false,claimed:0,accepted:0,failed:0};
   const sql=database();
+  await sql`UPDATE reservation_notification_outbox
+    SET status='failed',last_error='Retry limit exceeded after worker interruption',
+      lease_token=NULL,locked_until=NULL,updated_at=now()
+    WHERE status='sending' AND locked_until<now() AND attempt_count>=8`;
   const rows=await sql`SELECT id::text,lease_token::text,event_type,channel,payload
-    FROM claim_reservation_alerts(10, ${channels}::text[])`;
+    FROM claim_reservation_alerts(5, ${channels}::text[])`;
   const jobs=rows as unknown as AlertJob[];
   let accepted=0,failed=0;
   for(const job of jobs){
