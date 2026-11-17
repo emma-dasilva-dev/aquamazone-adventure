@@ -62,9 +62,10 @@ export function validateAdminExperienceSelection(input:{
     adults:input.adults,children:input.children,
     ...(experience==='glele' ? {choice} : {})
   },now));
-  if(validated.some(r=>!r.ok))return {ok:false,code:'rules'};
+  const firstError=validated.find(result=>!result.ok);
+  if(firstError && !firstError.ok)return {ok:false,code:firstError.code};
   const first=validated[0];
-  if(!first.ok)return {ok:false,code:'rules'};
+  if(!first.ok)return {ok:false,code:first.code};
   // A combination must be manually priced, including crossing exactly once.
   // For one selection, the existing quote remains indicative, never confirmed.
   const quoteAmount=selections.length===1?first.quote.total:null;
