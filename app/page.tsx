@@ -265,7 +265,45 @@ export default function Home(){
  </div>
 </section>
  </main>
- <footer className="footer"><div className="section-shell"><div className="footer-top"><div><h2>AQUAMAZONE <small>ADVENTURE</small></h2><p>Base de loisirs nautiques au Village Adounko.</p><em>« La détente au fil de l’eau. »</em></div><div><h3>Contact</h3><a href="tel:+2290154284444">+229 01 54 28 44 44</a><a href="mailto:aquamazone229@gmail.com">aquamazone229@gmail.com</a><a href="https://wa.me/2290154284444">WhatsApp</a></div><div><h3>Réseaux</h3><a href="https://www.youtube.com/@aquamazoneadventure229" target="_blank" rel="noopener noreferrer">YouTube</a><span>Instagram · TikTok · Facebook : liens à confirmer</span></div></div><div className="footer-bottom">© 2026 AQUAMAZONE Adventure. Tous droits réservés.</div></div></footer>
+ <footer className="footer footer-v15" aria-label={lang==='fr'?'Pied de page':'Footer'}>
+  <div className="footer-v15-inner">
+    <div className="footer-v15-opening">
+      <p>{lang==='fr'?'L’AVENTURE VOUS ATTEND':'ADVENTURE AWAITS'}</p>
+      <h2>{lang==='fr'?<>On se retrouve <em>au bord de l’eau ?</em></>:<>See you <em>by the water?</em></>}</h2>
+      <a href="#reservation">{lang==='fr'?'Préparer ma visite':'Plan my visit'} <ArrowUpRight size={20} aria-hidden="true"/></a>
+    </div>
+    <div className="footer-v15-columns">
+      <div className="footer-v15-brand">
+        <a href="#top" className="footer-v15-wordmark">AQUAMAZONE <span>ADVENTURE</span></a>
+        <p>La détente au fil de l’eau.</p>
+        <span>Village Adounko · Route des Pêches<br/>Cotonou, Bénin</span>
+      </div>
+      <nav aria-label={lang==='fr'?'Navigation du pied de page':'Footer navigation'}>
+        <h3>{lang==='fr'?'DÉCOUVRIR':'EXPLORE'}</h3>
+        <a href="#activities">{lang==='fr'?'Nos activités':'Activities'}</a>
+        <a href="#packages">{lang==='fr'?'Nos forfaits':'Packages'}</a>
+        <a href="#restaurant">Restaurant & Bar</a>
+        <a href="#gallery">{lang==='fr'?'Galerie':'Gallery'}</a>
+        <a href="#reservation">{lang==='fr'?'Préparer une visite':'Plan a visit'}</a>
+      </nav>
+      <nav aria-label={lang==='fr'?'Informations pratiques':'Visitor information'}>
+        <h3>{lang==='fr'?'INFORMATIONS':'INFORMATION'}</h3>
+        <a href="#location">{lang==='fr'?'Nous trouver':'Find us'}</a>
+        <a href="#visit">{lang==='fr'?'Horaires & accès':'Opening hours'}</a>
+        <a href="#faq">{lang==='fr'?'Questions fréquentes':'FAQ'}</a>
+        <span>{lang==='fr'?'Sam., dim. & jours fériés':'Sat., Sun. & public holidays'}<br/>11h — 18h</span>
+      </nav>
+      <div className="footer-v15-contact">
+        <h3>CONTACT</h3>
+        <a href="tel:+2290154284444">+229 01 54 28 44 44</a>
+        <a href="mailto:aquamazone229@gmail.com">aquamazone229@gmail.com</a>
+        <a href="https://wa.me/2290154284444" target="_blank" rel="noopener noreferrer">WhatsApp <ArrowUpRight size={15}/></a>
+        <a href="https://www.youtube.com/@aquamazoneadventure229" target="_blank" rel="noopener noreferrer">YouTube <ArrowUpRight size={15}/></a>
+      </div>
+    </div>
+    <div className="footer-v15-bottom"><span>© {new Date().getFullYear()} AQUAMAZONE Adventure</span><span>{lang==='fr'?'Tous droits réservés.':'All rights reserved.'}</span><a href="#top">{lang==='fr'?'Retour en haut':'Back to top'} ↑</a></div>
+  </div>
+</footer>
  {preview&&<div className="activity-lightbox" role="presentation" onClick={()=>setPreview(null)}>
   <div className="activity-lightbox-dialog" role="dialog" aria-modal="true" aria-label={lang==='fr'?'Aperçu photo':'Image preview'} onClick={event=>event.stopPropagation()}>
     <button className="activity-lightbox-close" type="button" onClick={()=>setPreview(null)} aria-label={lang==='fr'?'Fermer l’image':'Close image'}><X size={22}/></button>
