@@ -4,7 +4,7 @@
  * A single enquiry has one arrival slot, not a guaranteed schedule for each activity.
  */
 import {
-  RESERVATION_IDS, type ReservationId,
+  RESERVATION_IDS, RESERVATION_SLOTS, nextBookableDay, isNormalOpeningDay, type ReservationId,
   validateReservation, type ReservationRequest
 } from './reservation-rules';
 
@@ -57,22 +57,43 @@ export function validateAdminExperienceSelection(input:{
   if(selectedPackage==='glele'&&!choice)return {ok:false,code:'choice'};
   const selections=[...(selectedPackage?[selectedPackage]:[]),...activities] as ReservationId[];
   if(!selections.every(id=>everyId.has(id)))return {ok:false,code:'invalid'};
+  // Admin intake records UNCONFIRMED enquiries, including weekday and same-day
+  // requests. Public online bookings remain restricted to future weekends.
+  const date=input.date;
+  const parsedDate=new Date(date+'T00:00:00Z');
+  if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(date) ||
+     Number.isNaN(parsedDate.valueOf()) ||
+     parsedDate.toISOString().slice(0,10)!==date)return {ok:false,code:'invalid_date'};
+  const today=new Intl.DateTimeFormat('en-CA',{
+    timeZone:'Africa/Porto-Novo',year:'numeric',month:'2-digit',day:'2-digit'
+  }).format(now);
+  if(date<today)return {ok:false,code:'past_date'};
+  if(!(RESERVATION_SLOTS as readonly string[]).includes(input.time))
+    return {ok:false,code:'invalid_time'};
+
+  // Validate participant limits/package rules against a standard future Saturday.
+  // This avoids applying the public same-day/weekend cutoff to manual intake.
+  let Saturday=new Date(nextBookableDay(now)+'T00:00:00Z');
+  while(Saturday.getUTCDay()!==6)Saturday.setUTCDate(Saturday.getUTCDate()+1);
+  const validationDate=Saturday.toISOString().slice(0,10);
   const validated=selections.map(experience=>validateReservation({
-    experience,date:input.date,time:input.time,
+    experience,date:validationDate,time:input.time,
     adults:input.adults,children:input.children,
-    ...(experience==='glele' ? {choice} : {})
+    ...(experience==='glele'?{choice}:{})
   },now));
   const firstError=validated.find(result=>!result.ok);
-  if(firstError && !firstError.ok)return {ok:false,code:firstError.code};
+  if(firstError&&!firstError.ok)return {ok:false,code:firstError.code};
   const first=validated[0];
   if(!first.ok)return {ok:false,code:first.code};
-  // A combination must be manually priced, including crossing exactly once.
-  // For one selection, the existing quote remains indicative, never confirmed.
-  const quoteAmount=selections.length===1?first.quote.total:null;
+  const primary:ReservationRequest={...first.reservation,date};
+  // No automatic quote for weekday/same-day intake or combined experiences.
+  // Such requests remain for manual review; crossing is never charged twice.
+  const standardDate=date>=nextBookableDay(now)&&isNormalOpeningDay(date);
+  const quoteAmount=selections.length===1&&standardDate?first.quote.total:null;
   return {
     ok:true,
     selection:{activities,package:selectedPackage,choice},
-    primary:first.reservation,
+    primary,
     quoteAmount
   };
 }
