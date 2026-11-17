@@ -122,10 +122,10 @@ export default function ReservationPlanner({lang}:{lang:Lang}){
        <p>{bookingNotice}</p>
        {schedule&&<div className="az-reservation-window-days">
          <button type="button" disabled={!saturdayOpen} aria-pressed={date===schedule.saturday} onClick={()=>setDate(schedule.saturday)}>
-           {lang==='fr'?'Samedi':'Saturday'} · {schedule.saturday} <small>{saturdayOpen?(lang==='fr'?'Réservations ouvertes':'Booking open'):(lang==='fr'?'Clôturé':'Closed')}</small>
+           {lang==='fr'?'Samedi':'Saturday'} · {schedule.saturday} <small>{saturdayOpen?(lang==='fr'?'Demandes ouvertes':'Enquiries open'):(lang==='fr'?'Clôturé':'Closed')}</small>
          </button>
          <button type="button" disabled={!sundayOpen} aria-pressed={date===schedule.sunday} onClick={()=>setDate(schedule.sunday)}>
-           {lang==='fr'?'Dimanche':'Sunday'} · {schedule.sunday} <small>{sundayOpen?(lang==='fr'?'Réservations ouvertes':'Booking open'):(lang==='fr'?'Clôturé':'Closed')}</small>
+           {lang==='fr'?'Dimanche':'Sunday'} · {schedule.sunday} <small>{sundayOpen?(lang==='fr'?'Demandes ouvertes':'Enquiries open'):(lang==='fr'?'Clôturé':'Closed')}</small>
          </button>
        </div>}
      </div>
