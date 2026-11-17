@@ -66,12 +66,10 @@ BEGIN
 END;
 $outbox$;
 
-DROP TRIGGER IF EXISTS reservations_notify_created ON reservations;
 CREATE TRIGGER reservations_notify_created
 AFTER INSERT ON reservations FOR EACH ROW
 EXECUTE FUNCTION enqueue_reservation_alerts();
 
-DROP TRIGGER IF EXISTS reservations_notify_changed ON reservations;
 CREATE TRIGGER reservations_notify_changed
 AFTER UPDATE OF status,payment_status ON reservations FOR EACH ROW
 WHEN (
