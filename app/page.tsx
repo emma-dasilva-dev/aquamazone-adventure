@@ -163,7 +163,36 @@ export default function Home(){
   </div>
 </section>
 <ImmersiveGallery lang={lang}/>
- <section id="location" className="location section-shell"><div><p className="kicker">06 / LOCALISATION</p><h2>{t.location}</h2><p>Adounko Village, Route des Pêches, Cotonou, Bénin.</p><p><Clock size={17}/>{t.hours}</p><a className="inline-link" href="https://maps.google.com/?q=Togbin+Plage+AQUAMAZONE" target="_blank" rel="noopener noreferrer"><MapPin size={18}/> Google Maps <ArrowUpRight size={18}/></a></div><div className="map-placeholder"><MapPin size={45}/><span>{lang==='fr'?'Carte à intégrer après vérification du point exact':'Map to be added after pin verification'}</span></div></section>
+ <section id="location" className="location-v11" aria-labelledby="location-title">
+  <div className="location-v11-shell">
+    <div className="location-v11-heading">
+      <p className="location-v11-kicker">06 / {lang==='fr'?'NOUS TROUVER':'FIND US'}</p>
+      <h2 id="location-title">{lang==='fr'?<>Au bout de la Route des Pêches, <em>le lac vous attend.</em></>:<>At the end of the Coastal Road, <em>the lake awaits.</em></>}</h2>
+      <p>{lang==='fr'?'Retrouvez AQUAMAZONE ADVENTURE au Village Adounko, à Cotonou.':'Find AQUAMAZONE ADVENTURE in Adounko Village, Cotonou.'}</p>
+    </div>
+    <div className="location-v11-layout">
+      <div className="location-v11-map">
+        <iframe title={lang==='fr'?'Carte de Togbin Plage, Bénin — zone de localisation d’Aquamazone':'Map of Togbin Plage, Benin — Aquamazone location area'} src="https://www.google.com/maps?q=Togbin+Plage,+Benin&output=embed" loading="lazy" referrerPolicy="no-referrer-when-downgrade" allowFullScreen/>
+        <a className="location-v11-map-link" href="https://maps.google.com/?q=Togbin+Plage+AQUAMAZONE" target="_blank" rel="noopener noreferrer"><MapPin size={17}/>{lang==='fr'?'Ouvrir dans Google Maps':'Open in Google Maps'}<ArrowUpRight size={17}/></a>
+      </div>
+      <div className="location-v11-directions">
+        <div className="location-v11-address"><span>{lang==='fr'?'NOTRE ADRESSE':'OUR ADDRESS'}</span><strong>Village Adounko<br/>Route des Pêches<br/>Cotonou, Bénin</strong></div>
+        <div className="location-v11-route">
+          <div className="location-v11-route-head"><span>{lang==='fr'?'ITINÉRAIRE DEPUIS COTONOU':'DIRECTIONS FROM COTONOU'}</span><span>06 {lang==='fr'?'ÉTAPES':'STEPS'}</span></div>
+          <ol>
+            <li>{lang==='fr'?'Sur la Route des Pêches, après le Carrefour Club des Rois, continuez tout droit jusqu’au grand Carrefour Togbin Plage.':'Follow the Route des Pêches past Carrefour Club des Rois, continuing to the large Togbin Plage junction.'}</li>
+            <li>{lang==='fr'?'Passez la station-service JBP.':'Pass the JBP service station.'}</li>
+            <li>{lang==='fr'?'Continuez jusqu’à la prochaine intersection.':'Continue to the next intersection.'}</li>
+            <li>{lang==='fr'?'Suivez les panneaux AQUAMAZONE.':'Follow the AQUAMAZONE signs.'}</li>
+            <li>{lang==='fr'?'Tournez à droite et continuez jusqu’au lac.':'Turn right and continue towards the lake.'}</li>
+            <li>{lang==='fr'?'Vous arriverez directement à notre embarcadère.':'You will arrive directly at our landing.'}</li>
+          </ol>
+        </div>
+        <a className="location-v11-directions-cta" href="https://maps.google.com/?q=Togbin+Plage+AQUAMAZONE" target="_blank" rel="noopener noreferrer">{lang==='fr'?'Préparer mon itinéraire':'Get directions'}<ArrowUpRight size={19}/></a>
+      </div>
+    </div>
+  </div>
+</section>
  </main>
  <footer className="footer"><div className="section-shell"><div className="footer-top"><div><h2>AQUAMAZONE <small>ADVENTURE</small></h2><p>Base de loisirs nautiques au Village Adounko.</p><em>« La détente au fil de l’eau. »</em></div><div><h3>Contact</h3><a href="tel:+2290154284444">+229 01 54 28 44 44</a><a href="mailto:aquamazone229@gmail.com">aquamazone229@gmail.com</a><a href="https://wa.me/2290154284444">WhatsApp</a></div><div><h3>Réseaux</h3><a href="https://www.youtube.com/@aquamazoneadventure229" target="_blank" rel="noopener noreferrer">YouTube</a><span>Instagram · TikTok · Facebook : liens à confirmer</span></div></div><div className="footer-bottom">© 2026 AQUAMAZONE Adventure. Tous droits réservés.</div></div></footer>
  {preview&&<div className="activity-lightbox" role="presentation" onClick={()=>setPreview(null)}>
