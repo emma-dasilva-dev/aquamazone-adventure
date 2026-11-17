@@ -6,11 +6,26 @@ import { ArrowDown, ArrowUpRight, ChevronLeft, ChevronRight, X } from 'lucide-re
 type Lang = 'fr' | 'en';
 
 const slides = [
-  { id: 'water', title: { fr: 'Au fil de l’eau', en: 'By the water' }, meta: { fr: 'Évasion', en: 'Escape' }, image: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1400&q=82&auto=format&fit=crop' },
-  { id: 'nature', title: { fr: 'La nature en grand', en: 'Into nature' }, meta: { fr: 'Découverte', en: 'Discovery' }, image: 'https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=1400&q=82&auto=format&fit=crop' },
-  { id: 'adventure', title: { fr: 'L’appel de l’aventure', en: 'The call of adventure' }, meta: { fr: 'Aventure', en: 'Adventure' }, image: 'https://images.unsplash.com/photo-1500534623283-312aade485b7?w=1400&q=82&auto=format&fit=crop' },
-  { id: 'moments', title: { fr: 'Des instants à partager', en: 'Moments together' }, meta: { fr: 'Souvenirs', en: 'Memories' }, image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1400&q=82&auto=format&fit=crop' },
-  { id: 'horizon', title: { fr: 'Encore un peu de bleu', en: 'A little more blue' }, meta: { fr: 'Détente', en: 'Relaxation' }, image: 'https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=1400&q=82&auto=format&fit=crop' },
+  { id: 'photo-01', title: { fr: 'Au fil de l’eau', en: 'By the water' }, meta: { fr: 'Évasion', en: 'Escape' }, image: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1200&q=78&auto=format&fit=crop' },
+  { id: 'photo-02', title: { fr: 'La nature en grand', en: 'Into nature' }, meta: { fr: 'Découverte', en: 'Discovery' }, image: 'https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=1200&q=78&auto=format&fit=crop' },
+  { id: 'photo-03', title: { fr: 'L’appel de l’aventure', en: 'The call of adventure' }, meta: { fr: 'Aventure', en: 'Adventure' }, image: 'https://images.unsplash.com/photo-1500534623283-312aade485b7?w=1200&q=78&auto=format&fit=crop' },
+  { id: 'photo-04', title: { fr: 'Des instants à partager', en: 'Moments together' }, meta: { fr: 'Souvenirs', en: 'Memories' }, image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&q=78&auto=format&fit=crop' },
+  { id: 'photo-05', title: { fr: 'Encore un peu de bleu', en: 'A little more blue' }, meta: { fr: 'Détente', en: 'Relaxation' }, image: 'https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=1200&q=78&auto=format&fit=crop' },
+  { id: 'photo-06', title: { fr: 'L’horizon s’ouvre', en: 'The horizon opens' }, meta: { fr: 'Horizon', en: 'Horizon' }, image: 'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=1200&q=78&auto=format&fit=crop' },
+  { id: 'photo-07', title: { fr: 'Échappée belle', en: 'A lovely escape' }, meta: { fr: 'Évasion', en: 'Escape' }, image: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1200&q=78&auto=format&fit=crop' },
+  { id: 'photo-08', title: { fr: 'Nature vivante', en: 'Nature in motion' }, meta: { fr: 'Nature', en: 'Nature' }, image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=78&auto=format&fit=crop' },
+  { id: 'photo-09', title: { fr: 'Prendre de la hauteur', en: 'A wider perspective' }, meta: { fr: 'Découverte', en: 'Discovery' }, image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=78&auto=format&fit=crop' },
+  { id: 'photo-10', title: { fr: 'Le goût de l’ailleurs', en: 'Somewhere new' }, meta: { fr: 'Voyage', en: 'Journey' }, image: 'https://images.unsplash.com/photo-1511497584788-876760111969?w=1200&q=78&auto=format&fit=crop' },
+  { id: 'photo-11', title: { fr: 'Lumière du jour', en: 'Daylight' }, meta: { fr: 'Lumière', en: 'Light' }, image: 'https://images.unsplash.com/photo-1458668383970-8ddd3927deed?w=1200&q=78&auto=format&fit=crop' },
+  { id: 'photo-12', title: { fr: 'L’appel des grands espaces', en: 'Into the open' }, meta: { fr: 'Paysage', en: 'Landscape' }, image: 'https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=1200&q=78&auto=format&fit=crop' },
+  { id: 'photo-13', title: { fr: 'Des vues inoubliables', en: 'Views to remember' }, meta: { fr: 'Souvenirs', en: 'Memories' }, image: 'https://images.unsplash.com/photo-1472396961693-142e6e269027?w=1200&q=78&auto=format&fit=crop' },
+  { id: 'photo-14', title: { fr: 'Une parenthèse douce', en: 'A gentle pause' }, meta: { fr: 'Détente', en: 'Relaxation' }, image: 'https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=1200&q=78&auto=format&fit=crop' },
+  { id: 'photo-15', title: { fr: 'Loin du quotidien', en: 'A world away' }, meta: { fr: 'Évasion', en: 'Escape' }, image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1200&q=78&auto=format&fit=crop' },
+  { id: 'photo-16', title: { fr: 'Au rythme de l’eau', en: 'In rhythm with water' }, meta: { fr: 'Eau', en: 'Water' }, image: 'https://images.unsplash.com/photo-1439853949212-09789ba454ca?w=1200&q=78&auto=format&fit=crop' },
+  { id: 'photo-17', title: { fr: 'Moments de liberté', en: 'Moments of freedom' }, meta: { fr: 'Aventure', en: 'Adventure' }, image: 'https://images.unsplash.com/photo-1482192596544-9eb780fc7f66?w=1200&q=78&auto=format&fit=crop' },
+  { id: 'photo-18', title: { fr: 'Respirer autrement', en: 'A breath of fresh air' }, meta: { fr: 'Nature', en: 'Nature' }, image: 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=1200&q=78&auto=format&fit=crop' },
+  { id: 'photo-19', title: { fr: 'Face à l’immensité', en: 'Endless horizons' }, meta: { fr: 'Horizon', en: 'Horizon' }, image: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1200&q=78&auto=format&fit=crop' },
+  { id: 'photo-20', title: { fr: 'La détente au fil de l’eau', en: 'Relaxation by the water' }, meta: { fr: 'AQUAMAZONE', en: 'AQUAMAZONE' }, image: 'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=1200&q=78&auto=format&fit=crop' },
 ];
 
 export default function ImmersiveGallery({ lang }: { lang: Lang }) {
@@ -42,7 +57,7 @@ export default function ImmersiveGallery({ lang }: { lang: Lang }) {
           scrollTrigger: {
             trigger: stage,
             start: 'top top',
-            end: () => '+=' + Math.max(350, distance()),
+            end: () => '+=' + Math.max(350, distance() * 0.78),
             pin: true,
             pinSpacing: true,
             scrub: 0.6,
@@ -112,7 +127,7 @@ export default function ImmersiveGallery({ lang }: { lang: Lang }) {
         <div className="gallery-immersive-footer">
           <span>{lang === 'fr' ? 'Images d’illustration — photos officielles à venir' : 'Illustrative imagery — official photos coming soon'}</span>
           <div className="gallery-progress" aria-hidden="true"><div ref={progressRef}/></div>
-          <span className="gallery-progress-label">01 — 05</span>
+          <span className="gallery-progress-label">01 — {String(slides.length).padStart(2,'0')}</span>
         </div>
       </div>
       {lightboxIndex !== null && (
