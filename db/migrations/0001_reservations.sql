@@ -60,6 +60,18 @@ CREATE INDEX IF NOT EXISTS reservations_status_idx ON reservations(status, creat
 CREATE INDEX IF NOT EXISTS reservations_contact_phone_idx ON reservations(contact_phone);
 CREATE INDEX IF NOT EXISTS allocations_by_reservation_idx ON reservation_allocations(reservation_id);
 
+-- Immutable history is essential when staff later manage cancellations and payments.
+CREATE TABLE IF NOT EXISTS reservation_events (
+  id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  reservation_id uuid NOT NULL REFERENCES reservations(id) ON DELETE RESTRICT,
+  event_type text NOT NULL CHECK(event_type IN ('created','reviewed','quote_updated','payment_requested','payment_verified','confirmed','cancelled','completed','expired','note')),
+  actor_kind text NOT NULL CHECK(actor_kind IN ('system','staff','payment_provider')),
+  actor_id text,
+  details jsonb NOT NULL DEFAULT '{}'::jsonb,
+  occurred_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS reservation_events_by_reservation_idx ON reservation_events(reservation_id,occurred_at DESC);
+
 -- Inventory from approved equipment counts. Upsert only for idempotent migration.
 INSERT INTO reservation_assets(id,equipment_type,seats) VALUES
  ('PED-S01','pedalo_single',1), ('PED-S02','pedalo_single',1),
