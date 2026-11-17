@@ -80,7 +80,7 @@ export function validateAdminExperienceSelection(input:{
     experience,date:validationDate,time:input.time,
     adults:input.adults,children:input.children,
     ...(experience==='glele'?{choice}:{})
-  },now));
+  },now,{manualIntake:true}));
   const firstError=validated.find(result=>!result.ok);
   if(firstError&&!firstError.ok)return {ok:false,code:firstError.code};
   const first=validated[0];
