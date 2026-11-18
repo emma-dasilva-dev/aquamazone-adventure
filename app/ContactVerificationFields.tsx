@@ -75,7 +75,8 @@ export default function ContactVerificationFields({lang,phone,email}:Props){
       change(old=>({...old,busy:false,error:describeError(error instanceof Error?error.message:'error')}));
     }
   };
-  if(!ready)return null;
+  // Never show unfinished verification controls on the public website.
+  if(!ready||(!available.email&&!available.whatsapp))return null;
   return <div className="az-contact-verify" aria-label={french?'Vérification des coordonnées':'Contact verification'}>
     <div className="az-contact-verify-heading"><ShieldCheck size={18} aria-hidden="true"/>
       <span>{french?'Vérification des coordonnées':'Contact verification'}</span>
