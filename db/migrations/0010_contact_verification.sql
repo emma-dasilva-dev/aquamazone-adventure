@@ -31,6 +31,7 @@ BEGIN
      p_code !~ '^[0-9a-f]{64}$' OR p_ip !~ '^[0-9a-f]{64}$'
   THEN RAISE EXCEPTION 'Invalid verification arguments' USING ERRCODE='22023'; END IF;
 
+  PERFORM pg_advisory_xact_lock(hashtextextended(p_session||':'||p_channel,0));
   SELECT last_sent_at INTO existing FROM public.reservation_contact_challenges
   WHERE session_key=p_session AND channel=p_channel FOR UPDATE;
   IF FOUND AND existing.last_sent_at>clock_timestamp()-interval '60 seconds' THEN
