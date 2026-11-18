@@ -3,9 +3,15 @@ import {useEffect,useState} from 'react';
 import ImmersiveGallery from './ImmersiveGallery';
 import AquamazoneAssistant from './AquamazoneAssistant';
 import ReservationPlanner from './ReservationPlanner';
-import {ArrowDown,ArrowUpRight,ArrowRight,Menu,X,Plus,Minus,MapPin,Clock,MessageCircle,Waves,ZoomIn} from 'lucide-react';
+import {ArrowDown,ArrowUpRight,ArrowRight,Menu,X,Plus,Minus,MapPin,Clock,MessageCircle,Waves,ZoomIn,Instagram,Youtube} from 'lucide-react';
 
 type Lang='fr'|'en';
+function TikTokIcon({size=17}:{size?:number}){
+ return <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+   <path d="M16.65 2h-3.1v13.35c0 1.98-1.6 3.58-3.58 3.58a3.58 3.58 0 1 1 2.52-6.11V9.36a6.72 6.72 0 1 0 4.16 6.21V8.53a8.23 8.23 0 0 0 5.14 1.62V7.01A5.17 5.17 0 0 1 16.65 2Z"/>
+ </svg>;
+}
+
 const activities=[
  {id:'pedalo-simple',fr:'Pédalo simple',en:'Single pedalo',duration:'30 min',price:'3 000 FCFA / personne',note:'1 personne par pédalo',noteEn:'1 person per craft'},
  {id:'pedalo-double',fr:'Pédalo double',en:'Double pedalo',duration:'30 min',price:'3 000 FCFA / personne',note:'2 personnes sur le même pédalo',noteEn:'2 people on the same craft'},
@@ -377,10 +383,10 @@ export default function Home(){
         <h3>CONTACT</h3>
         <a href="tel:+2290154284444">+229 01 54 28 44 44</a>
         <a href="mailto:aquamazone229@gmail.com">aquamazone229@gmail.com</a>
-        <a href="https://wa.me/2290154284444" target="_blank" rel="noopener noreferrer">WhatsApp <ArrowUpRight size={15}/></a>
-        <a href="https://www.instagram.com/aquamazoneadventure/" target="_blank" rel="noopener noreferrer">Instagram <ArrowUpRight size={15}/></a>
-        <a href="https://www.tiktok.com/@aquamazone1" target="_blank" rel="noopener noreferrer">TikTok <ArrowUpRight size={15}/></a>
-        <a href="https://www.youtube.com/@aquamazoneadventure229" target="_blank" rel="noopener noreferrer">YouTube <ArrowUpRight size={15}/></a>
+        <a href="https://wa.me/2290154284444" target="_blank" rel="noopener noreferrer"><MessageCircle size={17} aria-hidden="true"/>WhatsApp <ArrowUpRight size={15} aria-hidden="true"/></a>
+        <a href="https://www.instagram.com/aquamazoneadventure/" target="_blank" rel="noopener noreferrer"><Instagram size={17} aria-hidden="true"/>Instagram <ArrowUpRight size={15} aria-hidden="true"/></a>
+        <a href="https://www.tiktok.com/@aquamazone1" target="_blank" rel="noopener noreferrer"><TikTokIcon/>TikTok <ArrowUpRight size={15} aria-hidden="true"/></a>
+        <a href="https://www.youtube.com/@aquamazoneadventure229" target="_blank" rel="noopener noreferrer"><Youtube size={17} aria-hidden="true"/>YouTube <ArrowUpRight size={15} aria-hidden="true"/></a>
       </div>
     </div>
     <div className="footer-v15-bottom"><span>© {new Date().getFullYear()} AQUAMAZONE Adventure</span><span>{lang==='fr'?'Tous droits réservés.':'All rights reserved.'}</span><a href="#top">{lang==='fr'?'Retour en haut':'Back to top'} ↑</a></div>
