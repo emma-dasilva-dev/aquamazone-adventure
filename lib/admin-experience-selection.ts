@@ -19,7 +19,7 @@ export type AdminPackage = typeof ADMIN_PACKAGES[number];
 export type ExperienceSelection = {
   activities: AdminActivity[];
   package: AdminPackage | null;
-  choice: 'canoe' | 'pedalo' | null;
+  choice: 'canoe' | 'pedalo' | 'paddle' | null;
 };
 type SelectionResult =
   | {ok:true; selection:ExperienceSelection; primary:ReservationRequest; quoteAmount:number|null}
@@ -53,7 +53,7 @@ export function validateAdminExperienceSelection(input:{
      !Number.isInteger(input.adults)||!Number.isInteger(input.children))
     return {ok:false,code:'invalid'};
   const choice=selectedPackage==='glele'?
-    (input.choice==='canoe'||input.choice==='pedalo'?input.choice:null):null;
+    (input.choice==='canoe'||input.choice==='pedalo'||input.choice==='paddle'?input.choice:null):null;
   if(selectedPackage==='glele'&&!choice)return {ok:false,code:'choice'};
   const selections=[...(selectedPackage?[selectedPackage]:[]),...activities] as ReservationId[];
   if(!selections.every(id=>everyId.has(id)))return {ok:false,code:'invalid'};
