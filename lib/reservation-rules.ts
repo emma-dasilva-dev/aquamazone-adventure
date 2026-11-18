@@ -138,9 +138,10 @@ export function validateReservation(input: unknown, now: Date = new Date(), opti
   if (experience==='glele') total = adults*5000 + children*3500;
   else if (experience==='guezo') total = 12000;
   else if (experience==='behanzin') total = 36000;
+  else if (experience==='toffa') total = 18000;
   else if (experience==='pedalboat') total = count*(count===2?5000:3000) + crossingAmount;
   else if (['pedalo','canoe','paddle','waterball'].includes(experience)) total = count*3000 + crossingAmount;
-  // TOFFA, lake outing and mangrove excursion have no publicly approved quotation.
+  // Lake outings and mangrove excursions have no publicly approved quotation.
   const reservation: ReservationRequest = {experience,date:obj.date,time:obj.time,adults,children,...(choice?{choice}:{})};
   return {ok:true,reservation,quote:{
     total,currency:'XOF',crossingIncluded,crossingAmount,
