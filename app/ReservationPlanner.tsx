@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { bookingWindow, checkBookingWindow } from '../lib/reservation-rules';
 import { validateBookingContact } from '../lib/booking-contact';
+import ContactVerificationFields from './ContactVerificationFields';
 import { ArrowUpRight, CalendarDays, Clock3, Minus, Plus, UsersRound } from 'lucide-react';
 
 type Lang='fr'|'en';
@@ -165,6 +166,7 @@ export default function ReservationPlanner({lang}:{lang:Lang}){
           placeholder="exemple@gmail.com" value={email} onChange={e=>setEmail(e.target.value)}/>
        </label>
       </div>
+      <ContactVerificationFields lang={lang} phone={phone} email={email}/>
       <p className="az-reservation-contact-disclaimer">{text.notVerified}</p>
      </fieldset>
      {id==='glele'&&<fieldset className="reservation-v15-choice"><legend>{text.choose}</legend><label><input type="radio" name="gleleChoice" checked={choice==='canoe'} onChange={()=>setChoice('canoe')}/>{text.canoe}</label><label><input type="radio" name="gleleChoice" checked={choice==='pedalo'} onChange={()=>setChoice('pedalo')}/>{text.pedalo}</label></fieldset>}
