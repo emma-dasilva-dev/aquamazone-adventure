@@ -61,7 +61,7 @@ function CraftThumbnail({kind,lang}:{kind:'pedalo-simple'|'pedalo-double'|'canoe
  </div>;
 }
 export default function Home(){
- const [lang,setLang]=useState<Lang>('fr');const [menu,setMenu]=useState(false);const [preview,setPreview]=useState<string|null>(null);const t=copy[lang];
+ const [lang,setLang]=useState<Lang>('fr');const [menu,setMenu]=useState(false);const [preview,setPreview]=useState<string|null>(null);const [reservationIntent,setReservationIntent]=useState<{activity:string;version:number}|null>(null);const t=copy[lang];
  useEffect(()=>{document.documentElement.lang=lang;},[lang]);
  useEffect(()=>{document.body.style.overflow=menu||preview?'hidden':'';return()=>{document.body.style.overflow='';};},[menu,preview]);
  useEffect(()=>{if(!preview)return;const close=(event:KeyboardEvent)=>{if(event.key==='Escape')setPreview(null)};window.addEventListener('keydown',close);return()=>window.removeEventListener('keydown',close)},[preview]);
@@ -105,7 +105,15 @@ export default function Home(){
      <h3>{lang==='fr'?a.fr:a.en}</h3>
      <div className="activity-list-facts">{a.duration&&<span>{a.duration}</span>}{a.duration&&a.price&&<span aria-hidden="true">·</span>}{a.price&&<strong>{a.price}</strong>}</div>
      {a.note&&<p className={a.unavailable?'activity-list-alert':'activity-list-note'}>{lang==='fr'?a.note:(a.noteEn??a.note)}</p>}
-     {!a.unavailable&&<a className="activity-list-link" href="#reservation">{lang==='fr'?'Demander une réservation':'Request a booking'}<ArrowUpRight size={15}/></a>}
+     {!a.unavailable&&<a className="activity-list-link" href={a.id==='rental'?bookingWhatsApp:'#reservation'}
+       target={a.id==='rental'?'_blank':undefined} rel={a.id==='rental'?'noopener noreferrer':undefined}
+       onClick={()=>{if(a.id!=='rental'){
+         const selectedActivity=a.id.startsWith('pedalo-')?'pedalo':a.id.startsWith('canoe-')?'canoe':
+           ({boat:'pedalboat',ball:'waterball',tour:'lake'} as Record<string,string>)[a.id]??a.id;
+         setReservationIntent(old=>({activity:selectedActivity,version:(old?.version??0)+1}));
+       }}}>
+       {lang==='fr'?'Demander une réservation':'Request a booking'}<ArrowUpRight size={15}/>
+     </a>}
    </div>
    {(['pedalo-simple','pedalo-double','canoe-simple','canoe-double'] as const).includes(a.id as 'pedalo-simple'|'pedalo-double'|'canoe-simple'|'canoe-double')?
      <CraftThumbnail kind={a.id as 'pedalo-simple'|'pedalo-double'|'canoe-simple'|'canoe-double'} lang={lang}/>:
@@ -335,7 +343,7 @@ export default function Home(){
   </div>
  </div>
 </section>
- <ReservationPlanner lang={lang}/>
+ <ReservationPlanner lang={lang} intent={reservationIntent}/>
  </main>
  <footer className="footer footer-v15" aria-label={lang==='fr'?'Pied de page':'Footer'}>
   <div className="footer-v15-inner">
