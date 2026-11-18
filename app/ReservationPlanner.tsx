@@ -33,7 +33,8 @@ function estimate(id:string,adults:number,children:number){
  if(id==='guezo')return adults===2&&children===0?{total:12000,crossingIncluded:true}:null;
  if(id==='behanzin')return adults===4&&children===0?{total:36000,crossingIncluded:true}:null;
  if(id==='toffa')return adults===2&&children===2?{total:18000,crossingIncluded:true}:null;
- if(id==='lake'||id==='mangrove')return null;
+ if(id==='mangrove')return {total:adults*5000+children*2500+adults*1500+children*500,crossingIncluded:false};
+ if(id==='lake')return null;
  if(id==='pedalboat')return count>=2&&count<=4?{total:count*(count===2?5000:3000)+adults*1500+children*500,crossingIncluded:false}:null;
  return {total:count*3000+adults*1500+children*500,crossingIncluded:false};
 }
