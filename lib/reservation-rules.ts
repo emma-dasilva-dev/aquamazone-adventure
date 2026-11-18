@@ -120,6 +120,8 @@ export function validateReservation(input: unknown, now: Date = new Date(), opti
   const adults = obj.adults as number, children = obj.children as number, count=adults+children;
   if (count < 1 || count > 20)
     return error('guest_limit','Choose between 1 and 20 guests; larger groups require team assistance.');
+  if(children>0&&adults<1)
+    return error('accompanying_adult','Children under 12 must be accompanied by a responsible adult.');
   if (experience === 'glele' && adults < 1)
     return error('accompanying_adult','GLÈLÈ requires at least one adult. Children under 12 must be accompanied.');
   if (experience === 'guezo' && (adults !== 2 || children !== 0))
