@@ -60,11 +60,16 @@ function ActivityChoiceIcon({id}:{id:string}){
  if(id==='lake')return <Waves {...common}/>;
  return <Trees {...common}/>;
 }
-export default function ReservationPlanner({lang}:{lang:Lang}){
+export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{activity:string;version:number}|null}){
  const [now,setNow]=useState<Date|null>(null);
  useEffect(()=>{const refresh=()=>setNow(new Date());refresh();const timer=setInterval(refresh,60000);return ()=>clearInterval(timer);},[]);
  const [id,setId]=useState('pedalo');
  const [activityIds,setActivityIds]=useState<string[]>(['pedalo']);
+ useEffect(()=>{
+   if(!intent||!options.some(option=>option.kind==='activity'&&option.id===intent.activity))return;
+   setActivityIds([intent.activity]);
+   setId(intent.activity);
+ },[intent]);
  const [date,setDate]=useState('');
  const [time,setTime]=useState('12:00');
  const [adults,setAdults]=useState(2);
