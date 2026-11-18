@@ -856,3 +856,8 @@ img,video,iframe{max-width:100%}
 .az-reservation-mini svg{width:92px;height:61px}
 .az-reservation-selection-note{grid-column:1/-1;font-size:11px;color:#60768a;line-height:1.4}
 @media(max-width:420px){.reservation-v15-fields .az-reservation-compact{grid-template-columns:minmax(0,1fr) 72px;gap:10px}.az-reservation-mini{width:72px;height:60px}.az-reservation-mini svg{width:69px;height:52px}}
+
+/* Package details: short, legible inclusion lists, consistent across every card. */
+.package-experience-included ul{list-style:none;padding:0;margin:9px 0 0;display:grid;gap:7px}
+.package-experience-included li{position:relative;padding-left:16px;line-height:1.5}
+.package-experience-included li::before{content:"";position:absolute;left:0;top:.6em;width:5px;height:5px;border-radius:50%;background:#0055A4}
