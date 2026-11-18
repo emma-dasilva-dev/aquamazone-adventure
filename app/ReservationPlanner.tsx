@@ -194,7 +194,7 @@ export default function ReservationPlanner({lang}:{lang:Lang}){
          </select>
        </label>)}
        {adults===0&&<p className="reservation-v15-error" role="status">{lang==='fr'?'Un adulte accompagnateur est obligatoire.':'An accompanying adult is required.'}</p>}
-     </fieldset>
+     </fieldset>}
      <fieldset className="az-reservation-identity">
       <legend>{text.identity}</legend>
       <p>{text.identityHelp}</p>
