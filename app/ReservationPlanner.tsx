@@ -37,9 +37,9 @@ function estimate(id:string,adults:number,children:number){
  if(id==='pedalboat')return count>=2&&count<=4?{total:count*(count===2?5000:3000)+adults*1500+children*500,crossingIncluded:false}:null;
  return {total:count*3000+adults*1500+children*500,crossingIncluded:false};
 }
-function ReservationActivityMini({id}:{id:string}){
- const isPaddle=id==='pedalo'||id==='glele'||id==='guezo'||id==='toffa'||id==='behanzin'||id==='pedalboat';
- const isCanoe=id==='canoe';
+function ReservationActivityMini({id,choice}:{id:string;choice:'canoe'|'pedalo'}){
+ const isPaddle=id==='pedalo'||id==='guezo'||id==='behanzin'||id==='pedalboat'||id==='toffa'||(id==='glele'&&choice==='pedalo');
+ const isCanoe=id==='canoe'||(id==='glele'&&choice==='canoe');
  const boat=isPaddle||isCanoe;
  return <svg viewBox="0 0 96 64" xmlns="http://www.w3.org/2000/svg" focusable="false">
   <path d="M7 49 Q21 43 35 49 T63 49 T91 49" stroke="#55B5EF" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
@@ -157,7 +157,7 @@ export default function ReservationPlanner({lang}:{lang:Lang}){
         </select>
       </label>
       <div className="az-reservation-mini" aria-hidden="true">
-        <ReservationActivityMini id={id}/>
+        <ReservationActivityMini id={id} choice={choice}/>
       </div>
       <small className="az-reservation-selection-note">{selected.duration??(lang==='fr'?'Durée selon l’expérience':'Duration depends on experience')} · {lang==='fr'?'Visuel indicatif':'Illustrative pictogram'}</small>
      </div></fieldset>
