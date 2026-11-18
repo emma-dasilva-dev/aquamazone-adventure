@@ -6,8 +6,13 @@ export const metadata: Metadata = {
   description:
     'Base de loisirs nautiques à Adounko Village, Route des Pêches, Cotonou.',
   icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon.ico',
+    icon: [
+      {
+        url: '/favicon.ico?v=20261118-2',
+        type: 'image/x-icon',
+        sizes: 'any',
+      },
+    ],
   },
 };
 
