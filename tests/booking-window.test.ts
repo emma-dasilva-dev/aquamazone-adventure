@@ -94,3 +94,21 @@ test('Mangrove discovery charges adults and under-12s separately, plus mandatory
     assert.equal(result.quote.total,19000);
   }
 });
+
+test('GLÈLÈ accepts canoe, pedalo or paddle as ONE included 30-minute activity',()=>{
+  const now=benin('2026-11-16','09:00');
+  for(const choice of ['canoe','pedalo','paddle']){
+    const result=validateReservation({
+      experience:'glele',date:'2026-11-21',time:'12:00',adults:1,children:0,choice
+    },now);
+    assert.equal(result.ok,true,choice);
+    if(result.ok){
+      assert.equal(result.quote.total,5000);
+      assert.equal(result.quote.crossingIncluded,true);
+      assert.equal(result.reservation.choice,choice);
+    }
+  }
+  assert.equal(validateReservation({
+    experience:'glele',date:'2026-11-21',time:'12:00',adults:1,children:0,choice:'all'
+  },now).ok,false);
+});
