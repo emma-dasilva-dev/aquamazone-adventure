@@ -133,7 +133,13 @@ export default function Home(){
          <p className="package-experience-eyebrow">{lang==='fr'?'Le plaisir de découvrir':'Your first adventure'}</p>
          <h3>GLÈLÈ</h3>
          <p className="package-experience-intro">{lang==='fr'?'Une première escapade sur l’eau, à votre rythme.':'Your first escape on the water, at your own pace.'}</p>
-         <div className="package-experience-included"><strong>{lang==='fr'?'Traversée aller-retour incluse':'Return crossing included'}</strong><br/><strong>{lang==='fr'?'1 activité au choix':'Choose 1 activity'}</strong> : {lang==='fr'?'canoë-kayak simple OU pédalo simple (30 min)':'single canoe-kayak OR single pedalo (30 min)'}</div>
+         <div className="package-experience-included">
+            <strong>{lang==='fr'?'Ce forfait comprend :':'Included in this package:'}</strong>
+            <ul>
+              <li>{lang==='fr'?'Traversée en pirogue aller-retour':'Return pirogue crossing'}</li>
+              <li>{lang==='fr'?'1 activité au choix : canoë-kayak simple OU pédalo simple (30 min)':'Choose ONE activity: single canoe-kayak OR single pedalo (30 min)'}</li>
+            </ul>
+          </div>
          <div className="package-experience-end">
            <div className="package-v6-prices"><span>{lang==='fr'?'Adulte':'Adult'} <strong>5 000 <small>FCFA</small></strong></span><span>{lang==='fr'?'Enfant':'Child'} <strong>3 500 <small>FCFA</small></strong></span></div>
            <a href="#reservation" aria-label={lang==='fr'?'Se renseigner sur le forfait GLÈLÈ':'Enquire about GLÈLÈ'}>{lang==='fr'?'Choisir GLÈLÈ':'Choose GLÈLÈ'}<ArrowUpRight size={18}/></a>
@@ -147,7 +153,15 @@ export default function Home(){
          <p className="package-experience-eyebrow">{lang==='fr'?'Deux fois plus de souvenirs':'Make memories together'}</p>
          <h3>GUÉZO</h3>
          <p className="package-experience-intro">{lang==='fr'?'Une aventure à partager, ensemble.':'An adventure made for two.'}</p>
-         <div className="package-experience-included"><strong>{lang==='fr'?'Traversée aller-retour incluse':'Return crossing included'}</strong><br/>{lang==='fr'?'Canoë-kayak double ET pédalo double · Jus offert':'Double canoe-kayak AND double pedalo · Complimentary juice'}</div>
+         <div className="package-experience-included">
+            <strong>{lang==='fr'?'Ce forfait comprend :':'Included in this package:'}</strong>
+            <ul>
+              <li>{lang==='fr'?'Traversée en pirogue aller-retour':'Return pirogue crossing'}</li>
+              <li>{lang==='fr'?'Canoë-kayak double':'Double canoe-kayak'}</li>
+              <li>{lang==='fr'?'Pédalo double':'Double pedalo'}</li>
+              <li>{lang==='fr'?'Jus offert':'Complimentary juice'}</li>
+            </ul>
+          </div>
          <div className="package-experience-end"><div><span className="package-experience-small">{lang==='fr'?'Pour le couple':'Per couple'}</span><strong>12 000 <small>FCFA</small></strong></div><a href="#reservation" aria-label={lang==='fr'?'Se renseigner sur le forfait GUÉZO':'Enquire about GUÉZO'}>{lang==='fr'?'Choisir GUÉZO':'Choose GUÉZO'}<ArrowUpRight size={18}/></a></div>
        </div>
      </article>
@@ -160,9 +174,14 @@ export default function Home(){
          <p className="package-experience-eyebrow">{lang==='fr'?'Des souvenirs ensemble':'Make memories together'}</p>
          <h3>TOFFA</h3>
          <p className="package-experience-intro">{lang==='fr'?'Une journée à partager en famille, au rythme de l’eau.':'A family day out, enjoyed at your own pace.'}</p>
-         <div className="package-experience-included">{lang==='fr'?
-           'Traversée en pirogue aller-retour · Bateau à pédales familial (4 personnes) · Jus offert':
-           'Return pirogue crossing · Family pedal-powered boat (4 people) · Complimentary juice'}</div>
+         <div className="package-experience-included">
+            <strong>{lang==='fr'?'Ce forfait comprend :':'Included in this package:'}</strong>
+            <ul>
+              <li>{lang==='fr'?'Traversée en pirogue aller-retour':'Return pirogue crossing'}</li>
+              <li>{lang==='fr'?'Bateau à pédales familial (4 personnes)':'Family pedal-powered boat (4 people)'}</li>
+              <li>{lang==='fr'?'Jus offert':'Complimentary juice'}</li>
+            </ul>
+          </div>
          <div className="package-experience-end"><div><span className="package-experience-small">{lang==='fr'?'Pour 2 adultes + 2 enfants':'For 2 adults + 2 children'}</span><strong>18 000 <small>FCFA</small></strong></div><a href="#reservation">{lang==='fr'?'Choisir TOFFA':'Choose TOFFA'}<ArrowUpRight size={18}/></a></div>
        </div>
      </article>
@@ -173,7 +192,16 @@ export default function Home(){
          <p className="package-experience-eyebrow">{lang==='fr'?'L’aventure à plusieurs':'Adventure together'}</p>
          <h3>BÉHANZIN</h3>
          <p className="package-experience-intro">{lang==='fr'?'Une expérience complète à vivre entre amis.':'A complete water adventure with friends.'}</p>
-         <div className="package-experience-included">{lang==='fr'?'Traversée en pirogue aller-retour · Canoë-kayak double · Balade sur le lac · Pédalo · Jus offert':'Return pirogue crossing · Double canoe-kayak · Lake tour · Pedalo · Complimentary juice'}</div>
+         <div className="package-experience-included">
+            <strong>{lang==='fr'?'Ce forfait comprend :':'Included in this package:'}</strong>
+            <ul>
+              <li>{lang==='fr'?'Traversée en pirogue aller-retour':'Return pirogue crossing'}</li>
+              <li>{lang==='fr'?'Canoë-kayak double':'Double canoe-kayak'}</li>
+              <li>{lang==='fr'?'Balade sur le lac':'Lake tour'}</li>
+              <li>{lang==='fr'?'Pédalo':'Pedalo'}</li>
+              <li>{lang==='fr'?'Jus offert':'Complimentary juice'}</li>
+            </ul>
+          </div>
          <div className="package-experience-end"><div><span className="package-experience-small">{lang==='fr'?'Pour 4 adultes':'For 4 adults'}</span><strong>36 000 <small>FCFA</small></strong></div><a href="#reservation">{lang==='fr'?'Choisir BÉHANZIN':'Choose BÉHANZIN'}<ArrowUpRight size={18}/></a></div>
        </div>
      </article>
