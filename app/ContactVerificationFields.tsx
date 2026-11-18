@@ -2,6 +2,7 @@
 
 import {useEffect,useState} from 'react';
 import {CheckCircle2,Mail,MessageCircle,ShieldCheck} from 'lucide-react';
+import {normalizeBookingEmail,normalizeBookingPhone} from '../lib/booking-contact';
 
 type Lang='fr'|'en';
 type Channel='email'|'whatsapp';
@@ -29,6 +30,32 @@ export default function ContactVerificationFields({lang,phone,email}:Props){
   // Never reuse a verified indicator after the customer edits a destination.
   useEffect(()=>{setWhatsapp(initial());},[phone]);
   useEffect(()=>{setMail(initial());},[email]);
+  // Rehydrate verified indicators from the HttpOnly session after a page refresh.
+  useEffect(()=>{
+    if(!available.email&&!available.whatsapp)return;
+    const pending:AbortController[]=[];
+    const timer=setTimeout(()=>{
+      const values:{channel:Channel;destination:string|null;change:typeof setMail}[]=[
+        {channel:'email',destination:available.email?normalizeBookingEmail(email):null,change:setMail},
+        {channel:'whatsapp',destination:available.whatsapp?normalizeBookingPhone(phone):null,change:setWhatsapp}
+      ];
+      for(const item of values){
+        if(!item.destination)continue;
+        const controller=new AbortController();
+        pending.push(controller);
+        fetch('/api/reservation/contact',{
+          method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({action:'status',channel:item.channel,destination:item.destination}),
+          signal:controller.signal
+        }).then(response=>response.json()).then(result=>{
+          if(result.ok&&result.verified===true)
+            item.change(old=>({...old,verified:true,sent:false,error:''}));
+        }).catch(()=>{});
+      }
+    },700);
+    return ()=>{clearTimeout(timer);pending.forEach(controller=>controller.abort());};
+  },[available.email,available.whatsapp,email,phone]);
+
 
   const describeError=(code:string)=>{
     if(code==='wait_or_rate_limited')
