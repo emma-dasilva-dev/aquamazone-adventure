@@ -51,3 +51,34 @@ test('Invalid dates and weekday online requests are rejected',()=>{
   assert.equal(weekday.ok,false);
   if(!weekday.ok)assert.equal(weekday.code,'special_day');
 });
+
+test('TOFFA is 18,000 FCFA for 2 adults + 2 children including the crossing',()=>{
+  const result=validateReservation({...request('2026-11-21'),experience:'toffa',adults:2,children:2},benin('2026-11-16','09:00'));
+  assert.equal(result.ok,true);
+  if(result.ok){
+    assert.equal(result.quote.total,18000);
+    assert.equal(result.quote.crossingIncluded,true);
+    assert.equal(result.quote.crossingAmount,0);
+  }
+});
+
+test('BÉHANZIN stays 36,000 FCFA with the crossing included',()=>{
+  const result=validateReservation({...request('2026-11-21'),experience:'behanzin',adults:4},benin('2026-11-16','09:00'));
+  assert.equal(result.ok,true);
+  if(result.ok){
+    assert.equal(result.quote.total,36000);
+    assert.equal(result.quote.crossingAmount,0);
+  }
+});
+
+test('Pedal-powered boat accepts 2 to 4 guests and rejects 1 or 5',()=>{
+  const now=benin('2026-11-16','09:00');
+  for(const adults of [2,3,4]){
+    const result=validateReservation({...request('2026-11-21'),experience:'pedalboat',adults},now);
+    assert.equal(result.ok,true);
+  }
+  for(const adults of [1,5]){
+    const result=validateReservation({...request('2026-11-21'),experience:'pedalboat',adults},now);
+    assert.equal(result.ok,false);
+  }
+});
