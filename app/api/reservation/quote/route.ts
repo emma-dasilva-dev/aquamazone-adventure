@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { validateReservation } from '../../../lib/reservation-rules';
+import { validateReservation } from '../../../../lib/reservation-rules';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
