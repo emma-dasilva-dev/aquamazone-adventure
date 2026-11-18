@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: '/aquamazone-tab-v3.ico',
+        url: '/aquamazone-tab-v4.ico',
         type: 'image/x-icon',
         sizes: 'any',
       },
