@@ -14,7 +14,7 @@ const options:Option[]=[
  {id:'paddle',fr:'Paddle / Stand Up',en:'Stand-up paddle',kind:'activity',duration:'30 min'},
  {id:'waterball',fr:'Bulle gonflable / Water Ball',en:'Inflatable Water Ball',kind:'activity',duration:'20 min'},
  {id:'pedalboat',fr:'Bateau à pédales (2 à 4 pers.)',en:'Pedal-powered boat (2–4 people)',kind:'activity',duration:'30 min'},
- {id:'lake',fr:'Balade sur le lac',en:'Lake outing',kind:'activity'},
+ {id:'lake',fr:'Balade sur le lac',en:'Lake outing',kind:'activity',duration:'30–45 min'},
  {id:'mangrove',fr:'Découverte des mangroves',en:'Mangrove discovery',kind:'activity'},
  {id:'glele',fr:'GLÈLÈ — Solo',en:'GLÈLÈ — Solo',kind:'package'},
  {id:'guezo',fr:'GUÉZO — Couple',en:'GUÉZO — Couple',kind:'package'},
@@ -32,7 +32,8 @@ function estimate(id:string,adults:number,children:number){
  if(id==='glele')return {total:adults*5000+children*3500,crossingIncluded:true};
  if(id==='guezo')return adults===2&&children===0?{total:12000,crossingIncluded:true}:null;
  if(id==='behanzin')return adults===4&&children===0?{total:36000,crossingIncluded:true}:null;
- if(id==='toffa'||id==='lake'||id==='mangrove')return null;
+ if(id==='toffa')return adults===2&&children===2?{total:18000,crossingIncluded:true}:null;
+ if(id==='lake'||id==='mangrove')return null;
  if(id==='pedalboat')return count>=2&&count<=4?{total:count*(count===2?5000:3000)+adults*1500+children*500,crossingIncluded:false}:null;
  return {total:count*3000+adults*1500+children*500,crossingIncluded:false};
 }
