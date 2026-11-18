@@ -7,10 +7,10 @@ import {ArrowDown,ArrowUpRight,ArrowRight,Menu,X,Plus,Minus,MapPin,Clock,Message
 
 type Lang='fr'|'en';
 const activities=[
- {id:'pedalo',fr:'Pédalo simple et double',en:'Single and double pedalo',duration:'30 min',price:'3 000 FCFA / personne',note:'Simple : 1 personne · Double : 2 personnes'},
- {id:'kayak',fr:'Canoë-kayak simple et double',en:'Single and double canoe-kayak',duration:'30 min',price:'3 000 FCFA / personne',note:'Simple : 1 personne · Double : 2 personnes'},
+ {id:'pedalo',fr:'Pédalo simple et double',en:'Single and double pedalo',duration:'30 min',price:'3 000 FCFA / personne',note:'Simple : 1 personne · Double : 2 personnes',noteEn:'Single: 1 person · Double: 2 people'},
+ {id:'kayak',fr:'Canoë-kayak simple et double',en:'Single and double canoe-kayak',duration:'30 min',price:'3 000 FCFA / personne',note:'Simple : 1 personne · Double : 2 personnes',noteEn:'Single: 1 person · Double: 2 people'},
  {id:'paddle',fr:'Paddle / Stand Up',en:'Stand-up paddle',duration:'30 min',price:'3 000 FCFA',note:''},
- {id:'boat',fr:'Bateau à pédales',en:'Pedal-powered boat',duration:'30 min',price:'5 000 FCFA / personne (2 pers.)',note:'Capacité : 2 à 4 personnes · 3 ou 4 personnes : 3 000 FCFA / personne'},
+ {id:'boat',fr:'Bateau à pédales',en:'Pedal-powered boat',duration:'30 min',price:'5 000 FCFA / personne (2 pers.)',note:'Capacité : 2 à 4 personnes · 3 ou 4 personnes : 3 000 FCFA / personne',noteEn:'Capacity: 2–4 people · For 3 or 4: 3,000 FCFA per person'},
  {id:'ball',fr:'Bulle gonflable / Water Ball',en:'Inflatable water ball',duration:'20 min',price:'3 000 FCFA / personne',note:''},
  {id:'tour',fr:'Balade sur l’eau / Mangrove',en:'Lagoon / Mangrove tour',duration:'30–45 min',price:'5 000 FCFA / adulte',note:'Enfant de moins de 12 ans : 2 500 FCFA'},
  {id:'jetski',fr:'Jet-ski',en:'Jet ski',duration:'',price:'',note:'Indisponible — maintenance',unavailable:true},
@@ -70,7 +70,7 @@ export default function Home(){
    <div className="activity-list-copy">
      <h3>{lang==='fr'?a.fr:a.en}</h3>
      <div className="activity-list-facts">{a.duration&&<span>{a.duration}</span>}{a.duration&&a.price&&<span aria-hidden="true">·</span>}{a.price&&<strong>{a.price}</strong>}</div>
-     {a.note&&<p className={a.unavailable?'activity-list-alert':'activity-list-note'}>{a.note}</p>}
+     {a.note&&<p className={a.unavailable?'activity-list-alert':'activity-list-note'}>{lang==='fr'?a.note:(a.noteEn??a.note)}</p>}
      {!a.unavailable&&<a className="activity-list-link" href="#reservation">{lang==='fr'?'Demander une réservation':'Request a booking'}<ArrowUpRight size={15}/></a>}
    </div>
    {activityVisuals[a.id]?
