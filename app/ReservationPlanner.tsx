@@ -37,6 +37,18 @@ function estimate(id:string,adults:number,children:number){
  if(id==='pedalboat')return count>=2&&count<=4?{total:count*(count===2?5000:3000)+adults*1500+children*500,crossingIncluded:false}:null;
  return {total:count*3000+adults*1500+children*500,crossingIncluded:false};
 }
+function ReservationActivityMini({id}:{id:string}){
+ const isPaddle=id==='pedalo'||id==='glele'||id==='guezo'||id==='toffa'||id==='behanzin'||id==='pedalboat';
+ const isCanoe=id==='canoe';
+ const boat=isPaddle||isCanoe;
+ return <svg viewBox="0 0 96 64" xmlns="http://www.w3.org/2000/svg" focusable="false">
+  <path d="M7 49 Q21 43 35 49 T63 49 T91 49" stroke="#55B5EF" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
+  {boat?<><path d={isCanoe?"M14 29 Q48 16 82 29 L71 43 Q48 50 25 43 Z":"M16 29 H80 L73 44 H23 Z"} fill="#0055A4"/>
+    <path d={isCanoe?"M14 29 Q48 16 82 29":"M16 29 H80"} fill="none" stroke="#062B60" strokeWidth="2"/>
+    <circle cx="37" cy="29" r="6" fill="#FFD326"/><circle cx="58" cy="29" r="6" fill="#FFD326"/>
+  </>:<><circle cx="48" cy="32" r="15" fill="#0055A4"/><path d="M48 9V55 M25 32H71" stroke="#FFD326" strokeWidth="4" strokeLinecap="round"/></>}
+ </svg>;
+}
 export default function ReservationPlanner({lang}:{lang:Lang}){
  const [now,setNow]=useState<Date|null>(null);
  useEffect(()=>{const refresh=()=>setNow(new Date());refresh();const timer=setInterval(refresh,60000);return ()=>clearInterval(timer);},[]);
@@ -128,7 +140,27 @@ export default function ReservationPlanner({lang}:{lang:Lang}){
    <div className="reservation-v15-heading"><p>{text.eyebrow}</p><h2 id="reservation-title">{text.heading}</h2><span>{text.desc}</span></div>
    <div className="reservation-v15-layout">
     <div className="reservation-v15-fields">
-     <fieldset><legend>{text.kind}</legend><div className="reservation-v15-categories">{(['activity','package'] as const).map(kind=><button key={kind} type="button" className={selected.kind===kind?'active':''} aria-pressed={selected.kind===kind} onClick={()=>{setId(kind==='activity'?'pedalo':'glele');setAdults(kind==='activity'?2:1);setChildren(0);}}>{kind==='activity'?text.activity:text.pack}</button>)}</div><div className="reservation-v15-options">{options.filter(o=>o.kind===selected.kind).map(o=><button type="button" key={o.id} className={id===o.id?'selected':''} aria-pressed={id===o.id} onClick={()=>{setId(o.id);if(o.id==='glele'){setAdults(1);setChildren(0);}if(o.id==='guezo'){setAdults(2);setChildren(0);}if(o.id==='behanzin'){setAdults(4);setChildren(0);}if(o.id==='toffa'){setAdults(2);setChildren(2);}}}><span>{o[lang]}</span>{o.duration&&<small>{o.duration}</small>}</button>)}</div></fieldset>
+     <fieldset><legend>{text.kind}</legend><div className="reservation-v15-categories">{(['activity','package'] as const).map(kind=><button key={kind} type="button" className={selected.kind===kind?'active':''} aria-pressed={selected.kind===kind} onClick={()=>{setId(kind==='activity'?'pedalo':'glele');setAdults(kind==='activity'?2:1);setChildren(0);}}>{kind==='activity'?text.activity:text.pack}</button>)}</div><div className="az-reservation-compact">
+      <label className="az-reservation-select" htmlFor="az-reservation-experience">
+        <span>{lang==='fr'?'Votre sélection':'Your selection'}</span>
+        <select id="az-reservation-experience" value={id} onChange={event=>{
+          const selectedId=event.target.value;
+          setId(selectedId);
+          if(selectedId==='glele'){setAdults(1);setChildren(0);}
+          else if(selectedId==='guezo'){setAdults(2);setChildren(0);}
+          else if(selectedId==='behanzin'){setAdults(4);setChildren(0);}
+          else if(selectedId==='toffa'){setAdults(2);setChildren(2);}
+        }}>
+          {options.filter(o=>o.kind===selected.kind).map(o=>
+            <option key={o.id} value={o.id}>{o[lang]}</option>
+          )}
+        </select>
+      </label>
+      <div className="az-reservation-mini" aria-hidden="true">
+        <ReservationActivityMini id={id}/>
+      </div>
+      <small className="az-reservation-selection-note">{selected.duration??(lang==='fr'?'Durée selon l’expérience':'Duration depends on experience')} · {lang==='fr'?'Visuel indicatif':'Illustrative pictogram'}</small>
+     </div></fieldset>
      <div className="az-reservation-window" role="status">
        <strong>{lang==='fr'?'Calendrier des réservations':'Booking calendar'}</strong>
        <p>{bookingNotice}</p>
