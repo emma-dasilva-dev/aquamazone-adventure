@@ -7,7 +7,7 @@ export const RESERVATION_SLOTS = ['12:00','12:30','13:00','13:30','14:00','14:30
 export const RESERVATION_IDS = ['pedalo','canoe','paddle','waterball','pedalboat','lake','mangrove','glele','guezo','toffa','behanzin'] as const;
 
 export type ReservationId = (typeof RESERVATION_IDS)[number];
-export type ReservationChoice = 'canoe' | 'pedalo';
+export type ReservationChoice = 'canoe' | 'pedalo' | 'paddle';
 export type ReservationRequest = {
   experience: ReservationId;
   date: string;
@@ -129,7 +129,7 @@ export function validateReservation(input: unknown, now: Date = new Date(), opti
     return error('package_guests','BÉHANZIN requires exactly four adults.');
   if (experience === 'pedalboat' && (count < 2 || count > 4))
     return error('capacity','Pedal-powered boats accommodate 2–4 people per request.');
-  if (experience === 'glele' && obj.choice !== 'canoe' && obj.choice !== 'pedalo')
+  if (experience === 'glele' && obj.choice !== 'canoe' && obj.choice !== 'pedalo' && obj.choice !== 'paddle')
     return error('activity_choice','Choose one GLÈLÈ activity.');
   const choice: ReservationChoice | undefined = experience==='glele' ? obj.choice as ReservationChoice : undefined;
   const crossingIncluded = ['glele','guezo','toffa','behanzin'].includes(experience);
