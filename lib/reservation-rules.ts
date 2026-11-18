@@ -15,6 +15,7 @@ export type ReservationRequest = {
   adults: number;
   children: number;
   choice?: ReservationChoice;
+  choices?: ReservationChoice[];
 };
 export type ReservationQuote = {
   total: number | null;
@@ -119,8 +120,8 @@ export function validateReservation(input: unknown, now: Date = new Date(), opti
   const adults = obj.adults as number, children = obj.children as number, count=adults+children;
   if (count < 1 || count > 20)
     return error('guest_limit','Choose between 1 and 20 guests; larger groups require team assistance.');
-  if (experience === 'glele' && count !== 1)
-    return error('package_guests','GLÈLÈ is for exactly one person.');
+  if (experience === 'glele' && adults < 1)
+    return error('accompanying_adult','GLÈLÈ requires at least one adult. Children under 12 must be accompanied.');
   if (experience === 'guezo' && (adults !== 2 || children !== 0))
     return error('package_guests','GUÉZO requires exactly two adults.');
   if (experience === 'toffa' && (adults !== 2 || children !== 2))
@@ -129,9 +130,20 @@ export function validateReservation(input: unknown, now: Date = new Date(), opti
     return error('package_guests','BÉHANZIN requires exactly four adults.');
   if (experience === 'pedalboat' && (count < 2 || count > 4))
     return error('capacity','Pedal-powered boats accommodate 2–4 people per request.');
-  if (experience === 'glele' && obj.choice !== 'canoe' && obj.choice !== 'pedalo' && obj.choice !== 'paddle')
-    return error('activity_choice','Choose one GLÈLÈ activity.');
-  const choice: ReservationChoice | undefined = experience==='glele' ? obj.choice as ReservationChoice : undefined;
+  const validGleleChoice=(v:unknown):v is ReservationChoice=>v==='canoe'||v==='pedalo'||v==='paddle';
+  let choices:ReservationChoice[]|undefined;
+  if(experience==='glele'){
+    if(Array.isArray(obj.choices)){
+      if(obj.choices.length!==count||!obj.choices.every(validGleleChoice))
+        return error('activity_choice','Choose exactly one GLÈLÈ activity for each participant.');
+      choices=[...obj.choices];
+      // Single-choice storage/legacy admin workflow does not yet represent multiple guests.
+      if(obj.choice!==undefined&&obj.choice!==choices[0])
+        return error('activity_choice','The primary GLÈLÈ choice must match the first participant.');
+    } else if(count===1&&validGleleChoice(obj.choice))choices=[obj.choice];
+    else return error('activity_choice','Choose exactly one GLÈLÈ activity for each participant.');
+  }
+  const choice=choices?.[0];
   const crossingIncluded = ['glele','guezo','toffa','behanzin'].includes(experience);
   const crossingAmount = crossingIncluded ? 0 : 1500*adults + 500*children;
   let total: number | null = null;
@@ -143,7 +155,7 @@ export function validateReservation(input: unknown, now: Date = new Date(), opti
   else if (['pedalo','canoe','paddle','waterball'].includes(experience)) total = count*3000 + crossingAmount;
   else if (experience==='mangrove') total = adults*5000+children*2500+crossingAmount;
   // Lake outings have no publicly approved quotation.
-  const reservation: ReservationRequest = {experience,date:obj.date,time:obj.time,adults,children,...(choice?{choice}:{})};
+  const reservation: ReservationRequest = {experience,date:obj.date,time:obj.time,adults,children,...(choice?{choice}:{}),...(choices?{choices}:{})};
   return {ok:true,reservation,quote:{
     total,currency:'XOF',crossingIncluded,crossingAmount,
     status:total===null?'confirm_with_team':'estimate',
