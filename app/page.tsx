@@ -43,7 +43,7 @@ const activityVisuals:Record<string,string>={
  paddle:'https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=1100&q=80&auto=format&fit=crop',
  boat:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1100&q=80&auto=format&fit=crop',
  ball:'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=1100&q=80&auto=format&fit=crop'
-
+};
 export default function Home(){
  const [lang,setLang]=useState<Lang>('fr');const [menu,setMenu]=useState(false);const [preview,setPreview]=useState<string|null>(null);const t=copy[lang];
  useEffect(()=>{document.documentElement.lang=lang;},[lang]);
