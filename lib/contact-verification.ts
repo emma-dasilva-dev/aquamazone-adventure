@@ -1,6 +1,7 @@
 import 'server-only';
 import {createHmac,randomBytes,randomInt} from 'node:crypto';
 import {neon} from '@neondatabase/serverless';
+import {normalizeBookingPhone,normalizeBookingEmail} from './booking-contact';
 
 export type ContactChannel='email'|'whatsapp';
 export const CONTACT_COOKIE='aquamazone_contact_session';
@@ -19,15 +20,7 @@ export function channelConfigured(channel:ContactChannel):boolean{
     process.env.WHATSAPP_OTP_TEMPLATE_NAME);
 }
 export function normalizeDestination(channel:ContactChannel,raw:unknown):string|null{
-  if(typeof raw!=='string')return null;
-  const value=raw.trim();
-  if(channel==='whatsapp'){
-    const phone=value.replace(/[\s().-]/g,'');
-    return value.length<=32&&/^\+[1-9]\d{6,14}$/.test(phone)?phone:null;
-  }
-  const email=value.toLowerCase();
-  return email.length>=5&&email.length<=254&&!/\s/.test(email)&&
-    /^[^@\s<>]+@[^@\s<>]+\.[^@\s<>.]{2,}$/.test(email)?email:null;
+  return channel==='whatsapp'?normalizeBookingPhone(raw):normalizeBookingEmail(raw);
 }
 export function newContactSession():string{return randomBytes(32).toString('base64url');}
 export function validContactSession(session:unknown):session is string{
