@@ -4,7 +4,7 @@
  * Does not modify any existing administrator or Neon secrets.
  */
 import {randomBytes} from 'node:crypto';
-import {readFileSync,writeFileSync,existsSync} from 'node:fs';
+import {readFileSync,writeFileSync,existsSync,chmodSync} from 'node:fs';
 import {resolve} from 'node:path';
 const path=resolve(process.cwd(),'.env.local');
 if(!existsSync(path)){
@@ -24,5 +24,6 @@ if(!existsSync(path)){
     writeFileSync(path,updated,{encoding:'utf8',mode:0o600});
     console.log('Generated a private CONTACT_OTP_SECRET in .env.local.');
   }
+  chmodSync(path,0o600);
   console.log('Next: configure DATABASE_URL_CONTACT_VERIFICATION, CONTACT_EMAIL_FROM, Resend and Meta OTP template credentials.');
 }
