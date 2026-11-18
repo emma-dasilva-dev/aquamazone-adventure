@@ -89,7 +89,7 @@ export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{act
  const count=adults+children;
  const dateValid=Boolean(windowCheck?.ok);
  const activityMode=selected.kind==='activity';
- const groupValid=count>0 && (activityMode
+ const groupValid=count>0 && (children===0||adults>0) && (activityMode
    ?(!activityIds.includes('pedalboat')||(count>=2&&count<=4))
    :id==='guezo'?adults===2&&children===0:id==='behanzin'?adults===4&&children===0:id==='toffa'?adults===2&&children===2:id==='glele'?adults>=1:true);
  const quote=useMemo(()=>{
@@ -298,7 +298,7 @@ export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{act
        :'TOFFA includes the return pirogue crossing, a family pedal-powered boat (4 people), and complimentary juice.'}</p>}
      <div className="reservation-v15-total"><span>{text.price}</span><strong>{quote?format(quote.total):text.unknown}</strong><small>{selected.kind==='package'?text.cross:(lang==='fr'?'Traversée aller-retour ajoutée une seule fois':'Return crossing added once')}</small></div>
      <p className="reservation-v15-hint">{text.costNote}</p>
-     {!okay&&<p className="reservation-v15-error" role="status">{dateNotice||text.validation}</p>}
+     {!okay&&<p className="reservation-v15-error" role="status">{dateNotice||(children>0&&adults===0?(lang==='fr'?'Les enfants doivent venir avec au moins un adulte responsable.':'Children must attend with at least one responsible adult.'):text.validation)}</p>}
      {okay&&!contactValidation.ok&&<p className="reservation-v15-error" role="status">{text.contactInvalid}</p>}
      {serverError&&<p className="reservation-v15-error" role="alert">{serverError} <a href={WA} target="_blank" rel="noopener noreferrer">WhatsApp</a></p>}
      <button className="reservation-v15-cta" type="button" onClick={onRequest} disabled={!ready||checking}>{checking?(lang==='fr'?'Vérification…':'Checking…'):text.contact}<ArrowUpRight size={19}/></button>
