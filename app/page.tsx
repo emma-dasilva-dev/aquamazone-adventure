@@ -44,6 +44,26 @@ const activityVisuals:Record<string,string>={
  boat:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1100&q=80&auto=format&fit=crop',
  ball:'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=1100&q=80&auto=format&fit=crop'
 };
+function CraftThumbnail({kind,lang}:{kind:'pedalo-simple'|'pedalo-double'|'canoe-simple'|'canoe-double';lang:Lang}){
+ const tandem=kind.endsWith('-double');
+ const pedalo=kind.startsWith('pedalo');
+ const people=tandem?2:1;
+ return <div className="az-craft-visual" aria-label={(lang==='fr'?'Schéma illustratif : ':'Illustrative diagram: ')+(pedalo?'pédalo':'canoë-kayak')+' · '+people+(lang==='fr'?' personne(s)':' person(s)')}>
+  <svg viewBox="0 0 200 112" role="img" aria-hidden="true" focusable="false">
+   <path d="M13 92 Q35 85 57 92 T101 92 T145 92 T188 92" fill="none" stroke="#55B5EF" strokeWidth="3" strokeLinecap="round"/>
+   {pedalo?<g>
+     <path d="M20 78 H180 L169 93 H31 Z" fill="#0055A4"/>
+     <path d="M28 78 H172" stroke="#062047" strokeWidth="3"/>
+     {tandem?<><g transform="translate(57 0)"><circle cx="0" cy="74" r="13" fill="none" stroke="#062B60" strokeWidth="3"/><path d="M0 74L13 53L28 74H0L13 53L19 43" fill="none" stroke="#FFD326" strokeWidth="3"/><circle cx="14" cy="32" r="7" fill="#062047"/><path d="M14 39L19 49L10 57" stroke="#062047" strokeWidth="5" strokeLinecap="round"/></g><g transform="translate(112 0)"><circle cx="0" cy="74" r="13" fill="none" stroke="#062B60" strokeWidth="3"/><path d="M0 74L13 53L28 74H0L13 53L19 43" fill="none" stroke="#FFD326" strokeWidth="3"/><circle cx="14" cy="32" r="7" fill="#062047"/><path d="M14 39L19 49L10 57" stroke="#062047" strokeWidth="5" strokeLinecap="round"/></g></>:<g transform="translate(80 0)"><circle cx="0" cy="74" r="13" fill="none" stroke="#062B60" strokeWidth="3"/><path d="M0 74L13 53L28 74H0L13 53L19 43" fill="none" stroke="#FFD326" strokeWidth="3"/><circle cx="14" cy="32" r="7" fill="#062047"/><path d="M14 39L19 49L10 57" stroke="#062047" strokeWidth="5" strokeLinecap="round"/></g>}
+    </g>:<g>
+     <path d="M15 73 Q100 52 185 73 Q169 95 100 94 Q31 95 15 73Z" fill="#0055A4"/>
+     <path d="M15 73 Q100 52 185 73" fill="none" stroke="#062047" strokeWidth="3"/>
+     {(tandem?[66,132]:[100]).map(x=><g key={x}><circle cx={x} cy="45" r="9" fill="#062047"/><path d={`M${x} 56l-6 14m6-13l12 12`} fill="none" stroke="#FFD326" strokeWidth="5" strokeLinecap="round"/><path d={`M${x-17} 33l33 48`} stroke="#062047" strokeWidth="3" strokeLinecap="round"/></g>)}
+    </g>}
+  </svg>
+  <span>{lang==='fr'?(tandem?'2 PLACES':'1 PLACE'):(tandem?'2 SEATS':'1 SEAT')}</span>
+ </div>;
+}
 export default function Home(){
  const [lang,setLang]=useState<Lang>('fr');const [menu,setMenu]=useState(false);const [preview,setPreview]=useState<string|null>(null);const t=copy[lang];
  useEffect(()=>{document.documentElement.lang=lang;},[lang]);
@@ -91,7 +111,9 @@ export default function Home(){
      {a.note&&<p className={a.unavailable?'activity-list-alert':'activity-list-note'}>{lang==='fr'?a.note:(a.noteEn??a.note)}</p>}
      {!a.unavailable&&<a className="activity-list-link" href="#reservation">{lang==='fr'?'Demander une réservation':'Request a booking'}<ArrowUpRight size={15}/></a>}
    </div>
-   {activityVisuals[a.id]?
+   {(['pedalo-simple','pedalo-double','canoe-simple','canoe-double'] as const).includes(a.id as 'pedalo-simple'|'pedalo-double'|'canoe-simple'|'canoe-double')?
+     <CraftThumbnail kind={a.id as 'pedalo-simple'|'pedalo-double'|'canoe-simple'|'canoe-double'} lang={lang}/>:
+     activityVisuals[a.id]?
      <button className="activity-thumbnail" type="button" onClick={()=>setPreview(a.id)} aria-label={(lang==='fr'?'Agrandir la photo illustrative : ':'Expand illustrative image: ')+(lang==='fr'?a.fr:a.en)}>
        <span className="activity-thumbnail-photo" style={{backgroundImage:`url("${activityVisuals[a.id]}")`}} aria-hidden="true"/>
        <span className="activity-thumbnail-zoom" aria-hidden="true"><ZoomIn size={17}/></span>
