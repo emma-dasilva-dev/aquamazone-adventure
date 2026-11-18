@@ -1,141 +1,111 @@
 'use client';
 
 import {useEffect,useState} from 'react';
-import {CheckCircle2,Mail,MessageCircle,ShieldCheck} from 'lucide-react';
-import {normalizeBookingEmail,normalizeBookingPhone} from '../lib/booking-contact';
+import {CheckCircle2,MessageCircle,ShieldCheck} from 'lucide-react';
+import {normalizeBookingPhone} from '../lib/booking-contact';
 
 type Lang='fr'|'en';
-type Channel='email'|'whatsapp';
 type Status={sent:boolean;verified:boolean;busy:boolean;code:string;error:string};
 const initial=():Status=>({sent:false,verified:false,busy:false,code:'',error:''});
-type Props={lang:Lang;phone:string;email:string};
 
-export default function ContactVerificationFields({lang,phone,email}:Props){
-  const [available,setAvailable]=useState<{email:boolean;whatsapp:boolean}>({email:false,whatsapp:false});
+export default function ContactVerificationFields({lang,phone}:{lang:Lang;phone:string}){
+  const [available,setAvailable]=useState(false);
   const [ready,setReady]=useState(false);
-  const [whatsapp,setWhatsapp]=useState<Status>(initial);
-  const [mail,setMail]=useState<Status>(initial);
+  const [status,setStatus]=useState<Status>(initial);
   const french=lang==='fr';
+  const normalized=normalizeBookingPhone(phone);
 
   useEffect(()=>{
     let active=true;
     fetch('/api/reservation/contact',{cache:'no-store'})
       .then(response=>response.json())
-      .then(result=>{if(active&&result.ok)setAvailable(result.available);})
+      .then(result=>{if(active)setAvailable(result.ok===true&&result.available?.whatsapp===true);})
       .catch(()=>{})
       .finally(()=>{if(active)setReady(true);});
     return ()=>{active=false;};
   },[]);
 
-  // Never reuse a verified indicator after the customer edits a destination.
-  useEffect(()=>{setWhatsapp(initial());},[phone]);
-  useEffect(()=>{setMail(initial());},[email]);
-  // Rehydrate verified indicators from the HttpOnly session after a page refresh.
+  useEffect(()=>{setStatus(initial());},[phone]);
+
   useEffect(()=>{
-    if(!available.email&&!available.whatsapp)return;
-    const pending:AbortController[]=[];
+    if(!available||!normalized)return;
+    const controller=new AbortController();
     const timer=setTimeout(()=>{
-      const values:{channel:Channel;destination:string|null;change:typeof setMail}[]=[
-        {channel:'email',destination:available.email?normalizeBookingEmail(email):null,change:setMail},
-        {channel:'whatsapp',destination:available.whatsapp?normalizeBookingPhone(phone):null,change:setWhatsapp}
-      ];
-      for(const item of values){
-        if(!item.destination)continue;
-        const controller=new AbortController();
-        pending.push(controller);
-        fetch('/api/reservation/contact',{
-          method:'POST',headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({action:'status',channel:item.channel,destination:item.destination}),
-          signal:controller.signal
-        }).then(response=>response.json()).then(result=>{
-          if(result.ok&&result.verified===true)
-            item.change(old=>({...old,verified:true,sent:false,error:''}));
-        }).catch(()=>{});
-      }
+      fetch('/api/reservation/contact',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({action:'status',channel:'whatsapp',destination:normalized}),
+        signal:controller.signal
+      }).then(response=>response.json())
+        .then(result=>{if(result.ok&&result.verified===true)
+          setStatus(old=>({...old,verified:true,sent:false,error:''}));})
+        .catch(()=>{});
     },700);
-    return ()=>{clearTimeout(timer);pending.forEach(controller=>controller.abort());};
-  },[available.email,available.whatsapp,email,phone]);
+    return ()=>{clearTimeout(timer);controller.abort();};
+  },[available,normalized]);
 
-
-  const describeError=(code:string)=>{
+  const explain=(code:string)=>{
     if(code==='wait_or_rate_limited')
       return french?'Patientez avant de demander un nouveau code.':'Please wait before requesting another code.';
     if(code==='code_incorrect_or_expired'||code==='invalid_code')
       return french?'Code incorrect, expiré ou déjà utilisé.':'Incorrect, expired or already used code.';
     if(code==='invalid_destination')
-      return french?'Vérifiez les coordonnées avant de continuer.':'Check the contact details before continuing.';
+      return french?'Vérifiez votre numéro international.':'Check your international number.';
     return french?'Vérification indisponible. Réessayez ou contactez-nous.':
       'Verification is unavailable. Try again or contact our team.';
   };
 
-  const send=async(channel:Channel)=>{
-    const destination=channel==='email'?email:phone;
-    const change=channel==='email'?setMail:setWhatsapp;
-    change(old=>({...old,busy:true,error:''}));
+  const submit=async(action:'send'|'verify')=>{
+    if(!normalized||status.busy||(action==='verify'&&!/^\d{6}$/.test(status.code)))return;
+    setStatus(old=>({...old,busy:true,error:''}));
     try{
       const response=await fetch('/api/reservation/contact',{
         method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({action:'send',channel,destination})
+        body:JSON.stringify({
+          action,channel:'whatsapp',destination:normalized,
+          ...(action==='verify'?{code:status.code}:{})
+        })
       });
       const result=await response.json();
-      if(!response.ok||!result.ok)throw new Error(result.code||'error');
-      change(old=>({...old,busy:false,sent:true,code:'',verified:false}));
+      if(!response.ok||!result.ok||(action==='verify'&&result.verified!==true))
+        throw new Error(result.code||'error');
+      if(action==='verify')setStatus(old=>({...old,busy:false,verified:true,sent:false,code:''}));
+      else setStatus(old=>({...old,busy:false,verified:false,sent:true,code:''}));
     }catch(error){
-      change(old=>({...old,busy:false,error:describeError(error instanceof Error?error.message:'error')}));
+      setStatus(old=>({...old,busy:false,error:explain(error instanceof Error?error.message:'error')}));
     }
   };
-  const verify=async(channel:Channel)=>{
-    const destination=channel==='email'?email:phone;
-    const status=channel==='email'?mail:whatsapp;
-    const change=channel==='email'?setMail:setWhatsapp;
-    if(!/^\d{6}$/.test(status.code))return;
-    change(old=>({...old,busy:true,error:''}));
-    try{
-      const response=await fetch('/api/reservation/contact',{
-        method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({action:'verify',channel,destination,code:status.code})
-      });
-      const result=await response.json();
-      if(!response.ok||result.verified!==true)throw new Error(result.code||'error');
-      change(old=>({...old,busy:false,verified:true,sent:false,code:''}));
-    }catch(error){
-      change(old=>({...old,busy:false,error:describeError(error instanceof Error?error.message:'error')}));
-    }
-  };
-  // Never show unfinished verification controls on the public website.
-  if(!ready||(!available.email&&!available.whatsapp))return null;
-  return <div className="az-contact-verify" aria-label={french?'Vérification des coordonnées':'Contact verification'}>
-    <div className="az-contact-verify-heading"><ShieldCheck size={18} aria-hidden="true"/>
-      <span>{french?'Vérification des coordonnées':'Contact verification'}</span>
+
+  // Do not expose inactive verification UI before a provider is configured.
+  if(!ready||!available)return null;
+  return <div className="az-contact-verify" aria-label={french?'Vérification WhatsApp':'WhatsApp verification'}>
+    <div className="az-contact-verify-heading">
+      <ShieldCheck size={18} aria-hidden="true"/>
+      <span>{french?'Vérification WhatsApp':'WhatsApp verification'}</span>
     </div>
     <p>{french?
-      'Pour les futures réservations payées en ligne, nous vérifierons séparément WhatsApp et votre adresse e-mail. La demande par WhatsApp reste possible sans code.':
-      'For future paid online bookings, we will verify WhatsApp and your email separately. You can still send a WhatsApp enquiry without a code.'}</p>
-    {([['whatsapp',whatsapp,phone,MessageCircle],['email',mail,email,Mail]] as const).map(([channel,state,destination,Icon])=>
-      <div className="az-contact-verify-row" key={channel}>
-        <div className="az-contact-verify-row-head">
-          <span><Icon size={16} aria-hidden="true"/>{channel==='whatsapp'?'WhatsApp':'E-mail'}</span>
-          {state.verified?<span className="az-contact-verified"><CheckCircle2 size={15}/>{french?'Vérifié':'Verified'}</span>:
-            available[channel]?
-             <button type="button" onClick={()=>send(channel)} disabled={state.busy||destination.trim().length<5}>
-              {state.busy?(french?'En cours…':'Working…'):state.sent?(french?'Renvoyer le code':'Resend code'):(french?'Envoyer un code':'Send a code')}
-             </button>:
-             <small>{french?'Bientôt disponible':'Coming soon'}</small>}
+      'Pour le futur paiement en ligne, nous vérifierons votre numéro WhatsApp. Vous pouvez toujours envoyer une demande sans code.':
+      'For future online payments, we will verify your WhatsApp number. You can still send an enquiry without a code.'}</p>
+    <div className="az-contact-verify-row">
+      <div className="az-contact-verify-row-head">
+        <span><MessageCircle size={16} aria-hidden="true"/>WhatsApp</span>
+        {status.verified?
+          <span className="az-contact-verified"><CheckCircle2 size={15}/>{french?'Vérifié':'Verified'}</span>:
+          <button type="button" disabled={status.busy||!normalized} onClick={()=>submit('send')}>
+            {status.busy?(french?'En cours…':'Working…'):
+              status.sent?(french?'Renvoyer le code':'Resend code'):(french?'Envoyer un code':'Send a code')}
+          </button>}
+      </div>
+      {status.sent&&!status.verified&&<div className="az-contact-verify-code">
+        <label htmlFor="az-code-whatsapp">{french?'Code à 6 chiffres (valable 5 min)':'6-digit code (valid 5 min)'}</label>
+        <div>
+          <input id="az-code-whatsapp" type="text" inputMode="numeric" pattern="[0-9]{6}"
+            maxLength={6} autoComplete="one-time-code" value={status.code}
+            onChange={event=>setStatus(old=>({...old,code:event.target.value.replace(/\D/g,'').slice(0,6),error:''}))}/>
+          <button type="button" disabled={status.busy||status.code.length!==6}
+            onClick={()=>submit('verify')}>{french?'Vérifier':'Verify'}</button>
         </div>
-        {state.sent&&!state.verified&&<div className="az-contact-verify-code">
-          <label htmlFor={'az-code-'+channel}>{french?'Code à 6 chiffres (valable 5 min)':'6-digit code (valid 5 min)'}</label>
-          <div><input id={'az-code-'+channel} type="text" inputMode="numeric" pattern="[0-9]{6}" maxLength={6}
-             autoComplete="one-time-code" value={state.code} onChange={event=>setCode(event.target.value,channel)}/>
-            <button type="button" disabled={state.busy||state.code.length!==6} onClick={()=>verify(channel)}>
-             {french?'Vérifier':'Verify'}
-            </button></div>
-        </div>}
-        {state.error&&<p className="az-contact-verify-error" role="alert">{state.error}</p>}
-      </div>)}
+      </div>}
+      {status.error&&<p className="az-contact-verify-error" role="alert">{status.error}</p>}
+    </div>
   </div>;
-
-  function setCode(value:string,channel:Channel){
-    const change=channel==='email'?setMail:setWhatsapp;
-    change(old=>({...old,code:value.replace(/\D/g,'').slice(0,6),error:''}));
-  }
 }
