@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { validateReservation } from '../../../../lib/reservation-rules';
+import { validateReservation, validateActivitySelection } from '../../../../lib/reservation-rules';
 import { validateBookingContact } from '../../../../lib/booking-contact';
 
 export const runtime = 'nodejs';
@@ -38,7 +38,9 @@ export async function POST(request: NextRequest) {
     {ok:false,code:contact.code,field:contact.field},
     {status:422,headers}
   );
-  const result=validateReservation(body);
+  const result=(body && typeof body==='object' && !Array.isArray(body) && 'activities' in body)
+    ?validateActivitySelection(body)
+    :validateReservation(body);
   if(!result.ok) return NextResponse.json(result, {status:422,headers});
   return NextResponse.json({
     ...result,
