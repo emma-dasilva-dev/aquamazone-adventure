@@ -148,6 +148,7 @@ export default function ReservationPlanner({lang}:{lang:Lang}){
       <label>{text.time}<span><Clock3 size={17} aria-hidden="true"/><select value={time} onChange={e=>setTime(e.target.value)}>{slots.map(slot=><option key={slot} value={slot}>{slot}</option>)}</select></span></label>
      </div>
      <fieldset className="reservation-v15-people"><legend>{text.people}</legend>{([['adult',text.adult,adults],['child',text.child,children]] as const).map(([type,label,n])=><div key={type} className="reservation-v15-counter"><span>{label}</span><div><button aria-label={(lang==='fr'?'Diminuer ':'Decrease ')+label} disabled={n===0} onClick={()=>updateCount(type,-1)} type="button"><Minus size={17}/></button><output aria-live="polite">{n}</output><button aria-label={(lang==='fr'?'Augmenter ':'Increase ')+label} disabled={n===20} onClick={()=>updateCount(type,1)} type="button"><Plus size={17}/></button></div></div>)}</fieldset>
+     {id==='glele'&&<fieldset className="reservation-v15-choice"><legend>{text.choose}</legend><label><input type="radio" name="gleleChoice" checked={choice==='canoe'} onChange={()=>setChoice('canoe')}/>{text.canoe}</label><label><input type="radio" name="gleleChoice" checked={choice==='pedalo'} onChange={()=>setChoice('pedalo')}/>{text.pedalo}</label></fieldset>}
      <fieldset className="az-reservation-identity">
       <legend>{text.identity}</legend>
       <p>{text.identityHelp}</p>
@@ -169,7 +170,6 @@ export default function ReservationPlanner({lang}:{lang:Lang}){
       <ContactVerificationFields lang={lang} phone={phone} email={email}/>
       <p className="az-reservation-contact-disclaimer">{text.notVerified}</p>
      </fieldset>
-     {id==='glele'&&<fieldset className="reservation-v15-choice"><legend>{text.choose}</legend><label><input type="radio" name="gleleChoice" checked={choice==='canoe'} onChange={()=>setChoice('canoe')}/>{text.canoe}</label><label><input type="radio" name="gleleChoice" checked={choice==='pedalo'} onChange={()=>setChoice('pedalo')}/>{text.pedalo}</label></fieldset>}
     </div>
     <aside className="reservation-v15-summary" aria-label={text.summary}>
      <div className="reservation-v15-summary-top"><span>{text.summary}</span><UsersRound size={22}/></div>
