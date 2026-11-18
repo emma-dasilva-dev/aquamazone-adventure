@@ -96,12 +96,10 @@ export default function ReservationPlanner({lang}:{lang:Lang}){
    return {total,crossingIncluded:false};
  },[id,selected.kind,activityIds,adults,children]);
  const toggleActivity=(activity:string)=>{
-   setActivityIds(previous=>{
-     const next=previous.includes(activity)?previous.filter(value=>value!==activity):[...previous,activity];
-     if(next.length===0)return previous;
-     setId(next[0]);
-     return next;
-   });
+   const next=activityIds.includes(activity)?activityIds.filter(value=>value!==activity):[...activityIds,activity];
+   if(next.length===0)return;
+   setActivityIds(next);
+   setId(next[0]);
  };
  const choices=Array.from({length:count},(_,i)=>gleleChoices[i]??'canoe');
  const updateGleleChoice=(index:number,value:'canoe'|'pedalo'|'paddle')=>setGleleChoices(previous=>Array.from({length:count},(_,i)=>i===index?value:(previous[i]??'canoe')));
