@@ -49,8 +49,7 @@ export default function ReservationPlanner({lang}:{lang:Lang}){
  const [serverError,setServerError]=useState('');
  const [fullName,setFullName]=useState('');
  const [phone,setPhone]=useState('');
- const [email,setEmail]=useState('');
- const contactValidation=validateBookingContact({fullName,phone,email});
+ const contactValidation=validateBookingContact({fullName,phone});
 
  const schedule=now?bookingWindow(now):null;
  const windowCheck=now?checkBookingWindow(date,now):null;
@@ -65,9 +64,9 @@ export default function ReservationPlanner({lang}:{lang:Lang}){
  const ready=okay&&contactValidation.ok;
  const activityLabel=selected[lang];
  const text=lang==='fr'?{
-  eyebrow:'09 / PRÉPARER UNE VISITE',heading:<>Votre prochaine aventure <em>commence ici.</em></>,desc:'Composez votre visite en quelques étapes. Notre équipe confirmera ensuite les disponibilités et les modalités.',kind:'CHOISIR UNE EXPÉRIENCE',activity:'Activité',pack:'Forfait',date:'DATE SOUHAITÉE',time:'HEURE SOUHAITÉE',people:'PARTICIPANTS',adult:'Adultes',child:'Enfants de moins de 12 ans',choose:'ACTIVITÉ AU CHOIX',canoe:'Canoë simple',pedalo:'Pédalo simple',summary:'RÉCAPITULATIF',price:'Estimation',unknown:'Tarif à confirmer',cross:'Traversée aller-retour incluse',crossSeparate:'Traversée aller-retour ajoutée au tarif',contact:'Envoyer ma demande sur WhatsApp',identity:'VOS COORDONNÉES',fullName:'Nom et prénom',phone:'Numéro WhatsApp international',phoneHelp:'Avec indicatif du pays, par exemple +229 01 54 28 44 44 ou +33 6 12 34 56 78.',email:'Adresse e-mail',identityHelp:'Un seul contact pour le groupe. Le nom, le téléphone et l’e-mail sont obligatoires.',notVerified:'Vos coordonnées seront transmises avec la demande. La vérification WhatsApp et e-mail sera activée avant le paiement en ligne.',contactInvalid:'Vérifiez votre nom, votre numéro international et votre e-mail.',notice:'Ceci est une demande, pas une réservation confirmée. Aucun paiement n’est effectué sur ce site.',serverError:'Impossible de vérifier votre demande pour le moment. Réessayez ou contactez notre équipe directement.',validation:'Sélectionnez une date ouverte du week-end à venir et respectez les conditions du forfait.',weekday:'En semaine, les visites nécessitent une organisation préalable avec notre équipe. Contactez-nous sur WhatsApp avant tout déplacement.',costNote:'Les tarifs sont indicatifs selon le choix et la composition du groupe. Les disponibilités restent à confirmer.',help:'Informations et réservation : +229 01 54 28 44 44'
+  eyebrow:'09 / PRÉPARER UNE VISITE',heading:<>Votre prochaine aventure <em>commence ici.</em></>,desc:'Composez votre visite en quelques étapes. Notre équipe confirmera ensuite les disponibilités et les modalités.',kind:'CHOISIR UNE EXPÉRIENCE',activity:'Activité',pack:'Forfait',date:'DATE SOUHAITÉE',time:'HEURE SOUHAITÉE',people:'PARTICIPANTS',adult:'Adultes',child:'Enfants de moins de 12 ans',choose:'ACTIVITÉ AU CHOIX',canoe:'Canoë simple',pedalo:'Pédalo simple',summary:'RÉCAPITULATIF',price:'Estimation',unknown:'Tarif à confirmer',cross:'Traversée aller-retour incluse',crossSeparate:'Traversée aller-retour ajoutée au tarif',contact:'Envoyer ma demande sur WhatsApp',identity:'VOS COORDONNÉES',fullName:'Nom et prénom',phone:'Numéro WhatsApp international',phoneHelp:'Avec indicatif du pays, par exemple +229 01 54 28 44 44 ou +33 6 12 34 56 78.',identityHelp:'Un seul contact pour le groupe. Le nom et le numéro WhatsApp sont obligatoires.',notVerified:'Vos coordonnées seront transmises avec la demande. La vérification du numéro WhatsApp sera activée avant le paiement en ligne.',contactInvalid:'Vérifiez votre nom et votre numéro WhatsApp international.',notice:'Ceci est une demande, pas une réservation confirmée. Aucun paiement n’est effectué sur ce site.',serverError:'Impossible de vérifier votre demande pour le moment. Réessayez ou contactez notre équipe directement.',validation:'Sélectionnez une date ouverte du week-end à venir et respectez les conditions du forfait.',weekday:'En semaine, les visites nécessitent une organisation préalable avec notre équipe. Contactez-nous sur WhatsApp avant tout déplacement.',costNote:'Les tarifs sont indicatifs selon le choix et la composition du groupe. Les disponibilités restent à confirmer.',help:'Informations et réservation : +229 01 54 28 44 44'
  }:{
-  eyebrow:'09 / PLAN A VISIT',heading:<>Your next adventure <em>starts here.</em></>,desc:'Plan your visit in a few steps. Our team will confirm availability and arrangements.',kind:'CHOOSE AN EXPERIENCE',activity:'Activity',pack:'Package',date:'PREFERRED DATE',time:'PREFERRED TIME',people:'GUESTS',adult:'Adults',child:'Children under 12',choose:'CHOOSE ONE ACTIVITY',canoe:'Single canoe',pedalo:'Single pedal boat',summary:'YOUR SUMMARY',price:'Estimate',unknown:'Price to be confirmed',cross:'Return crossing included',crossSeparate:'Return crossing added to price',contact:'Send enquiry on WhatsApp',identity:'YOUR CONTACT DETAILS',fullName:'Full name',phone:'International WhatsApp number',phoneHelp:'Include the country calling code, e.g. +229 01 54 28 44 44 or +33 6 12 34 56 78.',email:'Email address',identityHelp:'Only one contact person per group. All three fields are required.',notVerified:'Your contact details will be sent with the enquiry. WhatsApp and email verification will be enabled before online payment.',contactInvalid:'Check your full name, international number and email address.',notice:'This is an enquiry, not a confirmed booking. No payment is collected on this website.',serverError:'We could not validate your request right now. Please try again or contact our team directly.',validation:'Choose an eligible date for the upcoming weekend and meet the package guest requirements.',weekday:'Weekday visits must be arranged with our team in advance. Contact us on WhatsApp before travelling.',costNote:'Prices are estimates based on your choices. Availability remains subject to confirmation.',help:'Information and enquiries: +229 01 54 28 44 44'
+  eyebrow:'09 / PLAN A VISIT',heading:<>Your next adventure <em>starts here.</em></>,desc:'Plan your visit in a few steps. Our team will confirm availability and arrangements.',kind:'CHOOSE AN EXPERIENCE',activity:'Activity',pack:'Package',date:'PREFERRED DATE',time:'PREFERRED TIME',people:'GUESTS',adult:'Adults',child:'Children under 12',choose:'CHOOSE ONE ACTIVITY',canoe:'Single canoe',pedalo:'Single pedal boat',summary:'YOUR SUMMARY',price:'Estimate',unknown:'Price to be confirmed',cross:'Return crossing included',crossSeparate:'Return crossing added to price',contact:'Send enquiry on WhatsApp',identity:'YOUR CONTACT DETAILS',fullName:'Full name',phone:'International WhatsApp number',phoneHelp:'Include the country calling code, e.g. +229 01 54 28 44 44 or +33 6 12 34 56 78.',identityHelp:'Only one contact person per group. Both fields are required.',notVerified:'Your contact details will be sent with the enquiry. WhatsApp number verification will be enabled before online payment.',contactInvalid:'Check your full name and international WhatsApp number.',notice:'This is an enquiry, not a confirmed booking. No payment is collected on this website.',serverError:'We could not validate your request right now. Please try again or contact our team directly.',validation:'Choose an eligible date for the upcoming weekend and meet the package guest requirements.',weekday:'Weekday visits must be arranged with our team in advance. Contact us on WhatsApp before travelling.',costNote:'Prices are estimates based on your choices. Availability remains subject to confirmation.',help:'Information and enquiries: +229 01 54 28 44 44'
  };
  const bookingNotice=lang==='fr'?
   (!schedule?'Chargement du calendrier…':!saturdayOpen&&!sundayOpen?'Réservations clôturées. Réouverture lundi.':
@@ -85,7 +84,7 @@ export default function ReservationPlanner({lang}:{lang:Lang}){
    const response=await fetch('/api/reservation/quote',{
      method:'POST',
      headers:{'Content-Type':'application/json'},
-     body:JSON.stringify({experience:id,date,time,adults,children,fullName,phone,email,...(id==='glele'?{choice}:{})})
+     body:JSON.stringify({experience:id,date,time,adults,children,fullName,phone,...(id==='glele'?{choice}:{})})
    });
    const result=await response.json() as {
      ok:boolean;code?:string;
@@ -97,7 +96,6 @@ export default function ReservationPlanner({lang}:{lang:Lang}){
      'Bonjour AQUAMAZONE, je souhaite demander une réservation.',
      'Nom et prénom : '+(contactValidation.ok?contactValidation.contact.fullName:fullName),
      'Téléphone WhatsApp : '+(contactValidation.ok?contactValidation.contact.phone:phone),
-     'E-mail : '+(contactValidation.ok?contactValidation.contact.email:email),
      'Expérience : '+activityLabel,
      'Date : '+date,'Heure souhaitée : '+time,
      'Adultes : '+adults,'Enfants (<12 ans) : '+children,
@@ -108,7 +106,6 @@ export default function ReservationPlanner({lang}:{lang:Lang}){
      'Hello AQUAMAZONE, I would like to enquire about a booking.',
      'Full name: '+(contactValidation.ok?contactValidation.contact.fullName:fullName),
      'WhatsApp number: '+(contactValidation.ok?contactValidation.contact.phone:phone),
-     'Email: '+(contactValidation.ok?contactValidation.contact.email:email),
      'Experience: '+activityLabel,'Date: '+date,'Preferred time: '+time,
      'Adults: '+adults,'Children (under 12): '+children,
      ...(id==='glele'?['Chosen activity: '+(choice==='canoe'?'Single canoe':'Single pedal boat')]:[]),
@@ -162,12 +159,8 @@ export default function ReservationPlanner({lang}:{lang:Lang}){
           placeholder="+229 01 54 28 44 44" value={phone} onChange={e=>setPhone(e.target.value)}/>
         <small>{text.phoneHelp}</small>
        </label>
-       <label htmlFor="az-contact-email">{text.email} <span aria-hidden="true">*</span>
-        <input id="az-contact-email" name="contactEmail" type="email" autoComplete="email" maxLength={254} required
-          placeholder="exemple@gmail.com" value={email} onChange={e=>setEmail(e.target.value)}/>
-       </label>
       </div>
-      <ContactVerificationFields lang={lang} phone={phone} email={email}/>
+      <ContactVerificationFields lang={lang} phone={phone}/>
       <p className="az-reservation-contact-disclaimer">{text.notVerified}</p>
      </fieldset>
     </div>
