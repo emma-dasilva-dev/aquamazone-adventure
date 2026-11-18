@@ -26,7 +26,9 @@ export function validateBookingContact(value:unknown):ContactValidation{
   if(!value||typeof value!=='object'||Array.isArray(value))
     return {ok:false,field:'fullName',code:'contact_required'};
   const data=value as Record<string,unknown>;
-  const fullName=typeof data.fullName==='string'?data.fullName.trim().replace(/\s+/g,' '):'';
+  const rawName=typeof data.fullName==='string'?data.fullName:'';
+  if(/[\x00-\x1F\x7F<>]/.test(rawName))return {ok:false,field:'fullName',code:'invalid_name'};
+  const fullName=rawName.trim().replace(/\s+/g,' ');
   if(fullName.length<2||fullName.length>100||/[\x00-\x1F\x7F<>]/.test(fullName))
     return {ok:false,field:'fullName',code:'invalid_name'};
   const phone=normalizeBookingPhone(data.phone);
