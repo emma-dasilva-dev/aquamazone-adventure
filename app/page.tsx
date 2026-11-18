@@ -7,14 +7,17 @@ import {ArrowDown,ArrowUpRight,ArrowRight,Menu,X,Plus,Minus,MapPin,Clock,Message
 
 type Lang='fr'|'en';
 const activities=[
- {id:'pedalo',fr:'Pédalo simple et double',en:'Single and double pedalo',duration:'30 min',price:'3 000 FCFA / personne',note:'Simple : 1 personne · Double : 2 personnes',noteEn:'Single: 1 person · Double: 2 people'},
- {id:'kayak',fr:'Canoë-kayak simple et double',en:'Single and double canoe-kayak',duration:'30 min',price:'3 000 FCFA / personne',note:'Simple : 1 personne · Double : 2 personnes',noteEn:'Single: 1 person · Double: 2 people'},
+ {id:'pedalo-simple',fr:'Pédalo simple',en:'Single pedalo',duration:'30 min',price:'3 000 FCFA / personne',note:'1 personne par pédalo',noteEn:'1 person per craft'},
+ {id:'pedalo-double',fr:'Pédalo double',en:'Double pedalo',duration:'30 min',price:'3 000 FCFA / personne',note:'2 personnes sur le même pédalo',noteEn:'2 people on the same craft'},
+ {id:'canoe-simple',fr:'Canoë-kayak simple',en:'Single canoe-kayak',duration:'30 min',price:'3 000 FCFA / personne',note:'1 personne par embarcation',noteEn:'1 person per craft'},
+ {id:'canoe-double',fr:'Canoë-kayak double',en:'Double canoe-kayak',duration:'30 min',price:'3 000 FCFA / personne',note:'2 personnes dans la même embarcation',noteEn:'2 people in the same craft'},
  {id:'paddle',fr:'Paddle / Stand Up',en:'Stand-up paddle',duration:'30 min',price:'3 000 FCFA',note:''},
- {id:'boat',fr:'Bateau à pédales',en:'Pedal-powered boat',duration:'30 min',price:'5 000 FCFA / personne (2 pers.)',note:'Capacité : 2 à 4 personnes · 3 ou 4 personnes : 3 000 FCFA / personne',noteEn:'Capacity: 2–4 people · For 3 or 4: 3,000 FCFA per person'},
+ {id:'boat',fr:'Bateau à pédales',en:'Pedal-powered boat',duration:'30 min',price:'5 000 FCFA / personne (2 pers.)',note:'2 à 4 personnes · 3 ou 4 pers. : 3 000 FCFA / personne',noteEn:'2–4 people · 3 or 4 people: 3,000 FCFA per person'},
  {id:'ball',fr:'Bulle gonflable / Water Ball',en:'Inflatable water ball',duration:'20 min',price:'3 000 FCFA / personne',note:''},
- {id:'tour',fr:'Balade sur l’eau / Mangrove',en:'Lagoon / Mangrove tour',duration:'30–45 min',price:'5 000 FCFA / adulte',note:'Enfant de moins de 12 ans : 2 500 FCFA'},
- {id:'jetski',fr:'Jet-ski',en:'Jet ski',duration:'',price:'',note:'Indisponible — maintenance',unavailable:true},
- {id:'rental',fr:'Location embarcation + moteur + machiniste',en:'Boat, motor and operator hire',duration:'Demi-journée / journée',price:'Sur devis',note:'Réservation obligatoire'}
+ {id:'tour',fr:'Balade sur le lac',en:'Lake tour',duration:'30–45 min',price:'5 000 FCFA / adulte',note:'Enfant de moins de 12 ans : 2 500 FCFA',noteEn:'Child under 12: 2,500 FCFA'},
+ {id:'mangrove',fr:'Découverte des mangroves',en:'Mangrove discovery',duration:'Durée variable',price:'Tarif à confirmer',note:'Organisation auprès de notre équipe',noteEn:'Arrange details with our team'},
+ {id:'jetski',fr:'Jet-ski',en:'Jet ski',duration:'',price:'',note:'Indisponible — maintenance',noteEn:'Unavailable — maintenance',unavailable:true},
+ {id:'rental',fr:'Location embarcation + moteur + machiniste',en:'Boat, motor and operator hire',duration:'Demi-journée / journée',price:'Sur devis',note:'Réservation obligatoire',noteEn:'Advance booking required'}
 ];
 const copy={fr:{nav:['Activités','Forfaits','Restaurant','Galerie','Localisation'],book:'Réserver',hero:'La détente au fil de l’eau.',explore:'Explorer les activités',eyebrow:'VOTRE PROCHAINE ÉVASION',intro:'L’aventure commence ici.',desc:'Des expériences nautiques, des moments à partager et un cadre naturel à découvrir.',activity:'Choisissez votre aventure',activitySub:'Découvrez les activités et leurs tarifs. Les photographies officielles seront ajoutées prochainement.',featured:'À DÉCOUVRIR',packages:'Nos forfaits expériences',food:'Une pause gourmande au bord de l’eau',gallery:'Des souvenirs à vivre',location:'Comment nous trouver',hours:'Samedi, dimanche et jours fériés · 11h00–18h00',cta:'Préparer ma visite',placeholder:'Photographie Aquamazone à intégrer',ask:'Une question ?',chat:'Assistant Aquamazone',chatWelcome:'Bonjour ! Je peux vous renseigner sur nos horaires, tarifs et notre localisation.',chatQuestions:['Quels sont vos horaires ?','Où êtes-vous situés ?','Combien coûte le pédalo ?'],close:'Fermer',menu:'Ouvrir le menu'},en:{nav:['Activities','Packages','Restaurant','Gallery','Location'],book:'Book',hero:'Relaxation by the water.',explore:'Explore activities',eyebrow:'YOUR NEXT ESCAPE',intro:'Adventure starts here.',desc:'Water activities, moments together and a natural setting to discover.',activity:'Choose your adventure',activitySub:'Explore activities and prices. Official photos will be added soon.',featured:'EXPLORE',packages:'Experience packages',food:'A delicious break by the water',gallery:'Memories in the making',location:'Find us',hours:'Saturday, Sunday and public holidays · 11am–6pm',cta:'Plan my visit',placeholder:'Aqu​amazone photo to be added',ask:'Need help?',chat:'Aquamazone Assistant',chatWelcome:'Hello! I can help with our opening hours, prices and location.',chatQuestions:['What are your opening hours?','Where are you located?','How much is pedal boating?'],close:'Close',menu:'Open menu'}};
 const sections=['activities','packages','restaurant','gallery','location'];
@@ -33,12 +36,14 @@ const faqItems=[
 const bookingWhatsApp='https://wa.me/2290154284444?text=Bonjour%2C%20je%20souhaite%20r%C3%A9server%20une%20activit%C3%A9%20%C3%A0%20Aquamazone.';
 // Temporary stock photography. Replace with verified Aquamazone-owned photographs before launch.
 const activityVisuals:Record<string,string>={
- pedalo:'https://images.unsplash.com/photo-1500534623283-312aade485b7?w=1100&q=80&auto=format&fit=crop',
- kayak:'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1100&q=80&auto=format&fit=crop',
+ 'pedalo-simple':'https://images.unsplash.com/photo-1500534623283-312aade485b7?w=1100&q=80&auto=format&fit=crop',
+ 'pedalo-double':'https://images.unsplash.com/photo-1500534623283-312aade485b7?w=1100&q=80&auto=format&fit=crop',
+ 'canoe-simple':'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1100&q=80&auto=format&fit=crop',
+ 'canoe-double':'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1100&q=80&auto=format&fit=crop',
  paddle:'https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=1100&q=80&auto=format&fit=crop',
  boat:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1100&q=80&auto=format&fit=crop',
  ball:'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=1100&q=80&auto=format&fit=crop'
-};
+
 export default function Home(){
  const [lang,setLang]=useState<Lang>('fr');const [menu,setMenu]=useState(false);const [preview,setPreview]=useState<string|null>(null);const t=copy[lang];
  useEffect(()=>{document.documentElement.lang=lang;},[lang]);
@@ -60,6 +65,19 @@ export default function Home(){
  </div>
  <div className="hero-v3-bottom"><div><MapPin size={20}/><span>Adounko Village<br/>Route des Pêches, Cotonou</span></div><div><Clock size={20}/><span>{lang==='fr'?'Sam. · Dim. · Jours fériés':'Sat. · Sun. · Public holidays'}<br/>11h – 18h</span></div><div><MessageCircle size={20}/><span>{lang==='fr'?'Bar & Restaurant':'Bar & Restaurant'}<br/>{lang==='fr'?'Ouvert les week-ends et jours fériés':'Open weekends & public holidays'}</span></div></div>
  <span className="image-disclosure">{lang==='fr'?'Photo d’illustration · Visuels officiels à venir':'Illustrative photo · Official media coming soon'}</span>
+ </section>
+ <section className="az-crossing-first" aria-labelledby="az-crossing-title">
+   <div className="az-crossing-first-inner">
+     <div className="az-crossing-first-copy">
+       <p className="kicker">{lang==='fr'?'AVANT LES ACTIVITÉS':'BEFORE THE ACTIVITIES'}</p>
+       <h2 id="az-crossing-title">{lang==='fr'?'Traversée en pirogue aller-retour obligatoire':'Mandatory return pirogue crossing'}</h2>
+       <p>{lang==='fr'?'Pour rejoindre notre base nautique, chaque visiteur effectue la traversée aller-retour. Elle est déjà incluse dans tous nos forfaits : aucun supplément à payer.':'Every visitor takes the return pirogue crossing to reach our waterside base. All packages already include this crossing, so there is no additional charge.'}</p>
+     </div>
+     <div className="az-crossing-first-prices">
+       <div><span>{lang==='fr'?'Adulte et 12 ans +':'Adults and ages 12+'}</span><strong>1 500 <small>FCFA</small></strong></div>
+       <div><span>{lang==='fr'?'Enfant de moins de 12 ans':'Children under 12'}</span><strong>500 <small>FCFA</small></strong></div>
+     </div>
+   </div>
  </section>
  <section id="activities" className="activities activities-v3 section-shell">
  <div className="activity-v3-heading"><div><p className="kicker">{lang==='fr'?'02 / NOS ACTIVITÉS':'02 / OUR ACTIVITIES'}</p><h2>{lang==='fr'?'Des expériences uniques sur l’eau':'Unforgettable moments on the water'}</h2></div><p>{lang==='fr'?'Pédalo, kayak, paddle et bien plus encore. Trouvez l’expérience qui vous ressemble.':'Pedal boats, kayaks, paddleboards and more. Find your kind of adventure.'}</p></div>
@@ -127,7 +145,7 @@ export default function Home(){
          <div className="package-experience-included">{lang==='fr'?
            'Traversée en pirogue aller-retour · Bateau à pédales familial (4 personnes) · Jus offert':
            'Return pirogue crossing · Family pedal-powered boat (4 people) · Complimentary juice'}</div>
-         <div className="package-experience-end"><div><span className="package-experience-small">{lang==='fr'?'Tarif et activités':'Price and activities'}</span><strong>{lang==='fr'?'À confirmer':'To confirm'}</strong><span className="package-experience-muted">{lang==='fr'?'Confirmation auprès de l’équipe':'Please confirm with our team'}</span></div><a href={bookingWhatsApp} target="_blank" rel="noopener noreferrer">{lang==='fr'?'Découvrir le forfait':'Explore this package'}<ArrowUpRight size={18}/></a></div>
+         <div className="package-experience-end"><div><span className="package-experience-small">{lang==='fr'?'Pour 2 adultes + 2 enfants':'For 2 adults + 2 children'}</span><strong>18 000 <small>FCFA</small></strong></div><a href={bookingWhatsApp} target="_blank" rel="noopener noreferrer">{lang==='fr'?'Découvrir le forfait':'Explore this package'}<ArrowUpRight size={18}/></a></div>
        </div>
      </article>
      <article className="package-experience package-experience-group">
@@ -137,7 +155,7 @@ export default function Home(){
          <p className="package-experience-eyebrow">{lang==='fr'?'L’aventure à plusieurs':'Adventure together'}</p>
          <h3>BÉHANZIN</h3>
          <p className="package-experience-intro">{lang==='fr'?'Une expérience complète à vivre entre amis.':'A complete water adventure with friends.'}</p>
-         <div className="package-experience-included">{lang==='fr'?'Traversée A/R · Canoë-kayak double · Balade sur le lac · Pédalo · Jus offert':'Return crossing · Double canoe-kayak · Lake tour · Pedalo · Complimentary juice'}</div>
+         <div className="package-experience-included">{lang==='fr'?'Traversée en pirogue aller-retour · Canoë-kayak double · Balade sur le lac · Pédalo · Jus offert':'Return pirogue crossing · Double canoe-kayak · Lake tour · Pedalo · Complimentary juice'}</div>
          <div className="package-experience-end"><div><span className="package-experience-small">{lang==='fr'?'Pour 4 adultes':'For 4 adults'}</span><strong>36 000 <small>FCFA</small></strong></div><a href="#reservation">{lang==='fr'?'Choisir BÉHANZIN':'Choose BÉHANZIN'}<ArrowUpRight size={18}/></a></div>
        </div>
      </article>
@@ -303,6 +321,8 @@ export default function Home(){
         <a href="tel:+2290154284444">+229 01 54 28 44 44</a>
         <a href="mailto:aquamazone229@gmail.com">aquamazone229@gmail.com</a>
         <a href="https://wa.me/2290154284444" target="_blank" rel="noopener noreferrer">WhatsApp <ArrowUpRight size={15}/></a>
+        <a href="https://www.instagram.com/aquamazoneadventure/" target="_blank" rel="noopener noreferrer">Instagram <ArrowUpRight size={15}/></a>
+        <a href="https://www.tiktok.com/@aquamazone1" target="_blank" rel="noopener noreferrer">TikTok <ArrowUpRight size={15}/></a>
         <a href="https://www.youtube.com/@aquamazoneadventure229" target="_blank" rel="noopener noreferrer">YouTube <ArrowUpRight size={15}/></a>
       </div>
     </div>
