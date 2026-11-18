@@ -21,8 +21,8 @@ function sameOrigin(req:NextRequest):boolean{
   }catch{return false;}
 }
 
-export async function GET(){
-  return respond({
+export async function GET(request:NextRequest){
+  const response=respond({
     ok:true,
     available:{
       email:channelConfigured('email'),
@@ -30,6 +30,13 @@ export async function GET(){
     },
     paymentEnabled:false
   });
+  // Establish one session before the customer requests both independent codes.
+  if(verificationConfigured()&&!validContactSession(request.cookies.get(CONTACT_COOKIE)?.value))
+    response.cookies.set(CONTACT_COOKIE,newContactSession(),{
+      httpOnly:true,sameSite:'lax',secure:process.env.NODE_ENV==='production',
+      maxAge:3600,path:'/'
+    });
+  return response;
 }
 
 /** Two independent contact ownership challenges, scoped to one HttpOnly session. */
