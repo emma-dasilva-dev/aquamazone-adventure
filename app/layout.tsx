@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
-export const metadata: Metadata = {title:'Aquamazone Adventure | La détente au fil de l’eau',description:'Base de loisirs nautiques à Adounko Village, Route des Pêches, Cotonou.',icons:{icon:[{url:'/icon.png?v=20261118',type:'image/png',sizes:'any'}],shortcut:'/icon.png?v=20261118'}};
+export const metadata: Metadata = {title:'Aquamazone Adventure | La détente au fil de l’eau',description:'Base de loisirs nautiques à Adounko Village, Route des Pêches, Cotonou.',icons:{icon:[{url:'/favicon.png?v=20261118',type:'image/png',sizes:'any'}],shortcut:'/favicon.png?v=20261118'}};
 export const viewport: Viewport = { width: 'device-width', initialScale: 1, viewportFit: 'cover' };
 export default function RootLayout({children}:{children:React.ReactNode}) {return <html lang="fr"><body>{children}</body></html>}
