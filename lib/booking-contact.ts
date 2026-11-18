@@ -1,11 +1,11 @@
 /**
  * Contact details for public reservation enquiries.
- * Format checks are NOT WhatsApp or email ownership verification.
+ * Format checks are NOT proof that a WhatsApp account belongs to the customer.
  */
-export type BookingContact={fullName:string;phone:string;email:string};
+export type BookingContact={fullName:string;phone:string};
 export type ContactValidation=
   | {ok:true;contact:BookingContact}
-  | {ok:false;field:'fullName'|'phone'|'email';code:string};
+  | {ok:false;field:'fullName'|'phone';code:string};
 
 /** Accept all E.164 country calling codes without assuming any home country. */
 export function normalizeBookingPhone(value:unknown):string|null{
@@ -33,7 +33,5 @@ export function validateBookingContact(value:unknown):ContactValidation{
     return {ok:false,field:'fullName',code:'invalid_name'};
   const phone=normalizeBookingPhone(data.phone);
   if(!phone)return {ok:false,field:'phone',code:'invalid_phone'};
-  const email=normalizeBookingEmail(data.email);
-  if(!email)return {ok:false,field:'email',code:'invalid_email'};
-  return {ok:true,contact:{fullName,phone,email}};
+  return {ok:true,contact:{fullName,phone}};
 }
