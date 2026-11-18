@@ -1,13 +1,27 @@
 /**
  * Contact details for public reservation enquiries.
- * Syntax checks are NOT WhatsApp or email ownership verification.
- * Verification must be handled by separate provider-backed OTP challenges.
+ * Format checks are NOT WhatsApp or email ownership verification.
  */
 export type BookingContact={fullName:string;phone:string;email:string};
 export type ContactValidation=
   | {ok:true;contact:BookingContact}
   | {ok:false;field:'fullName'|'phone'|'email';code:string};
 
+/** Accept all E.164 country calling codes without assuming any home country. */
+export function normalizeBookingPhone(value:unknown):string|null{
+  if(typeof value!=='string')return null;
+  const raw=value.trim();
+  if(raw.length>32)return null;
+  const normalized=raw.replace(/[\s().-]/g,'');
+  return /^\+[1-9]\d{6,14}$/.test(normalized)?normalized:null;
+}
+export function normalizeBookingEmail(value:unknown):string|null{
+  if(typeof value!=='string')return null;
+  const email=value.trim().toLowerCase();
+  if(email.length<5||email.length>254||email.includes('..')||email.startsWith('.'))return null;
+  const valid=/^[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/;
+  return valid.test(email)?email:null;
+}
 export function validateBookingContact(value:unknown):ContactValidation{
   if(!value||typeof value!=='object'||Array.isArray(value))
     return {ok:false,field:'fullName',code:'contact_required'};
@@ -15,14 +29,9 @@ export function validateBookingContact(value:unknown):ContactValidation{
   const fullName=typeof data.fullName==='string'?data.fullName.trim().replace(/\s+/g,' '):'';
   if(fullName.length<2||fullName.length>100||/[\x00-\x1F\x7F<>]/.test(fullName))
     return {ok:false,field:'fullName',code:'invalid_name'};
-  const rawPhone=typeof data.phone==='string'?data.phone.trim():'';
-  // Global E.164 representation; do not assume all clients have a Benin number.
-  const phone=rawPhone.replace(/[\s().-]/g,'');
-  if(rawPhone.length>32||!/^\+[1-9]\d{6,14}$/.test(phone))
-    return {ok:false,field:'phone',code:'invalid_phone'};
-  const email=typeof data.email==='string'?data.email.trim().toLowerCase():'';
-  if(email.length>254||email.length<5||/\s/.test(email)||
-     !/^[^@\s<>]+@[^@\s<>]+\.[^@\s<>.]{2,}$/.test(email))
-    return {ok:false,field:'email',code:'invalid_email'};
+  const phone=normalizeBookingPhone(data.phone);
+  if(!phone)return {ok:false,field:'phone',code:'invalid_phone'};
+  const email=normalizeBookingEmail(data.email);
+  if(!email)return {ok:false,field:'email',code:'invalid_email'};
   return {ok:true,contact:{fullName,phone,email}};
 }
