@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { validateReservation } from '../../../../lib/reservation-rules';
+import { validateBookingContact } from '../../../../lib/booking-contact';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -32,10 +33,16 @@ export async function POST(request: NextRequest) {
   } catch {
     return NextResponse.json({ok:false,code:'invalid_json'}, {status:400,headers});
   }
+  const contact=validateBookingContact(body);
+  if(!contact.ok) return NextResponse.json(
+    {ok:false,code:contact.code,field:contact.field},
+    {status:422,headers}
+  );
   const result=validateReservation(body);
   if(!result.ok) return NextResponse.json(result, {status:422,headers});
   return NextResponse.json({
     ...result,
-    message:'Indicative estimate only. Contact the team to verify availability and confirm a booking.'
+    contactVerification:'not_verified',
+    message:'Contact details are provided but NOT OTP-verified. This is an unconfirmed WhatsApp enquiry; no payment is collected.'
   },{headers});
 }
