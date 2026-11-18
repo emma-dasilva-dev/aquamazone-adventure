@@ -82,3 +82,15 @@ test('Pedal-powered boat accepts 2 to 4 guests and rejects 1 or 5',()=>{
     assert.equal(result.ok,false);
   }
 });
+
+test('Mangrove discovery charges adults and under-12s separately, plus mandatory crossing',()=>{
+  const result=validateReservation({
+    experience:'mangrove',date:'2026-11-21',time:'12:00',adults:2,children:2
+  },benin('2026-11-16','09:00'));
+  assert.equal(result.ok,true);
+  if(result.ok){
+    assert.equal(result.quote.crossingIncluded,false);
+    assert.equal(result.quote.crossingAmount,4000);
+    assert.equal(result.quote.total,19000);
+  }
+});
