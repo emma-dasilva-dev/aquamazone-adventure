@@ -865,8 +865,8 @@ img,video,iframe{max-width:100%}
 /* Discovery package: per-person inclusions and safe, readable activity selection. */
 .az-glele-safety{font-size:12px;line-height:1.6;color:#365b6c;margin:10px 0 4px}
 .az-glele-person-choices .az-glele-note{margin:7px 0 14px;font-size:12px;line-height:1.6;color:#426377}
-.az-glele-person{display:grid;grid-template-columns:minmax(75px,1fr) minmax(0,2fr);align-items:center;gap:10px;margin:0 0 10px!important;min-width:0}
+.reservation-v15-choice .az-glele-person{display:grid;grid-template-columns:minmax(75px,1fr) minmax(0,2fr);align-items:center;gap:10px;margin:0 0 10px!important;min-width:0}
 .az-glele-person>span{font-weight:650;font-size:13px;color:#062047}
 .az-glele-person select{display:block;width:100%;min-width:0;padding:11px 34px 11px 12px;border:1px solid #b7ccda;border-radius:0;background:white;color:#062047;font:inherit;font-size:13px}
 .az-glele-person select:focus-visible{outline:3px solid #FFD326;outline-offset:2px}
-@media(max-width:420px){.az-glele-person{grid-template-columns:1fr;gap:4px}.az-glele-person select{min-height:46px}}
+@media(max-width:420px){.reservation-v15-choice .az-glele-person{grid-template-columns:1fr;gap:4px}.az-glele-person select{min-height:46px}}
