@@ -824,3 +824,35 @@ img,video,iframe{max-width:100%}
 /* Simplified identity: two full-width fields, no email collection. */
 .az-reservation-identity-fields{grid-template-columns:minmax(0,1fr)}
 .az-reservation-identity-fields label:first-child{grid-column:auto}
+
+
+/* Mandatory return crossing: editorial notice ahead of the activity catalogue. */
+.az-crossing-first{background:#062B60;color:white;padding:34px 0}
+.az-crossing-first-inner{max-width:1320px;margin:0 auto;padding:0 5%;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,1fr);gap:36px;align-items:center}
+.az-crossing-first .kicker{color:#FFD326;font-size:11px;letter-spacing:.16em;font-weight:700;margin:0 0 10px}
+.az-crossing-first h2{color:white;font-size:clamp(23px,2.8vw,38px);line-height:1.12;letter-spacing:-.025em;margin:0 0 12px;max-width:680px}
+.az-crossing-first-copy>p:last-child{margin:0;color:#d4e9f8;font-size:14px;line-height:1.65;max-width:710px}
+.az-crossing-first-prices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-left:1px solid rgba(255,255,255,.22)}
+.az-crossing-first-prices>div{padding:10px 18px;min-width:0;display:flex;flex-direction:column;gap:9px}
+.az-crossing-first-prices>div+div{border-left:1px solid rgba(255,255,255,.22)}
+.az-crossing-first-prices span{font-size:12px;color:#d3e9f7}
+.az-crossing-first-prices strong{font-size:clamp(24px,2.5vw,34px);font-variant-numeric:tabular-nums;letter-spacing:-.03em;white-space:nowrap}
+.az-crossing-first-prices small{font-size:11px;color:#FFD326;font-weight:700;letter-spacing:0}
+@media(max-width:800px){.az-crossing-first{padding:26px 0}.az-crossing-first-inner{grid-template-columns:1fr;gap:20px}.az-crossing-first-prices{border-left:0;border-top:1px solid rgba(255,255,255,.22);padding-top:10px}.az-crossing-first-prices>div:first-child{padding-left:0}}
+@media(max-width:360px){.az-crossing-first-prices>div{padding:10px 8px}.az-crossing-first-prices strong{font-size:23px}}
+
+/* Original mini equipment illustrations: show the number of seats, not fictitious product photos. */
+.az-craft-visual{width:100%;min-height:122px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:#eaf6fd;border:1px solid #c6e0ed;color:#062B60}
+.az-craft-visual svg{width:min(100%,205px);height:auto;max-height:95px}
+.az-craft-visual>span{font-size:10px;letter-spacing:.14em;font-weight:800;line-height:1.3;margin-bottom:8px}
+
+/* Compact booking picker: one dropdown and a small illustrative pictogram. */
+.reservation-v15-fields .az-reservation-compact{display:grid;grid-template-columns:minmax(0,1fr) 95px;gap:9px 14px;align-items:center;margin:10px 0 5px}
+.az-reservation-select{display:flex;flex-direction:column;gap:7px;min-width:0;font-size:12px;font-weight:700;color:#173b55}
+.az-reservation-select>span{display:block}
+.az-reservation-select select{width:100%;min-width:0;min-height:48px;padding:10px 34px 10px 12px;background:white;color:#062047;border:1px solid #b7ccda;border-radius:0;font-size:14px;font-weight:600}
+.az-reservation-select select:focus-visible{outline:3px solid #FFD326;outline-offset:2px}
+.az-reservation-mini{width:95px;height:69px;display:grid;place-items:center;background:#eaf6fd;border:1px solid #c7dfed}
+.az-reservation-mini svg{width:92px;height:61px}
+.az-reservation-selection-note{grid-column:1/-1;font-size:11px;color:#60768a;line-height:1.4}
+@media(max-width:420px){.reservation-v15-fields .az-reservation-compact{grid-template-columns:minmax(0,1fr) 72px;gap:10px}.az-reservation-mini{width:72px;height:60px}.az-reservation-mini svg{width:69px;height:52px}}
