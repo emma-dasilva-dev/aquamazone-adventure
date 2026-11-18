@@ -162,3 +162,42 @@ export function validateReservation(input: unknown, now: Date = new Date(), opti
     bookingConfirmed:false,paymentCollected:false,availabilityChecked:false
   }};
 }
+
+
+/**
+ * Public multi-activity enquiry: one group, one visit, one mandatory crossing.
+ * Each selected activity is priced for the entire entered group; individual
+ * schedules and equipment allocation remain subject to staff confirmation.
+ */
+export function validateActivitySelection(
+  input:unknown, now:Date=new Date(), options:{manualIntake?:boolean}={}
+):ValidationResult{
+  if(!input||typeof input!=='object'||Array.isArray(input))
+    return error('invalid_request','Invalid activity enquiry.');
+  const data=input as Record<string,unknown>;
+  const allowed:readonly string[]=['pedalo','canoe','paddle','waterball','pedalboat','lake','mangrove'];
+  if(!Array.isArray(data.activities)||data.activities.length===0||
+     data.activities.length>allowed.length||
+     !data.activities.every(x=>typeof x==='string'&&allowed.includes(x))||
+     new Set(data.activities).size!==data.activities.length)
+    return error('invalid_activities','Choose at least one unique activity.');
+  const activities=data.activities as ReservationId[];
+  const results=activities.map(experience=>validateReservation({...data,experience},now,options));
+  const failed=results.find(result=>!result.ok);
+  if(failed&&!failed.ok)return failed;
+  const accepted=results.filter((result):result is Extract<ValidationResult,{ok:true}>=>result.ok);
+  const first=accepted[0];
+  const adults=data.adults as number,children=data.children as number;
+  const crossingAmount=1500*adults+500*children;
+  // The pricing function for individual activities already includes crossing.
+  // Remove duplicate crossing from each subsequent activity.
+  const knownPrices=accepted.every(result=>result.quote.total!==null);
+  const total=knownPrices?
+    accepted.reduce((sum,result)=>sum+(result.quote.total??0)-crossingAmount,0)+crossingAmount:
+    null;
+  return {ok:true,reservation:first.reservation,quote:{
+    total,currency:'XOF',crossingIncluded:false,crossingAmount,
+    status:total===null?'confirm_with_team':'estimate',
+    bookingConfirmed:false,paymentCollected:false,availabilityChecked:false
+  }};
+}
