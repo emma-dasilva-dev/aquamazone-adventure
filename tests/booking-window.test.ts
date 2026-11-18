@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {bookingWindow,checkBookingWindow,validateReservation} from '../lib/reservation-rules.ts';
+import {bookingWindow,checkBookingWindow,validateReservation,validateActivitySelection} from '../lib/reservation-rules.ts';
 
 const request=(date:string)=>({experience:'pedalo',date,time:'12:00',adults:2,children:0});
 const benin=(date:string,time:string)=>new Date(date+'T'+time+':00+01:00');
@@ -154,4 +154,51 @@ test('GLÈLÈ price scales with adults and accompanied children',()=>{
   },benin('2026-11-16','09:00'));
   assert.equal(result.ok,true);
   if(result.ok)assert.equal(result.quote.total,8500);
+});
+
+test('Multi-activity estimate counts mandatory return crossing only once',()=>{
+  const result=validateActivitySelection({
+    activities:['pedalo','canoe','paddle'],date:'2026-11-21',time:'12:00',
+    adults:2,children:0
+  },benin('2026-11-16','09:00'));
+  assert.equal(result.ok,true);
+  if(result.ok){
+    assert.equal(result.quote.total,21000); // 3 x (2 x 3,000) + 2 x 1,500 crossing
+    assert.equal(result.quote.crossingAmount,3000);
+    assert.equal(result.quote.bookingConfirmed,false);
+  }
+});
+
+test('Multi-activity quote combines different prices without duplicating the crossing',()=>{
+  const result=validateActivitySelection({
+    activities:['pedalo','mangrove'],date:'2026-11-21',time:'12:00',
+    adults:1,children:1
+  },benin('2026-11-16','09:00'));
+  assert.equal(result.ok,true);
+  if(result.ok){
+    assert.equal(result.quote.total,15500); // 6,000 + 7,500 + 2,000 crossing
+    assert.equal(result.quote.crossingAmount,2000);
+  }
+});
+
+test('Unknown-price lake tour leaves multi-activity total for staff confirmation',()=>{
+  const result=validateActivitySelection({
+    activities:['pedalo','lake'],date:'2026-11-21',time:'12:00',adults:2,children:0
+  },benin('2026-11-16','09:00'));
+  assert.equal(result.ok,true);
+  if(result.ok){
+    assert.equal(result.quote.total,null);
+    assert.equal(result.quote.status,'confirm_with_team');
+  }
+});
+
+test('Multi-activity input refuses duplicates, invalid activities and incompatible capacity',()=>{
+  const base={date:'2026-11-21',time:'12:00',adults:1,children:0};
+  const now=benin('2026-11-16','09:00');
+  for(const activities of [[],['pedalo','pedalo'],['glele'],['not-an-activity']]){
+    assert.equal(validateActivitySelection({...base,activities},now).ok,false);
+  }
+  const tooFew=validateActivitySelection({...base,activities:['pedalo','pedalboat']},now);
+  assert.equal(tooFew.ok,false);
+  if(!tooFew.ok)assert.equal(tooFew.code,'capacity');
 });
