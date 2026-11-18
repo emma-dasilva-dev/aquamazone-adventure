@@ -117,6 +117,7 @@ export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{act
  const [children,setChildren]=useState(0);
  const [gleleChoices,setGleleChoices]=useState<('canoe'|'pedalo'|'paddle')[]>(['canoe']);
  const [checking,setChecking]=useState(false);
+ const [availability,setAvailability]=useState<'idle'|'checking'|'available'|'unavailable'|'unknown'|'manual'>('idle');
  const [serverError,setServerError]=useState('');
  const [fullName,setFullName]=useState('');
  const [phone,setPhone]=useState('');
@@ -150,7 +151,25 @@ export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{act
  const choices=Array.from({length:count},(_,i)=>gleleChoices[i]??'canoe');
  const updateGleleChoice=(index:number,value:'canoe'|'pedalo'|'paddle')=>setGleleChoices(previous=>Array.from({length:count},(_,i)=>i===index?value:(previous[i]??'canoe')));
  const okay=dateValid&&groupValid&&Boolean(time);
- const ready=okay&&contactValidation.ok;
+ const availabilityActivity=activityMode && activityIds.length===1 && ['pedalo','canoe','pedalboat'].includes(activityIds[0]);
+ useEffect(()=>{
+   if(!dateValid || !groupValid || !time){setAvailability('idle');return;}
+   if(!availabilityActivity){setAvailability('manual');return;}
+   const controller=new AbortController();
+   setAvailability('checking');
+   const query=new URLSearchParams({
+     experience:activityIds[0],date,time,adults:String(adults),children:String(children)
+   });
+   fetch('/api/reservation/availability?'+query,{signal:controller.signal,cache:'no-store'})
+     .then(async response=>{
+       const data=await response.json() as {status?:string};
+       if(!response.ok || !['available','unavailable'].includes(data.status??''))throw Error('unavailable');
+       setAvailability(data.status as 'available'|'unavailable');
+     })
+     .catch(()=>{if(!controller.signal.aborted)setAvailability('unknown');});
+   return ()=>controller.abort();
+ },[dateValid,groupValid,availabilityActivity,date,time,adults,children,activityIds]);
+ const ready=okay&&contactValidation.ok&&availability!=='unavailable'&&availability!=='checking';
  const activityLabel=selected.kind==='activity'?activityIds.map(value=>options.find(o=>o.id===value)?.[lang]??value).join(' + '):selected[lang];
  const text=lang==='fr'?{
   eyebrow:'09 / PRÉPARER UNE VISITE',heading:<>Votre prochaine aventure <em>commence ici.</em></>,desc:'Composez votre visite en quelques étapes. Notre équipe confirmera ensuite les disponibilités et les modalités.',kind:'CHOISIR UNE EXPÉRIENCE',activity:'Activité',pack:'Forfait',date:'DATE SOUHAITÉE',time:'HEURE SOUHAITÉE',people:'PARTICIPANTS',adult:'Adultes',child:'Enfants de moins de 12 ans',choose:'ACTIVITÉ AU CHOIX',canoe:'Canoë-kayak simple',pedalo:'Pédalo simple',paddle:'Paddle / Stand Up',summary:'RÉCAPITULATIF',price:'Estimation',unknown:'Tarif à confirmer',cross:'Traversée aller-retour incluse',crossSeparate:'Traversée aller-retour ajoutée au tarif',contact:'Envoyer ma demande sur WhatsApp',identity:'VOS COORDONNÉES',fullName:'Nom et prénom',phone:'Numéro WhatsApp international',phoneHelp:'Avec indicatif du pays, par exemple +229 01 54 28 44 44 ou +33 6 12 34 56 78.',identityHelp:'Un seul contact pour le groupe. Le nom et le numéro WhatsApp sont obligatoires.',notVerified:'Vos coordonnées seront transmises avec la demande. La vérification du numéro WhatsApp sera activée avant le paiement en ligne.',contactInvalid:'Vérifiez votre nom et votre numéro WhatsApp international.',notice:'Ceci est une demande, pas une réservation confirmée. Aucun paiement n’est effectué sur ce site.',serverError:'Impossible de vérifier votre demande pour le moment. Réessayez ou contactez notre équipe directement.',validation:'Sélectionnez une date ouverte du week-end à venir et respectez les conditions du forfait.',weekday:'En semaine, les visites nécessitent une organisation préalable avec notre équipe. Contactez-nous sur WhatsApp avant tout déplacement.',costNote:'Les tarifs sont indicatifs selon le choix et la composition du groupe. Les disponibilités restent à confirmer.',help:'Informations et réservation : +229 01 54 28 44 44'
@@ -339,6 +358,14 @@ export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{act
        :'TOFFA includes the return pirogue crossing, a family pedal-powered boat (4 people), and complimentary juice.'}</p>}
      <div className="reservation-v15-total"><span>{text.price}</span><strong>{quote?format(quote.total):text.unknown}</strong><small>{selected.kind==='package'?text.cross:(lang==='fr'?'Traversée aller-retour ajoutée une seule fois':'Return crossing added once')}</small></div>
      <p className="reservation-v15-hint">{text.costNote}</p>
+     {okay&&<p className="reservation-v15-hint" role="status" aria-live="polite">{({
+       idle:lang==='fr'?'Choisissez un créneau pour vérifier les capacités.':'Choose a slot to check capacity.',
+       checking:lang==='fr'?'Vérification des places disponibles…':'Checking available capacity…',
+       available:lang==='fr'?'Capacité disponible à cet instant (non garantie, aucun équipement bloqué).':'Capacity available at this moment (not guaranteed, no equipment held).',
+       unavailable:lang==='fr'?'Complet pour cette sélection. Choisissez une autre heure ou activité.':'Fully booked for this selection. Choose another time or activity.',
+       unknown:lang==='fr'?'Vérification indisponible. Demandez une confirmation sur WhatsApp.':'Availability check unavailable. Request confirmation on WhatsApp.',
+       manual:lang==='fr'?'Disponibilité à confirmer directement avec Aquamazone pour cette expérience.':'Availability must be confirmed with Aquamazone for this experience.'
+     } as const)[availability]}</p>}
      {!okay&&<p className="reservation-v15-error" role="status">{dateNotice||(children>0&&adults===0?(lang==='fr'?'Les enfants doivent venir avec au moins un adulte responsable.':'Children must attend with at least one responsible adult.'):text.validation)}</p>}
      {okay&&!contactValidation.ok&&<p className="reservation-v15-error" role="status">{text.contactInvalid}</p>}
      {serverError&&<p className="reservation-v15-error" role="alert">{serverError} <a href={WA} target="_blank" rel="noopener noreferrer">WhatsApp</a></p>}

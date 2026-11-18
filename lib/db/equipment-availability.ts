@@ -67,3 +67,42 @@ export async function equipmentAvailability(input: {
     availableUnits: Number(row.available_units)
   }));
 }
+
+export type ReservationCapacity = {
+  dailyVisitors: number;
+  dailyReservations: number;
+  slotVisitors: number;
+  limitVisitors: number;
+  limitReservations: number;
+  limitSlotVisitors: number;
+};
+
+/** Read-only confirmed/active-hold totals, with no public reservation details. */
+export async function reservationCapacity(input: {date:string;time:string}):Promise<ReservationCapacity> {
+  const {date,time}=input;
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!/^\d{2}:\d{2}$/.test(time))
+    throw new Error('Invalid capacity window');
+  const sql=sqlClient();
+  const rows=await sql`
+    SELECT policy.daily_visitors AS limit_visitors,
+           policy.daily_reservations AS limit_reservations,
+           policy.slot_visitors AS limit_slot_visitors,
+           COALESCE(SUM(usage.reservation_count),0)::integer AS daily_reservations,
+           COALESCE(SUM(usage.visitor_count),0)::integer AS daily_visitors,
+           COALESCE(SUM(usage.visitor_count) FILTER (WHERE usage.requested_time=${time}::time),0)::integer AS slot_visitors
+    FROM reservation_capacity_policy AS policy
+    LEFT JOIN reservation_capacity_usage AS usage ON usage.visit_date=${date}::date
+    WHERE policy.id=1
+    GROUP BY policy.daily_visitors,policy.daily_reservations,policy.slot_visitors
+  `;
+  if(rows.length!==1)throw new Error('Capacity policy is unavailable');
+  const r=rows[0];
+  return {
+    dailyVisitors:Number(r.daily_visitors),
+    dailyReservations:Number(r.daily_reservations),
+    slotVisitors:Number(r.slot_visitors),
+    limitVisitors:Number(r.limit_visitors),
+    limitReservations:Number(r.limit_reservations),
+    limitSlotVisitors:Number(r.limit_slot_visitors)
+  };
+}
