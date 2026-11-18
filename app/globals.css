@@ -788,3 +788,17 @@ img,video,iframe{max-width:100%}
 .az-reservation-window-days button:disabled{opacity:.63;cursor:not-allowed;background:#e9edf0;border-color:#d5dfe5}
 .az-reservation-window-days button:disabled small{color:#687b89}
 @media(max-width:480px){.az-reservation-window{padding:15px}.az-reservation-window-days{grid-template-columns:1fr}}
+
+/* Reservation identity — one contact per booking, intentionally compact. */
+.az-reservation-identity{border:1px solid #d5e4ec;background:#f7fbfd;padding:24px;margin:12px 0 24px;min-width:0}
+.az-reservation-identity legend{font-size:12px;font-weight:800;letter-spacing:.12em;color:#062047;padding:0 9px}
+.az-reservation-identity>p{font-size:13px;color:#557186;line-height:1.6;margin:0 0 15px}
+.az-reservation-identity-fields{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.az-reservation-identity-fields label{display:flex;flex-direction:column;gap:8px;min-width:0;font-size:12px;font-weight:700;color:#173b55}
+.az-reservation-identity-fields label:first-child{grid-column:1/-1}
+.az-reservation-identity-fields input{width:100%;min-width:0;background:white;color:#102c42;border:1px solid #b6ccdb;border-radius:0;min-height:48px;padding:12px 13px;font:inherit;font-size:15px;letter-spacing:normal}
+.az-reservation-identity-fields input:focus-visible{outline:2px solid #0055a4;outline-offset:1px}
+.az-reservation-identity-fields input::placeholder{color:#7c929f}
+.az-reservation-identity-fields label small{font-size:11px;line-height:1.5;font-weight:400;color:#5e7585}
+.az-reservation-identity .az-reservation-contact-disclaimer{border-top:1px solid #dbe6ec;margin:18px 0 0;padding-top:12px;font-size:11px;color:#526e7f}
+@media(max-width:780px){.az-reservation-identity{padding:18px}.az-reservation-identity-fields{grid-template-columns:1fr}.az-reservation-identity-fields label:first-child{grid-column:auto}}
