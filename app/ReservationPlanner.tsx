@@ -16,7 +16,7 @@ const options:Option[]=[
  {id:'pedalboat',fr:'Bateau à pédales (2 à 4 pers.)',en:'Pedal-powered boat (2–4 people)',kind:'activity',duration:'30 min'},
  {id:'lake',fr:'Balade sur le lac',en:'Lake outing',kind:'activity',duration:'30–45 min'},
  {id:'mangrove',fr:'Découverte des mangroves',en:'Mangrove discovery',kind:'activity'},
- {id:'glele',fr:'GLÈLÈ — Solo',en:'GLÈLÈ — Solo',kind:'package'},
+ {id:'glele',fr:'GLÈLÈ — Découverte',en:'GLÈLÈ — Discovery',kind:'package'},
  {id:'guezo',fr:'GUÉZO — Couple',en:'GUÉZO — Couple',kind:'package'},
  {id:'toffa',fr:'TOFFA — Famille',en:'TOFFA — Family',kind:'package'},
  {id:'behanzin',fr:'BÉHANZIN — Groupe',en:'BÉHANZIN — Group',kind:'package'}
@@ -58,7 +58,7 @@ export default function ReservationPlanner({lang}:{lang:Lang}){
  const [time,setTime]=useState('12:00');
  const [adults,setAdults]=useState(2);
  const [children,setChildren]=useState(0);
- const [choice,setChoice]=useState<'canoe'|'pedalo'|'paddle'>('canoe');
+ const [gleleChoices,setGleleChoices]=useState<('canoe'|'pedalo'|'paddle')[]>(['canoe']);
  const [checking,setChecking]=useState(false);
  const [serverError,setServerError]=useState('');
  const [fullName,setFullName]=useState('');
@@ -72,8 +72,10 @@ export default function ReservationPlanner({lang}:{lang:Lang}){
  const selected=options.find(o=>o.id===id)!;
  const count=adults+children;
  const dateValid=Boolean(windowCheck?.ok);
- const groupValid=count>0 && (id==='guezo'?adults===2&&children===0:id==='behanzin'?adults===4&&children===0:id==='toffa'?adults===2&&children===2:id==='glele'?count===1:id==='pedalboat'?count>=2&&count<=4:true);
+ const groupValid=count>0 && (id==='guezo'?adults===2&&children===0:id==='behanzin'?adults===4&&children===0:id==='toffa'?adults===2&&children===2:id==='glele'?adults>=1:id==='pedalboat'?count>=2&&count<=4:true);
  const quote=useMemo(()=>estimate(id,adults,children),[id,adults,children]);
+ const choices=Array.from({length:count},(_,i)=>gleleChoices[i]??'canoe');
+ const updateGleleChoice=(index:number,value:'canoe'|'pedalo'|'paddle')=>setGleleChoices(previous=>Array.from({length:count},(_,i)=>i===index?value:(previous[i]??'canoe')));
  const okay=dateValid&&groupValid&&Boolean(time);
  const ready=okay&&contactValidation.ok;
  const activityLabel=selected[lang];
@@ -98,7 +100,7 @@ export default function ReservationPlanner({lang}:{lang:Lang}){
    const response=await fetch('/api/reservation/quote',{
      method:'POST',
      headers:{'Content-Type':'application/json'},
-     body:JSON.stringify({experience:id,date,time,adults,children,fullName,phone,...(id==='glele'?{choice}:{})})
+     body:JSON.stringify({experience:id,date,time,adults,children,fullName,phone,...(id==='glele'?{choice:choices[0],choices}:{})})
    });
    const result=await response.json() as {
      ok:boolean;code?:string;
@@ -113,7 +115,7 @@ export default function ReservationPlanner({lang}:{lang:Lang}){
      'Expérience : '+activityLabel,
      'Date : '+date,'Heure souhaitée : '+time,
      'Adultes : '+adults,'Enfants (<12 ans) : '+children,
-     ...(id==='glele'?['Activité choisie : '+(choice==='canoe'?'Canoë-kayak simple':choice==='pedalo'?'Pédalo simple':'Paddle / Stand Up')]:[]),
+     ...(id==='glele'?choices.map((activity,i)=>(i<adults?'Adulte '+(i+1):'Enfant '+(i-adults+1))+' : '+(activity==='canoe'?'Canoë-kayak simple':activity==='pedalo'?'Pédalo simple':'Paddle / Stand Up')):[]),
      'Estimation indicative : '+(validated.total===null?'À confirmer':format(validated.total)),
      'Coordonnées communiquées, non vérifiées. Ceci est une demande non confirmée. Merci de vérifier la disponibilité et le prix final.'
    ]:[
@@ -122,7 +124,7 @@ export default function ReservationPlanner({lang}:{lang:Lang}){
      'WhatsApp number: '+(contactValidation.ok?contactValidation.contact.phone:phone),
      'Experience: '+activityLabel,'Date: '+date,'Preferred time: '+time,
      'Adults: '+adults,'Children (under 12): '+children,
-     ...(id==='glele'?['Chosen activity: '+(choice==='canoe'?'Single canoe-kayak':choice==='pedalo'?'Single pedalo':'Stand-up paddle')]:[]),
+     ...(id==='glele'?choices.map((activity,i)=>(i<adults?'Adult '+(i+1):'Child '+(i-adults+1))+' : '+(activity==='canoe'?'Single canoe-kayak':activity==='pedalo'?'Single pedalo':'Stand-up paddle')):[]),
      'Indicative estimate: '+(validated.total===null?'To be confirmed':format(validated.total)),
      'Contact details supplied, not verified. This is an unconfirmed enquiry. Please verify availability and final pricing.'
    ];
@@ -147,7 +149,7 @@ export default function ReservationPlanner({lang}:{lang:Lang}){
         <select id="az-reservation-experience" value={id} onChange={event=>{
           const selectedId=event.target.value;
           setId(selectedId);
-          if(selectedId==='glele'){setAdults(1);setChildren(0);}
+          if(selectedId==='glele'){setAdults(1);setChildren(0);setGleleChoices(['canoe']);}
           else if(selectedId==='guezo'){setAdults(2);setChildren(0);}
           else if(selectedId==='behanzin'){setAdults(4);setChildren(0);}
           else if(selectedId==='toffa'){setAdults(2);setChildren(2);}
@@ -158,7 +160,7 @@ export default function ReservationPlanner({lang}:{lang:Lang}){
         </select>
       </label>
       <div className="az-reservation-mini" aria-hidden="true">
-        <ReservationActivityMini id={id} choice={choice}/>
+        <ReservationActivityMini id={id} choice={choices[0]??'canoe'}/>
       </div>
       <small className="az-reservation-selection-note">{selected.duration??(lang==='fr'?'Durée selon l’expérience':'Duration depends on experience')} · {lang==='fr'?'Visuel indicatif':'Illustrative pictogram'}</small>
      </div></fieldset>
@@ -179,7 +181,20 @@ export default function ReservationPlanner({lang}:{lang:Lang}){
       <label>{text.time}<span><Clock3 size={17} aria-hidden="true"/><select value={time} onChange={e=>setTime(e.target.value)}>{slots.map(slot=><option key={slot} value={slot}>{slot}</option>)}</select></span></label>
      </div>
      <fieldset className="reservation-v15-people"><legend>{text.people}</legend>{([['adult',text.adult,adults],['child',text.child,children]] as const).map(([type,label,n])=><div key={type} className="reservation-v15-counter"><span>{label}</span><div><button aria-label={(lang==='fr'?'Diminuer ':'Decrease ')+label} disabled={n===0} onClick={()=>updateCount(type,-1)} type="button"><Minus size={17}/></button><output aria-live="polite">{n}</output><button aria-label={(lang==='fr'?'Augmenter ':'Increase ')+label} disabled={n===20} onClick={()=>updateCount(type,1)} type="button"><Plus size={17}/></button></div></div>)}</fieldset>
-     {id==='glele'&&<fieldset className="reservation-v15-choice"><legend>{text.choose}</legend><label><input type="radio" name="gleleChoice" checked={choice==='canoe'} onChange={()=>setChoice('canoe')}/>{text.canoe}</label><label><input type="radio" name="gleleChoice" checked={choice==='pedalo'} onChange={()=>setChoice('pedalo')}/>{text.pedalo}</label><label><input type="radio" name="gleleChoice" checked={choice==='paddle'} onChange={()=>setChoice('paddle')}/>{text.paddle}</label></fieldset>}
+     {id==='glele'&&<fieldset className="reservation-v15-choice az-glele-person-choices">
+       <legend>{lang==='fr'?'UNE ACTIVITÉ PAR PERSONNE':'ONE ACTIVITY PER PARTICIPANT'}</legend>
+       <p className="az-glele-note">{lang==='fr'?
+         'Chaque personne choisit une activité de 30 min. Les enfants doivent être accompagnés d’un adulte. L’équipe vérifie leur aptitude à diriger l’équipement en sécurité.':
+         'Each person chooses a 30-minute activity. Children must be accompanied by an adult. Staff assess whether they can steer the equipment safely.'}</p>
+       {choices.map((value,index)=><label className="az-glele-person" key={index}>
+         <span>{index<adults?(lang==='fr'?'Adulte ':'Adult ')+(index+1):(lang==='fr'?'Enfant ':'Child ')+(index-adults+1)}</span>
+         <select value={value} aria-label={(lang==='fr'?'Activité pour le participant ':'Activity for participant ')+(index+1)}
+           onChange={event=>updateGleleChoice(index,event.target.value as 'canoe'|'pedalo'|'paddle')}>
+           <option value="canoe">{text.canoe}</option><option value="pedalo">{text.pedalo}</option><option value="paddle">{text.paddle}</option>
+         </select>
+       </label>)}
+       {adults===0&&<p className="reservation-v15-error" role="status">{lang==='fr'?'Un adulte accompagnateur est obligatoire.':'An accompanying adult is required.'}</p>}
+     </fieldset>
      <fieldset className="az-reservation-identity">
       <legend>{text.identity}</legend>
       <p>{text.identityHelp}</p>
