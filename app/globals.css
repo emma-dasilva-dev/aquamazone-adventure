@@ -820,3 +820,7 @@ img,video,iframe{max-width:100%}
 .az-contact-verify-code input{width:120px;min-width:0;font-size:16px;letter-spacing:.15em;background:white;border:1px solid #b6ccdb;border-radius:0;padding:8px 10px}
 .az-contact-verify-error{margin:8px 0 0!important;color:#a12f36!important;font-size:12px!important}
 @media(max-width:440px){.az-contact-verify-row-head{flex-wrap:wrap}.az-contact-verify-code input{width:112px}}
+
+/* Simplified identity: two full-width fields, no email collection. */
+.az-reservation-identity-fields{grid-template-columns:minmax(0,1fr)}
+.az-reservation-identity-fields label:first-child{grid-column:auto}
