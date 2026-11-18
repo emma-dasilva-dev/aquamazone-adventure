@@ -141,7 +141,8 @@ export function validateReservation(input: unknown, now: Date = new Date(), opti
   else if (experience==='toffa') total = 18000;
   else if (experience==='pedalboat') total = count*(count===2?5000:3000) + crossingAmount;
   else if (['pedalo','canoe','paddle','waterball'].includes(experience)) total = count*3000 + crossingAmount;
-  // Lake outings and mangrove excursions have no publicly approved quotation.
+  else if (experience==='mangrove') total = adults*5000+children*2500+crossingAmount;
+  // Lake outings have no publicly approved quotation.
   const reservation: ReservationRequest = {experience,date:obj.date,time:obj.time,adults,children,...(choice?{choice}:{})};
   return {ok:true,reservation,quote:{
     total,currency:'XOF',crossingIncluded,crossingAmount,
