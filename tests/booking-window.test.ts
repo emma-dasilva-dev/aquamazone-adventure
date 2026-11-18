@@ -202,3 +202,14 @@ test('Multi-activity input refuses duplicates, invalid activities and incompatib
   assert.equal(tooFew.ok,false);
   if(!tooFew.ok)assert.equal(tooFew.code,'capacity');
 });
+
+test('Public activity enquiries require adult accompaniment for under-12 visitors',()=>{
+  const now=benin('2026-11-16','09:00');
+  const childrenOnly={date:'2026-11-21',time:'12:00',adults:0,children:2};
+  const single=validateReservation({...childrenOnly,experience:'pedalo'},now);
+  assert.equal(single.ok,false);
+  if(!single.ok)assert.equal(single.code,'accompanying_adult');
+  const combined=validateActivitySelection({...childrenOnly,activities:['pedalo','paddle']},now);
+  assert.equal(combined.ok,false);
+  if(!combined.ok)assert.equal(combined.code,'accompanying_adult');
+});
