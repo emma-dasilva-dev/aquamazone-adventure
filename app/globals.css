@@ -802,3 +802,21 @@ img,video,iframe{max-width:100%}
 .az-reservation-identity-fields label small{font-size:11px;line-height:1.5;font-weight:400;color:#5e7585}
 .az-reservation-identity .az-reservation-contact-disclaimer{border-top:1px solid #dbe6ec;margin:18px 0 0;padding-top:12px;font-size:11px;color:#526e7f}
 @media(max-width:780px){.az-reservation-identity{padding:18px}.az-reservation-identity-fields{grid-template-columns:1fr}.az-reservation-identity-fields label:first-child{grid-column:auto}}
+
+/* Optional OTP verification for paid-booking readiness. Public WhatsApp enquiries remain enabled. */
+.az-contact-verify{margin-top:18px;border-top:1px solid #d9e5ec;padding-top:17px}
+.az-contact-verify-heading{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:800;color:#062047}
+.az-contact-verify>p{margin:7px 0 14px;color:#577184;font-size:12px;line-height:1.65}
+.az-contact-verify-row{padding:11px 0;border-top:1px solid #e1e9ee}
+.az-contact-verify-row-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.az-contact-verify-row-head>span{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700}
+.az-contact-verify-row-head>small{color:#708495;font-size:11px}
+.az-contact-verify-row-head button,.az-contact-verify-code button{border:1px solid #0055a4;background:white;color:#0055a4;font-weight:700;font-size:12px;min-height:36px;padding:8px 13px}
+.az-contact-verify-row-head button:disabled,.az-contact-verify-code button:disabled{opacity:.45;cursor:not-allowed}
+.az-contact-verify-row-head .az-contact-verified{color:#11623c;font-size:12px}
+.az-contact-verify-code{margin-top:13px}
+.az-contact-verify-code>label{display:block;margin-bottom:7px;color:#405f75;font-size:12px}
+.az-contact-verify-code>div{display:flex;gap:8px}
+.az-contact-verify-code input{width:120px;min-width:0;font-size:16px;letter-spacing:.15em;background:white;border:1px solid #b6ccdb;border-radius:0;padding:8px 10px}
+.az-contact-verify-error{margin:8px 0 0!important;color:#a12f36!important;font-size:12px!important}
+@media(max-width:440px){.az-contact-verify-row-head{flex-wrap:wrap}.az-contact-verify-code input{width:112px}}
