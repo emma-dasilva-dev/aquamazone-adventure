@@ -870,3 +870,40 @@ img,video,iframe{max-width:100%}
 .az-glele-person select{display:block;width:100%;min-width:0;padding:11px 34px 11px 12px;border:1px solid #b7ccda;border-radius:0;background:white;color:#062047;font:inherit;font-size:13px}
 .az-glele-person select:focus-visible{outline:3px solid #FFD326;outline-offset:2px}
 @media(max-width:420px){.reservation-v15-choice .az-glele-person{grid-template-columns:1fr;gap:4px}.az-glele-person select{min-height:46px}}
+
+
+/* Experience picker — visual editorial cards, no unverified venue photography. */
+.az-experience-fieldset{min-width:0}
+.az-activity-picker{margin-top:10px}
+.az-activity-picker-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:0 0 16px}
+.az-activity-picker-head p{font-size:17px;font-weight:800;letter-spacing:-.025em;color:#062047;margin:0}
+.az-activity-picker-head>span{font-size:11px;font-weight:700;color:#0055A4;white-space:nowrap;font-variant-numeric:tabular-nums}
+.az-activity-picker-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.az-activity-pick{position:relative;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:110px minmax(94px,auto);min-width:0;min-height:214px;background:#fff;color:#062047;border:1px solid #d3e1e9;padding:0;text-align:left;overflow:hidden;cursor:pointer;transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease}
+.az-activity-pick:hover{border-color:#55B5EF;transform:translateY(-2px)}
+.az-activity-pick.is-picked{border-color:#0055A4;box-shadow:inset 0 0 0 2px #0055A4}
+.az-activity-pick:focus-visible{outline:3px solid #FFD326;outline-offset:3px}
+.az-activity-art{position:relative;display:grid;place-items:center;isolation:isolate;overflow:hidden;background:#e4f3fa;color:#0055A4}
+.az-activity-art svg{position:relative;z-index:2;filter:drop-shadow(0 5px 2px rgba(6,43,96,.08));transition:transform .2s ease}
+.az-activity-pick:hover .az-activity-art svg{transform:translateY(-4px)}
+.az-activity-art-orbit{position:absolute;width:125px;height:125px;left:-28px;top:-61px;border-radius:50%;background:rgba(255,255,255,.45);z-index:0}
+.az-activity-art-wave{position:absolute;bottom:-20px;left:-5%;width:110%;height:45px;border-radius:55% 55% 0 0;background:rgba(0,85,164,.12)}
+.az-activity-art-1{background:#eaf2ea;color:#267054}
+.az-activity-art-2{background:#f2f4e6;color:#506c33}
+.az-activity-art-3{background:#faefd9;color:#956b21}
+.az-activity-art-4{background:#e3edf5;color:#064e84}
+.az-activity-art-5{background:#e0f4ef;color:#12705d}
+.az-activity-art-6{background:#ebedfa;color:#465b96}
+.az-activity-pick-copy{display:flex;flex-direction:column;align-items:flex-start;padding:13px 43px 14px 15px;gap:5px;min-width:0}
+.az-activity-pick-copy strong{font-weight:800;font-size:14px;line-height:1.35;letter-spacing:-.018em;color:#062047}
+.az-activity-pick-copy>small{font-size:11px;color:#637a89;font-weight:650}
+.az-activity-pick-price{font-size:11px;color:#0055A4;font-weight:750;line-height:1.45;margin-top:auto}
+.az-activity-check{position:absolute;right:12px;bottom:13px;display:grid;place-items:center;width:28px;height:28px;border:1px solid #bdd3e0;border-radius:50%;color:#0055A4;background:#fff}
+.az-activity-pick.is-picked .az-activity-check{background:#0055A4;border-color:#0055A4;color:white}
+.az-activity-picker-footnote{font-size:12px;line-height:1.6;color:#557389;margin:16px 0 0;max-width:58ch}
+.az-summary-activities{list-style:none;margin:0 0 18px;padding:0;display:grid;gap:11px}
+.az-summary-activities li{display:flex;align-items:flex-start;gap:9px;font-size:13px;line-height:1.45;color:#edf8ff}
+.az-summary-activities svg{flex:none;color:#FFD326;margin-top:2px}
+@media(max-width:600px){.az-activity-picker-grid{gap:10px}.az-activity-pick{grid-template-rows:88px minmax(105px,auto);min-height:198px}.az-activity-pick-copy{padding:12px 34px 13px 11px}.az-activity-pick-copy strong{font-size:13px}.az-activity-pick-price{font-size:10px}.az-activity-check{right:8px;bottom:10px;width:25px;height:25px}.az-activity-art svg{width:39px;height:39px}}
+@media(max-width:355px){.az-activity-picker-head{flex-direction:column;gap:3px}.az-activity-picker-grid{grid-template-columns:1fr}.az-activity-pick{grid-template-columns:105px minmax(0,1fr);grid-template-rows:minmax(110px,auto);min-height:110px}.az-activity-art{min-height:110px}.az-activity-pick-copy{padding:13px 36px 13px 12px}}
+@media(prefers-reduced-motion:reduce){.az-activity-pick,.az-activity-art svg{transition:none}.az-activity-pick:hover{transform:none}.az-activity-pick:hover .az-activity-art svg{transform:none}}
