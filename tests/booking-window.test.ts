@@ -112,3 +112,46 @@ test('GLÈLÈ accepts canoe, pedalo or paddle as ONE included 30-minute activity
     experience:'glele',date:'2026-11-21',time:'12:00',adults:1,children:0,choice:'all'
   },now).ok,false);
 });
+
+test('GLÈLÈ discovery supports a group with individually selected activities',()=>{
+  const now=benin('2026-11-16','09:00');
+  const result=validateReservation({
+    experience:'glele',date:'2026-11-21',time:'12:00',
+    adults:2,children:1,choice:'canoe',choices:['canoe','pedalo','paddle']
+  },now);
+  assert.equal(result.ok,true);
+  if(result.ok){
+    assert.equal(result.quote.total,13500);
+    assert.equal(result.quote.crossingAmount,0);
+    assert.deepEqual(result.reservation.choices,['canoe','pedalo','paddle']);
+  }
+});
+
+test('GLÈLÈ requires an accompanying adult for children',()=>{
+  const result=validateReservation({
+    experience:'glele',date:'2026-11-21',time:'12:00',
+    adults:0,children:1,choice:'paddle',choices:['paddle']
+  },benin('2026-11-16','09:00'));
+  assert.equal(result.ok,false);
+  if(!result.ok)assert.equal(result.code,'accompanying_adult');
+});
+
+test('GLÈLÈ rejects incomplete and inconsistent participant activity selections',()=>{
+  const base={experience:'glele',date:'2026-11-21',time:'12:00',adults:1,children:1};
+  const now=benin('2026-11-16','09:00');
+  for(const data of [
+    {...base,choice:'canoe'},
+    {...base,choice:'canoe',choices:['canoe']},
+    {...base,choice:'canoe',choices:['canoe','other']},
+    {...base,choice:'pedalo',choices:['canoe','paddle']}
+  ]) assert.equal(validateReservation(data,now).ok,false);
+});
+
+test('GLÈLÈ price scales with adults and accompanied children',()=>{
+  const result=validateReservation({
+    experience:'glele',date:'2026-11-21',time:'12:00',
+    adults:1,children:1,choice:'pedalo',choices:['pedalo','canoe']
+  },benin('2026-11-16','09:00'));
+  assert.equal(result.ok,true);
+  if(result.ok)assert.equal(result.quote.total,8500);
+});
