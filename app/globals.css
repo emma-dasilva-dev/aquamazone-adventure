@@ -907,3 +907,26 @@ img,video,iframe{max-width:100%}
 @media(max-width:600px){.az-activity-picker-grid{gap:10px}.az-activity-pick{grid-template-rows:88px minmax(105px,auto);min-height:198px}.az-activity-pick-copy{padding:12px 34px 13px 11px}.az-activity-pick-copy strong{font-size:13px}.az-activity-pick-price{font-size:10px}.az-activity-check{right:8px;bottom:10px;width:25px;height:25px}.az-activity-art svg{width:39px;height:39px}}
 @media(max-width:355px){.az-activity-picker-head{flex-direction:column;gap:3px}.az-activity-picker-grid{grid-template-columns:1fr}.az-activity-pick{grid-template-columns:105px minmax(0,1fr);grid-template-rows:minmax(110px,auto);min-height:110px}.az-activity-art{min-height:110px}.az-activity-pick-copy{padding:13px 36px 13px 12px}}
 @media(prefers-reduced-motion:reduce){.az-activity-pick,.az-activity-art svg{transition:none}.az-activity-pick:hover{transform:none}.az-activity-pick:hover .az-activity-art svg{transform:none}}
+
+
+/* Activity catalogue: editorial gallery cards echoing the forfaits section. */
+.activities-v3 .activity-vertical-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;border-top:0;margin-top:24px}
+.activities-v3 .activity-list-item{position:relative;display:flex;flex-direction:column;align-items:stretch;gap:0;min-height:0;padding:0;background:#fff;border:1px solid #d6e1e8;overflow:hidden;transition:border-color .2s ease,transform .2s ease,box-shadow .2s ease}
+.activities-v3 .activity-list-item:hover{border-color:#9fc7dc;transform:translateY(-3px);box-shadow:0 12px 32px rgba(6,43,96,.07)}
+.activities-v3 .activity-list-index{position:absolute;z-index:3;top:16px;left:16px;align-self:auto;margin:0;padding:9px 11px;background:#fff;font-size:11px;line-height:1;color:#062B60;border:1px solid #d5e3ed;font-variant-numeric:tabular-nums;letter-spacing:.08em}
+.activities-v3 .activity-list-copy{order:2;flex:1;align-self:stretch;padding:22px 24px 25px;min-width:0;display:flex;flex-direction:column;align-items:flex-start}
+.activities-v3 .activity-list-copy h3{font-size:clamp(25px,2.5vw,35px);margin:0 0 11px;line-height:1.14}
+.activities-v3 .activity-list-facts{font-size:12px;gap:7px;line-height:1.6}
+.activities-v3 .activity-list-note{font-size:12px;line-height:1.55}
+.activities-v3 .activity-list-link{margin-top:auto;padding-top:19px;padding-bottom:4px}
+.activities-v3 .activity-thumbnail,.activities-v3 .activity-no-photo,.activities-v3 .az-craft-visual{order:1;align-self:stretch;justify-self:stretch;width:100%;height:194px;min-height:0;border:0;border-bottom:1px solid #d6e1e8;border-radius:0;margin:0;overflow:hidden}
+.activities-v3 .activity-thumbnail{display:block}
+.activities-v3 .activity-thumbnail:focus-visible{outline:3px solid #FFD326;outline-offset:-4px}
+.activities-v3 .activity-thumbnail-photo{background-position:center;background-size:cover}
+.activities-v3 .az-craft-visual{gap:4px;background:#eaf6fd}
+.activities-v3 .az-craft-visual svg{height:145px;max-height:145px;width:min(70%,260px)}
+.activities-v3 .az-craft-visual>span{font-size:11px;margin:0;color:#062B60}
+.activities-v3 .activity-no-photo{background:#eaf6fd;color:#386482;min-height:194px}
+@media(max-width:760px){.activities-v3 .activity-vertical-list{grid-template-columns:1fr;gap:16px}.activities-v3 .activity-list-copy{padding:22px}.activities-v3 .activity-thumbnail,.activities-v3 .activity-no-photo,.activities-v3 .az-craft-visual{height:185px}.activities-v3 .activity-list-copy h3{font-size:29px}}
+@media(min-width:761px) and (max-width:980px){.activities-v3 .activity-list-copy{padding:18px}.activities-v3 .activity-list-copy h3{font-size:26px}}
+@media(prefers-reduced-motion:reduce){.activities-v3 .activity-list-item{transition:none}.activities-v3 .activity-list-item:hover{transform:none;box-shadow:none}}
