@@ -30,7 +30,7 @@ const intakeErrorMessages:Record<string,string>={
   empty:'Choisissez au moins une activité ou un forfait.',
   activities:'Sélection des activités invalide ou activité sélectionnée plusieurs fois.',
   package:'Forfait inconnu. Choisissez un forfait dans la liste.',
-  choice:'Pour GLÈLÈ, choisissez le canoë simple ou le pédalo simple.',
+  choice:'Pour GLÈLÈ, choisissez le canoë-kayak simple, le pédalo simple ou le paddle/stand-up.',
   unknown_experience:'Activité ou forfait non reconnu.',
   invalid_date:'La date choisie est invalide.',
   past_date:'La date ne peut pas être dans le passé. Pour une demande ancienne, utilisez le suivi historique lorsqu’il sera disponible.',
@@ -41,7 +41,7 @@ const intakeErrorMessages:Record<string,string>={
   guest_limit:'Choisissez entre 1 et 20 participants.',
   package_guests:'Participants incompatibles avec le forfait : GLÈLÈ = 1 personne ; GUÉZO = 2 adultes ; TOFFA = 2 adultes et 2 enfants ; BÉHANZIN = 4 adultes.',
   capacity:'Le bateau à pédales accepte actuellement 2 à 4 personnes par demande.',
-  activity_choice:'Pour GLÈLÈ, choisissez une seule activité incluse : canoë simple ou pédalo simple.',
+  activity_choice:'Pour GLÈLÈ, choisissez une seule activité incluse : canoë-kayak simple, pédalo simple ou paddle/stand-up.',
   invalid:'Vérifiez le nom, le téléphone et les informations de la demande.',
   database_error:'La demande n’a pas été enregistrée. Vérifiez la connexion de saisie ou contactez l’administratrice.',
   rules:'Vérifiez les activités, le forfait, la date et les participants.'
@@ -188,7 +188,7 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
             <td>{row.status==='awaiting_payment'&&row.expires_at?
               <span className="az-admin-hold-expiry">Retenue jusqu’au {dateTime(row.expires_at)}. Aucun paiement lancé.</span>:
               ['inquiry','pending_review'].includes(row.status)&&Boolean(row.quote_amount_xof)&&
-              (row.experience==='glele'&&Number(row.adults)+Number(row.children)===1||
+              (row.experience==='glele'&&row.experience_selection?.choice!=='paddle'&&Number(row.adults)+Number(row.children)===1||
                ['canoe','pedalo'].includes(row.experience)&&Number(row.adults)+Number(row.children)<=2||
                row.experience==='pedalboat'&&Number(row.adults)+Number(row.children)>=2&&Number(row.adults)+Number(row.children)<=4)&&
               !(row.experience_selection&&(
