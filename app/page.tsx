@@ -7,10 +7,10 @@ import {ArrowDown,ArrowUpRight,ArrowRight,Menu,X,Plus,Minus,MapPin,Clock,Message
 
 type Lang='fr'|'en';
 const activities=[
- {id:'pedalo',fr:'Pédalo',en:'Pedal boat',duration:'30 min',price:'3 000 FCFA / personne',note:''},
- {id:'kayak',fr:'Canoë / Kayak',en:'Canoe / Kayak',duration:'30 min',price:'3 000 FCFA / personne',note:''},
+ {id:'pedalo',fr:'Pédalo simple et double',en:'Single and double pedalo',duration:'30 min',price:'3 000 FCFA / personne',note:'Simple : 1 personne · Double : 2 personnes'},
+ {id:'kayak',fr:'Canoë-kayak simple et double',en:'Single and double canoe-kayak',duration:'30 min',price:'3 000 FCFA / personne',note:'Simple : 1 personne · Double : 2 personnes'},
  {id:'paddle',fr:'Paddle / Stand Up',en:'Stand-up paddle',duration:'30 min',price:'3 000 FCFA',note:''},
- {id:'boat',fr:'Bateau à pédales',en:'Pedal-powered boat',duration:'30 min',price:'5 000 FCFA / personne (2 pers.)',note:'Dès 3 personnes : 3 000 FCFA / personne'},
+ {id:'boat',fr:'Bateau à pédales',en:'Pedal-powered boat',duration:'30 min',price:'5 000 FCFA / personne (2 pers.)',note:'Capacité : 2 à 4 personnes · 3 ou 4 personnes : 3 000 FCFA / personne'},
  {id:'ball',fr:'Bulle gonflable / Water Ball',en:'Inflatable water ball',duration:'20 min',price:'3 000 FCFA / personne',note:''},
  {id:'tour',fr:'Balade sur l’eau / Mangrove',en:'Lagoon / Mangrove tour',duration:'30–45 min',price:'5 000 FCFA / adulte',note:'Enfant de moins de 12 ans : 2 500 FCFA'},
  {id:'jetski',fr:'Jet-ski',en:'Jet ski',duration:'',price:'',note:'Indisponible — maintenance',unavailable:true},
@@ -97,7 +97,7 @@ export default function Home(){
          <p className="package-experience-eyebrow">{lang==='fr'?'Le plaisir de découvrir':'Your first adventure'}</p>
          <h3>GLÈLÈ</h3>
          <p className="package-experience-intro">{lang==='fr'?'Une première escapade sur l’eau, à votre rythme.':'Your first escape on the water, at your own pace.'}</p>
-         <div className="package-experience-included"><strong>{lang==='fr'?'Traversée aller-retour incluse':'Return crossing included'}</strong><br/><strong>{lang==='fr'?'1 activité au choix':'Choose 1 activity'}</strong> : {lang==='fr'?'canoë simple OU pédalo simple (30 min)':'single canoe OR single pedalo (30 min)'}</div>
+         <div className="package-experience-included"><strong>{lang==='fr'?'Traversée aller-retour incluse':'Return crossing included'}</strong><br/><strong>{lang==='fr'?'1 activité au choix':'Choose 1 activity'}</strong> : {lang==='fr'?'canoë-kayak simple OU pédalo simple (30 min)':'single canoe-kayak OR single pedalo (30 min)'}</div>
          <div className="package-experience-end">
            <div className="package-v6-prices"><span>{lang==='fr'?'Adulte':'Adult'} <strong>5 000 <small>FCFA</small></strong></span><span>{lang==='fr'?'Enfant':'Child'} <strong>3 500 <small>FCFA</small></strong></span></div>
            <a href="#reservation" aria-label={lang==='fr'?'Se renseigner sur le forfait GLÈLÈ':'Enquire about GLÈLÈ'}>{lang==='fr'?'Choisir GLÈLÈ':'Choose GLÈLÈ'}<ArrowUpRight size={18}/></a>
@@ -111,7 +111,7 @@ export default function Home(){
          <p className="package-experience-eyebrow">{lang==='fr'?'Deux fois plus de souvenirs':'Make memories together'}</p>
          <h3>GUÉZO</h3>
          <p className="package-experience-intro">{lang==='fr'?'Une aventure à partager, ensemble.':'An adventure made for two.'}</p>
-         <div className="package-experience-included"><strong>{lang==='fr'?'Traversée aller-retour incluse':'Return crossing included'}</strong><br/>{lang==='fr'?'Canoë double ET pédalo double · Eau offerte':'Double canoe AND double pedalo · Complimentary water'}</div>
+         <div className="package-experience-included"><strong>{lang==='fr'?'Traversée aller-retour incluse':'Return crossing included'}</strong><br/>{lang==='fr'?'Canoë-kayak double ET pédalo double · Jus offert':'Double canoe-kayak AND double pedalo · Complimentary juice'}</div>
          <div className="package-experience-end"><div><span className="package-experience-small">{lang==='fr'?'Pour le couple':'Per couple'}</span><strong>12 000 <small>FCFA</small></strong></div><a href="#reservation" aria-label={lang==='fr'?'Se renseigner sur le forfait GUÉZO':'Enquire about GUÉZO'}>{lang==='fr'?'Choisir GUÉZO':'Choose GUÉZO'}<ArrowUpRight size={18}/></a></div>
        </div>
      </article>
@@ -124,6 +124,9 @@ export default function Home(){
          <p className="package-experience-eyebrow">{lang==='fr'?'Des souvenirs ensemble':'Make memories together'}</p>
          <h3>TOFFA</h3>
          <p className="package-experience-intro">{lang==='fr'?'Une journée à partager en famille, au rythme de l’eau.':'A family day out, enjoyed at your own pace.'}</p>
+         <div className="package-experience-included">{lang==='fr'?
+           'Traversée en pirogue aller-retour · Bateau à pédales familial (4 personnes) · Jus offert':
+           'Return pirogue crossing · Family pedal-powered boat (4 people) · Complimentary juice'}</div>
          <div className="package-experience-end"><div><span className="package-experience-small">{lang==='fr'?'Tarif et activités':'Price and activities'}</span><strong>{lang==='fr'?'À confirmer':'To confirm'}</strong><span className="package-experience-muted">{lang==='fr'?'Confirmation auprès de l’équipe':'Please confirm with our team'}</span></div><a href={bookingWhatsApp} target="_blank" rel="noopener noreferrer">{lang==='fr'?'Découvrir le forfait':'Explore this package'}<ArrowUpRight size={18}/></a></div>
        </div>
      </article>
@@ -134,7 +137,7 @@ export default function Home(){
          <p className="package-experience-eyebrow">{lang==='fr'?'L’aventure à plusieurs':'Adventure together'}</p>
          <h3>BÉHANZIN</h3>
          <p className="package-experience-intro">{lang==='fr'?'Une expérience complète à vivre entre amis.':'A complete water adventure with friends.'}</p>
-         <div className="package-experience-included">{lang==='fr'?'Traversée A/R · Canoë double · Balade sur le lac · Pédalo · Eau offerte':'Return crossing · Double canoe · Lake tour · Pedalo · Complimentary water'}</div>
+         <div className="package-experience-included">{lang==='fr'?'Traversée A/R · Canoë-kayak double · Balade sur le lac · Pédalo · Jus offert':'Return crossing · Double canoe-kayak · Lake tour · Pedalo · Complimentary juice'}</div>
          <div className="package-experience-end"><div><span className="package-experience-small">{lang==='fr'?'Pour 4 adultes':'For 4 adults'}</span><strong>36 000 <small>FCFA</small></strong></div><a href="#reservation">{lang==='fr'?'Choisir BÉHANZIN':'Choose BÉHANZIN'}<ArrowUpRight size={18}/></a></div>
        </div>
      </article>
