@@ -242,18 +242,16 @@ export default function Home(){
         <div className="restaurant-v9-menu-top"><span>{lang==='fr'?'À LA CARTE':'ON THE MENU'}</span><span>ADOUNKO · BÉNIN</span></div>
         <div className="restaurant-v9-menu-group">
           <h3>{lang==='fr'?'Nos grillades':'From the grill'}</h3>
-          <p className="restaurant-v9-weekend">{lang==='fr'?'Bar et carpe braisés disponibles chaque week-end':'Grilled sea bass and carp available every weekend'}</p>
           <ul className="restaurant-v9-fish-list">
-            <li><span>{lang==='fr'?'Bar braisé':'Grilled sea bass'}</span><strong>6 500 FCFA</strong></li>
-            <li><span>{lang==='fr'?'Carpe braisée':'Grilled carp'}</span><strong>6 500 – 9 000 FCFA</strong></li>
+            <li><span>{lang==='fr'?'Bar / Carpe braisés (selon arrivage)':'Grilled sea bass / carp (subject to availability)'}</span><strong>6 500 – 9 000 FCFA</strong></li>
             <li><span>{lang==='fr'?'Brochettes de poulet':'Chicken skewers'}</span><strong>6 000 FCFA</strong></li>
           </ul>
           <p className="restaurant-v9-included">{lang==='fr'
-            ?'Bar, carpe et brochettes : un accompagnement au choix inclus dans le prix. Le prix de la carpe dépend de sa taille.'
-            :'Sea bass, carp and chicken skewers each include one side of your choice. Carp pricing depends on size.'}</p>
+            ?'Chaque grillade comprend un accompagnement au choix. Le prix du poisson varie selon le type et la taille.'
+            :'Each grilled dish includes one side of your choice. Fish prices vary by type and size.'}</p>
         </div>
         <div className="restaurant-v9-menu-group">
-          <h3>{lang==='fr'?'Autre plat':'Another dish'}</h3>
+          <h3>{lang==='fr'?'Autres propositions':'Other selections'}</h3>
           <ul className="restaurant-v9-fish-list">
             <li><span>{lang==='fr'?'Gari Gnignan + œufs brouillés':'Gari Gnignan with scrambled eggs'}</span><strong>3 000 FCFA</strong></li>
           </ul>

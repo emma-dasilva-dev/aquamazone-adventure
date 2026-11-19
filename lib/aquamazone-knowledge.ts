@@ -46,7 +46,7 @@ export const businessKnowledge = {
     { name:'BÉHANZIN', type:'Groupe (4 adultes)', rate:'36 000 FCFA/groupe', includes:'Traversée aller-retour, canoë double, balade sur le lac, pédalo, eau offerte.' }
   ],
   restaurant: {
-    availability: 'Week-ends et jours fériés, confirmer la commande avant arrivée.',
+    availability: 'Restaurant ouvert les week-ends et jours fériés. Bar et carpe braisés selon arrivage ; confirmer la disponibilité du poisson et la commande avant arrivée.',
     grillades: ['Bar braisé','Carpe braisée','Brochettes de poulet'],
     otherDishes: ['Gari Gnignan + œufs brouillés : 3 000 FCFA'],
     sides: ['Riz','Aloco','Légumes sautés','Pommes frites','Pommes sautées','Igname','Patate douce'],
@@ -61,7 +61,7 @@ export const businessKnowledge = {
       'Thé vert ou citronnelle chaud : 1 500 FCFA',
       'Café : 1 500 FCFA'
     ],
-    prices: 'Bar braisé : 6 500 FCFA. Carpe braisée : 6 500 à 9 000 FCFA selon la taille. Brochettes de poulet : 6 000 FCFA. Chacun de ces trois plats comprend un accompagnement au choix inclus dans son prix. Toute portion ou tout accompagnement supplémentaire coûte 1 500 FCFA. Bar et carpe braisés disponibles chaque week-end. Gari Gnignan avec œufs brouillés : 3 000 FCFA.'
+    prices: 'Bar braisé : 6 500 FCFA. Carpe braisée : 6 500 à 9 000 FCFA selon la taille. Brochettes de poulet : 6 000 FCFA. Chacun de ces trois plats comprend un accompagnement au choix inclus dans son prix. Toute portion ou tout accompagnement supplémentaire coûte 1 500 FCFA. Bar et carpe braisés selon arrivage le week-end. Gari Gnignan avec œufs brouillés : 3 000 FCFA.'
   },
   booking: {
     status: 'Le module de réservation et de paiement en ligne n’est PAS opérationnel.',
