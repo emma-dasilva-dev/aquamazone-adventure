@@ -50,7 +50,7 @@ export const businessKnowledge = {
     grillades: ['Bar braisé','Carpe braisée','Brochettes de poulet'],
     sides: ['Riz','Aloco','Légumes sautés','Pommes frites','Pommes sautées','Igname','Patate douce'],
     drinks: 'Plusieurs boissons fraîches',
-    prices: 'Non publiés : demander confirmation sur WhatsApp.'
+    prices: 'Bar braisé : 6 500 FCFA. Carpe braisée : de 6 500 à 9 000 FCFA selon la taille. Chaque poisson comprend exactement un accompagnement au choix dans le prix. Toute portion ou tout accompagnement supplémentaire coûte 1 500 FCFA. Bar et carpe braisés disponibles chaque week-end. Prix des brochettes et des boissons non confirmés : demander sur WhatsApp.'
   },
   booking: {
     status: 'Le module de réservation et de paiement en ligne n’est PAS opérationnel.',

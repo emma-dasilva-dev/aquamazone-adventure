@@ -242,11 +242,20 @@ export default function Home(){
         <div className="restaurant-v9-menu-top"><span>{lang==='fr'?'À LA CARTE':'ON THE MENU'}</span><span>ADOUNKO · BÉNIN</span></div>
         <div className="restaurant-v9-menu-group">
           <h3>{lang==='fr'?'Nos grillades':'From the grill'}</h3>
-          <ul><li>{lang==='fr'?'Bar braisé':'Grilled sea bass'}</li><li>{lang==='fr'?'Carpe braisée':'Grilled carp'}</li><li>{lang==='fr'?'Brochettes de poulet':'Chicken skewers'}</li></ul>
+          <p className="restaurant-v9-weekend">{lang==='fr'?'Bar et carpe braisés disponibles chaque week-end':'Grilled sea bass and carp available every weekend'}</p>
+          <ul className="restaurant-v9-fish-list">
+            <li><span>{lang==='fr'?'Bar braisé':'Grilled sea bass'}</span><strong>6 500 FCFA</strong></li>
+            <li><span>{lang==='fr'?'Carpe braisée':'Grilled carp'}</span><strong>6 500 – 9 000 FCFA</strong></li>
+          </ul>
+          <p className="restaurant-v9-included">{lang==='fr'
+            ?'Chaque poisson est servi avec un accompagnement au choix, inclus dans le prix. Le tarif de la carpe varie selon sa taille.'
+            :'Each fish dish includes one side of your choice. Carp pricing depends on fish size.'}</p>
+          <ul className="restaurant-v9-other-grills"><li>{lang==='fr'?'Brochettes de poulet — tarif à confirmer':'Chicken skewers — price to confirm'}</li></ul>
         </div>
         <div className="restaurant-v9-menu-group">
           <h3>{lang==='fr'?'Accompagnements':'Sides'}</h3>
           <ul><li>{lang==='fr'?'Riz':'Rice'}</li><li>Aloco</li><li>{lang==='fr'?'Légumes sautés':'Sautéed vegetables'}</li><li>{lang==='fr'?'Pommes frites':'French fries'}</li><li>{lang==='fr'?'Pommes sautées':'Sautéed potatoes'}</li><li>{lang==='fr'?'Igname':'Yam'}</li><li>{lang==='fr'?'Patates douces':'Sweet potatoes'}</li></ul>
+          <p className="restaurant-v9-extra">{lang==='fr'?'Portion supplémentaire : ':'Additional side portion: '}<strong>1 500 FCFA</strong></p>
         </div>
         <div className="restaurant-v9-menu-group restaurant-v9-menu-drinks">
           <h3>{lang==='fr'?'Boissons':'Drinks'}</h3>

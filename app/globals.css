@@ -424,6 +424,17 @@ body{overflow-x:clip}
 .restaurant-v9-menu-group ul{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:10px 20px}
 .restaurant-v9-menu-group li{font-size:14px;line-height:1.55;color:#3e5359;position:relative;padding-left:14px}
 .restaurant-v9-menu-group li:before{content:'';position:absolute;left:0;top:.68em;width:4px;height:4px;border-radius:50%;background:#158a89}
+/* Verified fish pricing: compact menu rows, no new card styling. */
+.restaurant-v9-weekend{font-size:12px;font-weight:650;color:#0055a4;margin:0 0 12px;line-height:1.5}
+.restaurant-v9-menu-group .restaurant-v9-fish-list{display:block;margin:0;padding:0}
+.restaurant-v9-menu-group .restaurant-v9-fish-list li{display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px solid rgba(6,32,71,.12)}
+.restaurant-v9-menu-group .restaurant-v9-fish-list li::before{display:none}
+.restaurant-v9-fish-list strong{color:#062047;white-space:nowrap;font-weight:750;font-variant-numeric:tabular-nums;font-size:13px}
+.restaurant-v9-included{font-size:12px;color:#52646b;line-height:1.65;margin:11px 0 13px}
+.restaurant-v9-extra{font-size:13px;line-height:1.6;color:#062047;margin:15px 0 0}
+.restaurant-v9-extra strong{font-variant-numeric:tabular-nums;white-space:nowrap}
+.restaurant-v9-menu-group .restaurant-v9-other-grills{grid-template-columns:1fr}
+@media(max-width:370px){.restaurant-v9-menu-group .restaurant-v9-fish-list li{flex-wrap:wrap;gap:3px 12px}}
 .restaurant-v9-menu-drinks p{color:#3e5359;font-size:14px;margin:0;line-height:1.6}
 .restaurant-v9-footer{padding-top:24px;display:flex;flex-direction:column;gap:21px;align-items:start}
 .restaurant-v9-footer p{color:#52646b;line-height:1.7;font-size:13px;max-width:450px;margin:0}
