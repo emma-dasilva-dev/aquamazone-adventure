@@ -243,7 +243,7 @@ export default function Home(){
         <div className="restaurant-v9-menu-group">
           <h3>{lang==='fr'?'Nos grillades':'From the grill'}</h3>
           <ul className="restaurant-v9-fish-list">
-            <li><span>{lang==='fr'?'Bar / Carpe braisés (selon arrivage)':'Grilled sea bass / carp (subject to availability)'}</span><strong>6 500 – 9 000 FCFA</strong></li>
+            <li><span>{lang==='fr'?'Poissons braisés (bar / carpe, selon arrivage)':'Grilled fish (sea bass / carp, subject to availability)'}</span><strong>6 500 – 9 000 FCFA</strong></li>
             <li><span>{lang==='fr'?'Brochettes de poulet':'Chicken skewers'}</span><strong>6 000 FCFA</strong></li>
           </ul>
           <p className="restaurant-v9-included">{lang==='fr'

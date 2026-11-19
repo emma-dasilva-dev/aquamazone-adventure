@@ -47,7 +47,7 @@ export const businessKnowledge = {
   ],
   restaurant: {
     availability: 'Restaurant ouvert les week-ends et jours fériés. Bar et carpe braisés selon arrivage ; confirmer la disponibilité du poisson et la commande avant arrivée.',
-    grillades: ['Bar braisé','Carpe braisée','Brochettes de poulet'],
+    grillades: ['Poissons braisés (bar / carpe, selon arrivage)','Brochettes de poulet'],
     otherDishes: ['Gari Gnignan + œufs brouillés : 3 000 FCFA'],
     sides: ['Riz','Aloco','Légumes sautés','Pommes frites','Pommes sautées','Igname','Patate douce'],
     drinks: [
