@@ -3,6 +3,7 @@ import {useEffect,useState} from 'react';
 import ImmersiveGallery from './ImmersiveGallery';
 import AquamazoneAssistant from './AquamazoneAssistant';
 import ReservationPlanner from './ReservationPlanner';
+import { restaurantMenu, type RestaurantItem } from '../lib/restaurant-menu';
 import {ArrowDown,ArrowUpRight,ArrowRight,Menu,X,Plus,Minus,MapPin,Clock,MessageCircle,Waves,ZoomIn,Instagram,Youtube} from 'lucide-react';
 
 type Lang='fr'|'en';
@@ -27,6 +28,17 @@ const activities=[
 ];
 const copy={fr:{nav:['Activités','Forfaits','Restaurant','Galerie','Localisation'],book:'Réserver',hero:'La détente au fil de l’eau.',explore:'Explorer les activités',eyebrow:'VOTRE PROCHAINE ÉVASION',intro:'L’aventure commence ici.',desc:'Des expériences nautiques, des moments à partager et un cadre naturel à découvrir.',activity:'Choisissez votre aventure',activitySub:'Découvrez les activités et leurs tarifs. Les photographies officielles seront ajoutées prochainement.',featured:'À DÉCOUVRIR',packages:'Nos forfaits expériences',food:'Une pause gourmande au bord de l’eau',gallery:'Des souvenirs à vivre',location:'Comment nous trouver',hours:'Samedi, dimanche et jours fériés · 11h00–18h00',cta:'Préparer ma visite',placeholder:'Photographie Aquamazone à intégrer',ask:'Une question ?',chat:'Assistant Aquamazone',chatWelcome:'Bonjour ! Je peux vous renseigner sur nos horaires, tarifs et notre localisation.',chatQuestions:['Quels sont vos horaires ?','Où êtes-vous situés ?','Combien coûte le pédalo ?'],close:'Fermer',menu:'Ouvrir le menu'},en:{nav:['Activities','Packages','Restaurant','Gallery','Location'],book:'Book',hero:'Relaxation by the water.',explore:'Explore activities',eyebrow:'YOUR NEXT ESCAPE',intro:'Adventure starts here.',desc:'Water activities, moments together and a natural setting to discover.',activity:'Choose your adventure',activitySub:'Explore activities and prices. Official photos will be added soon.',featured:'EXPLORE',packages:'Experience packages',food:'A delicious break by the water',gallery:'Memories in the making',location:'Find us',hours:'Saturday, Sunday and public holidays · 11am–6pm',cta:'Plan my visit',placeholder:'Aqu​amazone photo to be added',ask:'Need help?',chat:'Aquamazone Assistant',chatWelcome:'Hello! I can help with our opening hours, prices and location.',chatQuestions:['What are your opening hours?','Where are you located?','How much is pedal boating?'],close:'Close',menu:'Open menu'}};
 const sections=['activities','packages','restaurant','gallery','location'];
+function RestaurantPriceList({items,lang}:{items:readonly RestaurantItem[];lang:Lang}) {
+ const formatPrice=(amount:number)=>new Intl.NumberFormat('fr-FR').format(amount)+' FCFA';
+ return <ul className="restaurant-v9-price-list">
+  {items.map(item=><li key={item.id}>
+   <span className="restaurant-v9-dish-name">{item[lang]}</span>
+   <span className="restaurant-v9-dish-price">{item.priceXof===null
+    ?(lang==='fr'?'Prix à confirmer':'Price to confirm')
+    :formatPrice(item.priceXof)}</span>
+  </li>)}
+ </ul>;
+}
 
 const faqItems=[
  {q:{fr:'Quels sont vos jours et horaires d’ouverture ?',en:'When are you open?'},a:{fr:'Nous sommes ouverts les samedis, dimanches et jours fériés, de 11h à 18h.',en:'We are open on Saturdays, Sundays and public holidays, from 11am to 6pm.'}},
@@ -242,15 +254,16 @@ export default function Home(){
         <div className="restaurant-v9-menu-top"><span>{lang==='fr'?'À LA CARTE':'ON THE MENU'}</span><span>ADOUNKO · BÉNIN</span></div>
         <div className="restaurant-v9-menu-group">
           <h3>{lang==='fr'?'Nos grillades':'From the grill'}</h3>
-          <ul><li>{lang==='fr'?'Bar braisé':'Grilled sea bass'}</li><li>{lang==='fr'?'Carpe braisée':'Grilled carp'}</li><li>{lang==='fr'?'Brochettes de poulet':'Chicken skewers'}</li></ul>
+          <RestaurantPriceList items={restaurantMenu.grills} lang={lang}/>
         </div>
         <div className="restaurant-v9-menu-group">
           <h3>{lang==='fr'?'Accompagnements':'Sides'}</h3>
-          <ul><li>{lang==='fr'?'Riz':'Rice'}</li><li>Aloco</li><li>{lang==='fr'?'Légumes sautés':'Sautéed vegetables'}</li><li>{lang==='fr'?'Pommes frites':'French fries'}</li><li>{lang==='fr'?'Pommes sautées':'Sautéed potatoes'}</li><li>{lang==='fr'?'Igname':'Yam'}</li><li>{lang==='fr'?'Patates douces':'Sweet potatoes'}</li></ul>
+          <RestaurantPriceList items={restaurantMenu.sides} lang={lang}/>
         </div>
         <div className="restaurant-v9-menu-group restaurant-v9-menu-drinks">
           <h3>{lang==='fr'?'Boissons':'Drinks'}</h3>
-          <p>{lang==='fr'?'Plusieurs boissons fraîches disponibles.':'A selection of chilled drinks is available.'}</p>
+          <RestaurantPriceList items={restaurantMenu.drinks} lang={lang}/>
+          <p>{lang==='fr'?'Le choix des boissons varie selon les disponibilités.':'Drink selection varies with availability.'}</p>
         </div>
         <div className="restaurant-v9-footer">
           <p>{lang==='fr'?'Pour faciliter la préparation de votre repas, nous vous recommandons de confirmer votre commande avant votre arrivée.':'For a smoother dining experience, we recommend confirming your order before you arrive.'}</p>

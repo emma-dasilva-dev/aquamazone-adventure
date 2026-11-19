@@ -938,3 +938,37 @@ img,video,iframe{max-width:100%}
  .reservation-v15-fields .az-activity-art svg{width:54px;height:50px}
  .reservation-v15-fields .az-activity-pick-copy strong{font-size:12px}
 }
+
+/* Restaurant prices — lightweight menu rows, responsive without card nesting. */
+.restaurant-v9-menu-group .restaurant-v9-price-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.restaurant-v9-menu-group .restaurant-v9-price-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 14px;
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(6,32,71,.1);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.restaurant-v9-menu-group .restaurant-v9-price-list li:last-child {border-bottom: 0}
+.restaurant-v9-menu-group .restaurant-v9-price-list li::before {display: none}
+.restaurant-v9-menu-group .restaurant-v9-price-list .restaurant-v9-dish-name {flex: 1;min-width: 0}
+.restaurant-v9-dish-price {
+  color: #062047;
+  text-align: right;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.restaurant-v9-menu-drinks > p {margin-top: 10px}
+@media(max-width:380px) {
+  .restaurant-v9-menu-group .restaurant-v9-price-list li {font-size: 12px;gap: 8px}
+}
