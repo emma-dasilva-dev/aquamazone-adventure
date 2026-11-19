@@ -250,7 +250,7 @@ export default function Home(){
           <p className="restaurant-v9-included">{lang==='fr'
             ?'Chaque poisson est servi avec un accompagnement au choix, inclus dans le prix. Le tarif de la carpe varie selon sa taille.'
             :'Each fish dish includes one side of your choice. Carp pricing depends on fish size.'}</p>
-          <ul className="restaurant-v9-other-grills"><li>{lang==='fr'?'Brochettes de poulet — tarif à confirmer':'Chicken skewers — price to confirm'}</li></ul>
+          <ul className="restaurant-v9-other-grills"><li>{lang==='fr'?'Brochettes de poulet — 6 000 FCFA':'Chicken skewers — 6,000 FCFA'}</li></ul>
         </div>
         <div className="restaurant-v9-menu-group">
           <h3>{lang==='fr'?'Accompagnements':'Sides'}</h3>
