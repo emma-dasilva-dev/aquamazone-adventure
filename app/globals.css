@@ -429,6 +429,7 @@ body{overflow-x:clip}
 .restaurant-v9-menu-group .restaurant-v9-fish-list{display:block;margin:0;padding:0}
 .restaurant-v9-menu-group .restaurant-v9-fish-list li{display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px solid rgba(6,32,71,.12)}
 .restaurant-v9-menu-group .restaurant-v9-fish-list li::before{display:none}
+.restaurant-v9-menu-group .restaurant-v9-fish-list li > span > small{display:block;margin-top:3px;font-size:12px;line-height:1.5;color:#52646b}
 .restaurant-v9-fish-list strong{color:#062047;white-space:nowrap;font-weight:750;font-variant-numeric:tabular-nums;font-size:13px}
 .restaurant-v9-included{font-size:12px;color:#52646b;line-height:1.65;margin:11px 0 13px}
 .restaurant-v9-extra{font-size:13px;line-height:1.6;color:#062047;margin:15px 0 0}
