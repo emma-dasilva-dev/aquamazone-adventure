@@ -48,9 +48,20 @@ export const businessKnowledge = {
   restaurant: {
     availability: 'Week-ends et jours fériés, confirmer la commande avant arrivée.',
     grillades: ['Bar braisé','Carpe braisée','Brochettes de poulet'],
+    otherDishes: ['Gari Gnignan + œufs brouillés : 3 000 FCFA'],
     sides: ['Riz','Aloco','Légumes sautés','Pommes frites','Pommes sautées','Igname','Patate douce'],
-    drinks: 'Plusieurs boissons fraîches',
-    prices: 'Bar braisé : 6 500 FCFA. Carpe braisée : de 6 500 à 9 000 FCFA selon la taille. Chaque poisson comprend exactement un accompagnement au choix dans le prix. Toute portion ou tout accompagnement supplémentaire coûte 1 500 FCFA. Bar et carpe braisés disponibles chaque week-end. Brochettes de poulet : 6 000 FCFA (accompagnement non précisé). Prix des boissons non confirmés : demander sur WhatsApp.'
+    drinks: [
+      'Sucreries : 1 000 à 1 500 FCFA',
+      'Cocktails : 3 000 FCFA',
+      'Vins : 9 000 à 15 000 FCFA',
+      'Champagne : 50 000 FCFA',
+      'Bières : 1 500 à 2 000 FCFA',
+      'Eaux : 500 à 1 500 FCFA',
+      'Alcools : 1 000 à 3 000 FCFA',
+      'Thé vert ou citronnelle chaud : 1 500 FCFA',
+      'Café : 1 500 FCFA'
+    ],
+    prices: 'Bar braisé : 6 500 FCFA. Carpe braisée : 6 500 à 9 000 FCFA selon la taille. Brochettes de poulet : 6 000 FCFA. Chacun de ces trois plats comprend un accompagnement au choix inclus dans son prix. Toute portion ou tout accompagnement supplémentaire coûte 1 500 FCFA. Bar et carpe braisés disponibles chaque week-end. Gari Gnignan avec œufs brouillés : 3 000 FCFA.'
   },
   booking: {
     status: 'Le module de réservation et de paiement en ligne n’est PAS opérationnel.',

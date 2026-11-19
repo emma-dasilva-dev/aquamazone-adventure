@@ -949,3 +949,11 @@ img,video,iframe{max-width:100%}
  .reservation-v15-fields .az-activity-art svg{width:54px;height:50px}
  .reservation-v15-fields .az-activity-pick-copy strong{font-size:12px}
 }
+
+/* Mobile-friendly restaurant menu: prices retain their own readable column. */
+.restaurant-v9-menu-group .restaurant-v9-drink-prices li{padding-block:9px}
+@media(max-width:420px){
+ .restaurant-v9-menu-group .restaurant-v9-fish-list li{align-items:flex-start;gap:9px}
+ .restaurant-v9-menu-group .restaurant-v9-fish-list li span{min-width:0;flex:1}
+ .restaurant-v9-menu-group .restaurant-v9-fish-list li strong{font-size:12px;text-align:right}
+}

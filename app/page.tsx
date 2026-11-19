@@ -246,11 +246,17 @@ export default function Home(){
           <ul className="restaurant-v9-fish-list">
             <li><span>{lang==='fr'?'Bar braisé':'Grilled sea bass'}</span><strong>6 500 FCFA</strong></li>
             <li><span>{lang==='fr'?'Carpe braisée':'Grilled carp'}</span><strong>6 500 – 9 000 FCFA</strong></li>
+            <li><span>{lang==='fr'?'Brochettes de poulet':'Chicken skewers'}</span><strong>6 000 FCFA</strong></li>
           </ul>
           <p className="restaurant-v9-included">{lang==='fr'
-            ?'Chaque poisson est servi avec un accompagnement au choix, inclus dans le prix. Le tarif de la carpe varie selon sa taille.'
-            :'Each fish dish includes one side of your choice. Carp pricing depends on fish size.'}</p>
-          <ul className="restaurant-v9-other-grills"><li>{lang==='fr'?'Brochettes de poulet — 6 000 FCFA':'Chicken skewers — 6,000 FCFA'}</li></ul>
+            ?'Bar, carpe et brochettes : un accompagnement au choix inclus dans le prix. Le prix de la carpe dépend de sa taille.'
+            :'Sea bass, carp and chicken skewers each include one side of your choice. Carp pricing depends on size.'}</p>
+        </div>
+        <div className="restaurant-v9-menu-group">
+          <h3>{lang==='fr'?'Autre plat':'Another dish'}</h3>
+          <ul className="restaurant-v9-fish-list">
+            <li><span>{lang==='fr'?'Gari Gnignan + œufs brouillés':'Gari Gnignan with scrambled eggs'}</span><strong>3 000 FCFA</strong></li>
+          </ul>
         </div>
         <div className="restaurant-v9-menu-group">
           <h3>{lang==='fr'?'Accompagnements':'Sides'}</h3>
@@ -259,7 +265,17 @@ export default function Home(){
         </div>
         <div className="restaurant-v9-menu-group restaurant-v9-menu-drinks">
           <h3>{lang==='fr'?'Boissons':'Drinks'}</h3>
-          <p>{lang==='fr'?'Plusieurs boissons fraîches disponibles.':'A selection of chilled drinks is available.'}</p>
+          <ul className="restaurant-v9-fish-list restaurant-v9-drink-prices">
+            <li><span>{lang==='fr'?'Sucreries':'Soft drinks'}</span><strong>1 000 – 1 500 FCFA</strong></li>
+            <li><span>{lang==='fr'?'Cocktails':'Cocktails'}</span><strong>3 000 FCFA</strong></li>
+            <li><span>{lang==='fr'?'Vins':'Wines'}</span><strong>9 000 – 15 000 FCFA</strong></li>
+            <li><span>{lang==='fr'?'Champagne':'Champagne'}</span><strong>50 000 FCFA</strong></li>
+            <li><span>{lang==='fr'?'Bières':'Beers'}</span><strong>1 500 – 2 000 FCFA</strong></li>
+            <li><span>{lang==='fr'?'Eaux':'Water'}</span><strong>500 – 1 500 FCFA</strong></li>
+            <li><span>{lang==='fr'?'Alcools':'Spirits'}</span><strong>1 000 – 3 000 FCFA</strong></li>
+            <li><span>{lang==='fr'?'Thé chaud (thé vert / citronnelle)':'Hot tea (green tea / lemongrass)'}</span><strong>1 500 FCFA</strong></li>
+            <li><span>{lang==='fr'?'Café':'Coffee'}</span><strong>1 500 FCFA</strong></li>
+          </ul>
         </div>
         <div className="restaurant-v9-footer">
           <p>{lang==='fr'?'Pour faciliter la préparation de votre repas, nous vous recommandons de confirmer votre commande avant votre arrivée.':'For a smoother dining experience, we recommend confirming your order before you arrive.'}</p>
