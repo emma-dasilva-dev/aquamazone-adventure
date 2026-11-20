@@ -62,10 +62,16 @@ export default function ActivitiesPage(){
     <p>{fr?'Retrouvez les présentations et vidéos d’Aquamazone sur notre chaîne officielle. Nous y montrons les activités et les moments vécus sur place.':'Watch Aquamazone presentations and videos on our official channel, featuring activities and moments from the venue.'}</p>
     <a href="https://www.youtube.com/@AquAmazone229" target="_blank" rel="noopener noreferrer" className="activities-video-cta"><Play size={16} fill="currentColor"/> {fr?'Voir les vidéos Aquamazone':'Watch Aquamazone videos'} <ArrowUpRight size={16}/></a>
    </div>
-   <a href="https://www.youtube.com/@AquAmazone229" target="_blank" rel="noopener noreferrer" className="activities-video-card" aria-label={fr?'Ouvrir les vidéos Aquamazone':'Open Aquamazone videos'}>
-    <div className="activities-video-card-image"><img src="/images/gallery/gallery-18.webp" alt="" loading="lazy"/></div>
-    <div><span>YOUTUBE · AQUAMAZONE</span><strong>{fr?'Présentation d’activité sur Aquamazone':'Activity presentation on Aquamazone'}</strong><ArrowUpRight size={20}/></div>
-   </a>
+   <div className="activities-video-grid">
+    <div className="activities-video-card">
+     <div className="activities-video-card-image"><video controls playsInline preload="metadata" poster="/images/activities/canoe-simple.webp"><source src="/videos/canoe-simple.mp4" type="video/mp4"/></video></div>
+     <div><span>{fr?'EXEMPLE · CANOË-KAYAK':'EXAMPLE · CANOE-KAYAK'}</span><strong>{fr?'Voir l’activité en action':'See the activity in action'}</strong><ArrowUpRight size={20}/></div>
+    </div>
+    <a href="https://www.youtube.com/@AquAmazone229" target="_blank" rel="noopener noreferrer" className="activities-video-card" aria-label={fr?'Ouvrir les vidéos Aquamazone':'Open Aquamazone videos'}>
+     <div className="activities-video-card-image"><img src="/images/gallery/gallery-18.webp" alt="" loading="lazy"/></div>
+     <div><span>YOUTUBE · AQUAMAZONE</span><strong>{fr?'Plus de vidéos et présentations':'More videos and presentations'}</strong><ArrowUpRight size={20}/></div>
+    </a>
+   </div>
   </section>
 
   <section className="activities-page-footer-cta">
