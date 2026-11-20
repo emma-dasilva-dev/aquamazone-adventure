@@ -125,7 +125,7 @@ export default function Home(){
        {lang==='fr'?'Demander une réservation':'Request a booking'}<ArrowUpRight size={15}/>
      </a>}
    </div>
-     activityVisuals[a.id]?
+   {activityVisuals[a.id]?
      <button className="activity-thumbnail" type="button" onClick={()=>setPreview(a.id)} aria-label={(lang==='fr'?'Agrandir la photo : ':'Expand photo: ')+(lang==='fr'?a.fr:a.en)}>
        <span className="activity-thumbnail-photo" style={{backgroundImage:`url("${activityVisuals[a.id]}")`}} aria-hidden="true"/>
        <span className="activity-thumbnail-zoom" aria-hidden="true"><ZoomIn size={17}/></span>
