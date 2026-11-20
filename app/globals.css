@@ -115,7 +115,7 @@ body{overflow-x:clip}
 /* V0.3: Photography-led destination design */
 :root{--cream:#FAF9F5;--aqua-navy:#062047}
 .hero-v3{position:relative;display:block;isolation:isolate;background:#123956;min-height:730px;height:min(960px,100svh);overflow:hidden;color:white}
-.hero-photography{position:absolute;inset:0;z-index:-3;background-image:url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=2000&q=85&auto=format&fit=crop');background-size:cover;background-position:center 51%;filter:saturate(.95)}
+.hero-photography{position:absolute;inset:0;z-index:-3;background-image:url('/images/gallery/gallery-19.webp');background-size:cover;background-position:center 51%;filter:saturate(.95)}
 .hero-shade{position:absolute;inset:0;z-index:-2;background:linear-gradient(90deg,rgba(1,24,45,.83) 0%,rgba(4,36,61,.54) 44%,rgba(4,36,61,.08) 100%),linear-gradient(0deg,rgba(2,23,44,.68) 0%,transparent 33%,rgba(2,23,44,.28) 100%)}
 .hero-v3-content{position:relative;z-index:2;width:min(1420px,100%);margin:auto;padding:clamp(160px,21vh,235px) clamp(26px,5.3vw,88px) 170px}
 .hero-v3-kicker{font-size:11px;letter-spacing:.27em;font-weight:700;margin:0 0 32px}
@@ -413,7 +413,7 @@ body{overflow-x:clip}
 .restaurant-v9-intro>p:last-child{font-size:15px;line-height:1.8;color:#52656b;max-width:305px;margin:0 0 8px}
 .restaurant-v9-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:stretch;gap:clamp(25px,5vw,78px)}
 .restaurant-v9-visual{display:flex;flex-direction:column;min-width:0}
-.restaurant-v9-photo{min-height:570px;flex:1;background:#d7ddd4 url('https://images.unsplash.com/photo-1547592180-85f173990554?w=1400&q=80&auto=format&fit=crop') center/cover no-repeat;position:relative}
+.restaurant-v9-photo{min-height:570px;flex:1;background:#d7ddd4 url('/images/restaurant/poisson-braise.webp') center/cover no-repeat;position:relative}
 .restaurant-v9-photo:after{content:'';position:absolute;inset:0;border:1px solid rgba(6,32,71,.08);pointer-events:none}
 .restaurant-v9-photo-caption{display:flex;justify-content:space-between;align-items:center;gap:15px;padding-top:15px;font-size:11px;color:#5b6c74;letter-spacing:.02em}
 .restaurant-v9-photo-caption span:first-child{font-weight:700}

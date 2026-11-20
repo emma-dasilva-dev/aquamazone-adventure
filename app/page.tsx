@@ -24,7 +24,7 @@ const activities=[
  {id:'jetski',fr:'Jet-ski',en:'Jet ski',duration:'',price:'',note:'Indisponible — maintenance',noteEn:'Unavailable — maintenance',unavailable:true},
  {id:'rental',fr:'Location embarcation + moteur + machiniste',en:'Boat, motor and operator hire',duration:'Demi-journée / journée',price:'Sur devis',note:'Réservation obligatoire',noteEn:'Advance booking required'}
 ];
-const copy={fr:{nav:['Activités','Forfaits','Restaurant','Galerie','Localisation'],book:'Réserver',hero:'La détente au fil de l’eau.',explore:'Explorer les activités',eyebrow:'VOTRE PROCHAINE ÉVASION',intro:'L’aventure commence ici.',desc:'Des expériences nautiques, des moments à partager et un cadre naturel à découvrir.',activity:'Choisissez votre aventure',activitySub:'Découvrez les activités et leurs tarifs. Les photographies officielles seront ajoutées prochainement.',featured:'À DÉCOUVRIR',packages:'Nos forfaits expériences',food:'Une pause gourmande au bord de l’eau',gallery:'Des souvenirs à vivre',location:'Comment nous trouver',hours:'Samedi, dimanche et jours fériés · 11h00–18h00',cta:'Préparer ma visite',placeholder:'Photographie Aquamazone à intégrer',ask:'Une question ?',chat:'Assistant Aquamazone',chatWelcome:'Bonjour ! Je peux vous renseigner sur nos horaires, tarifs et notre localisation.',chatQuestions:['Quels sont vos horaires ?','Où êtes-vous situés ?','Combien coûte le pédalo ?'],close:'Fermer',menu:'Ouvrir le menu'},en:{nav:['Activities','Packages','Restaurant','Gallery','Location'],book:'Book',hero:'Relaxation by the water.',explore:'Explore activities',eyebrow:'YOUR NEXT ESCAPE',intro:'Adventure starts here.',desc:'Water activities, moments together and a natural setting to discover.',activity:'Choose your adventure',activitySub:'Explore activities and prices. Official photos will be added soon.',featured:'EXPLORE',packages:'Experience packages',food:'A delicious break by the water',gallery:'Memories in the making',location:'Find us',hours:'Saturday, Sunday and public holidays · 11am–6pm',cta:'Plan my visit',placeholder:'Aqu​amazone photo to be added',ask:'Need help?',chat:'Aquamazone Assistant',chatWelcome:'Hello! I can help with our opening hours, prices and location.',chatQuestions:['What are your opening hours?','Where are you located?','How much is pedal boating?'],close:'Close',menu:'Open menu'}};
+const copy={fr:{nav:['Activités','Forfaits','Restaurant','Galerie','Localisation'],book:'Réserver',hero:'La détente au fil de l’eau.',explore:'Explorer les activités',eyebrow:'VOTRE PROCHAINE ÉVASION',intro:'L’aventure commence ici.',desc:'Des expériences nautiques, des moments à partager et un cadre naturel à découvrir.',activity:'Choisissez votre aventure',activitySub:'Découvrez les activités, leurs tarifs et les photos prises à Aquamazone.',featured:'À DÉCOUVRIR',packages:'Nos forfaits expériences',food:'Une pause gourmande au bord de l’eau',gallery:'Des souvenirs à vivre',location:'Comment nous trouver',hours:'Samedi, dimanche et jours fériés · 11h00–18h00',cta:'Préparer ma visite',placeholder:'Photographie Aquamazone à intégrer',ask:'Une question ?',chat:'Assistant Aquamazone',chatWelcome:'Bonjour ! Je peux vous renseigner sur nos horaires, tarifs et notre localisation.',chatQuestions:['Quels sont vos horaires ?','Où êtes-vous situés ?','Combien coûte le pédalo ?'],close:'Fermer',menu:'Ouvrir le menu'},en:{nav:['Activities','Packages','Restaurant','Gallery','Location'],book:'Book',hero:'Relaxation by the water.',explore:'Explore activities',eyebrow:'YOUR NEXT ESCAPE',intro:'Adventure starts here.',desc:'Water activities, moments together and a natural setting to discover.',activity:'Choose your adventure',activitySub:'Explore activities, prices and photographs from Aquamazone.',featured:'EXPLORE',packages:'Experience packages',food:'A delicious break by the water',gallery:'Memories in the making',location:'Find us',hours:'Saturday, Sunday and public holidays · 11am–6pm',cta:'Plan my visit',placeholder:'Aqu​amazone photo to be added',ask:'Need help?',chat:'Aquamazone Assistant',chatWelcome:'Hello! I can help with our opening hours, prices and location.',chatQuestions:['What are your opening hours?','Where are you located?','How much is pedal boating?'],close:'Close',menu:'Open menu'}};
 const sections=['activities','packages','restaurant','gallery','location'];
 
 const faqItems=[
@@ -39,11 +39,16 @@ const faqItems=[
 ] as const;
 
 const bookingWhatsApp='https://wa.me/2290154284444?text=Bonjour%2C%20je%20souhaite%20r%C3%A9server%20une%20activit%C3%A9%20%C3%A0%20Aquamazone.';
-// Temporary stock photography. Replace with verified Aquamazone-owned photographs before launch.
+// Official Aquamazone imagery. Unverified inflatable structure is intentionally excluded.
 const activityVisuals:Record<string,string>={
- paddle:'https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=1100&q=80&auto=format&fit=crop',
- boat:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1100&q=80&auto=format&fit=crop',
- ball:'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=1100&q=80&auto=format&fit=crop'
+ 'pedalo-simple':'/images/activities/pedalo-simple.webp',
+ 'pedalo-double':'/images/activities/pedalo-double.webp',
+ 'canoe-simple':'/images/activities/canoe-simple.webp',
+ 'canoe-double':'/images/activities/canoe-double.webp',
+ paddle:'/images/activities/paddle.webp',
+ boat:'/images/activities/bateau-a-pedales.webp',
+ tour:'/images/activities/mangrove-paysage.webp',
+ jetski:'/images/activities/jet-ski.webp'
 };
 function CraftThumbnail({kind,lang}:{kind:'pedalo-simple'|'pedalo-double'|'canoe-simple'|'canoe-double';lang:Lang}){
  const tandem=kind.endsWith('-double');
@@ -76,7 +81,7 @@ export default function Home(){
  {menu&&<nav id="mobile-menu" className="mobile-nav" aria-label={lang==='fr'?'Navigation mobile':'Mobile navigation'}>{sections.map((s,i)=><a onClick={()=>setMenu(false)} href={'#'+s} key={s}><span>0{i+1}</span>{t.nav[i]}<ArrowUpRight size={20}/></a>)}<a href="#reservation" onClick={()=>setMenu(false)}>{t.book}<ArrowRight/></a></nav>}
  <main id="top">
  <section className="hero hero-v3" aria-labelledby="hero-title">
- <div className="hero-photography" role="img" aria-label={lang==='fr'?'Photographie de paysage illustrative, à remplacer par une photo officielle Aquamazone':'Illustrative landscape photography, to be replaced with an official Aquamazone photograph'}/>
+ <div className="hero-photography" role="img" aria-label={lang==='fr'?'Photographie de la base nautique Aquamazone':'Photograph of the Aquamazone waterfront base'}/>
  <div className="hero-shade" aria-hidden="true"/>
  <div className="hero-v3-content">
   <p className="hero-v3-kicker">{lang==='fr'?'BASE DE LOISIRS NAUTIQUES':'WATERFRONT ADVENTURE'}</p>
@@ -85,7 +90,7 @@ export default function Home(){
   <div className="hero-v3-actions"><a className="yellow-button" href="#reservation">{lang==='fr'?'Demander une réservation':'Request a booking'}<ArrowUpRight size={18}/></a><a className="hero-secondary" href="#activities">{t.explore}<ArrowDown size={17}/></a></div>
  </div>
  <div className="hero-v3-bottom"><div><MapPin size={20}/><span>Adounko Village<br/>Route des Pêches, Cotonou</span></div><div><Clock size={20}/><span>{lang==='fr'?'Sam. · Dim. · Jours fériés':'Sat. · Sun. · Public holidays'}<br/>11h – 18h</span></div><div><MessageCircle size={20}/><span>{lang==='fr'?'Bar & Restaurant':'Bar & Restaurant'}<br/>{lang==='fr'?'Ouvert les week-ends et jours fériés':'Open weekends & public holidays'}</span></div></div>
- <span className="image-disclosure">{lang==='fr'?'Photo d’illustration · Visuels officiels à venir':'Illustrative photo · Official media coming soon'}</span>
+ <span className="image-disclosure">{lang==='fr'?'Photographie prise à Aquamazone':'Photographed at Aquamazone'}</span>
  </section>
  <section className="az-crossing-first" aria-labelledby="az-crossing-title">
    <div className="az-crossing-first-inner">
@@ -102,7 +107,7 @@ export default function Home(){
  </section>
  <section id="activities" className="activities activities-v3 section-shell">
  <div className="activity-v3-heading"><div><p className="kicker">{lang==='fr'?'02 / NOS ACTIVITÉS':'02 / OUR ACTIVITIES'}</p><h2>{lang==='fr'?'Des expériences uniques sur l’eau':'Unforgettable moments on the water'}</h2></div><p>{lang==='fr'?'Pédalo, kayak, paddle et bien plus encore. Trouvez l’expérience qui vous ressemble.':'Pedal boats, kayaks, paddleboards and more. Find your kind of adventure.'}</p></div>
- <p className="visual-warning">{lang==='fr'?'Photographies d’illustration — elles ne représentent pas le site Aquamazone.':'Illustrative stock photography — not images of the Aquamazone location.'}</p>
+ 
  <div className="activity-vertical-list">
  {activities.map((a,i)=><article className="activity-list-item" key={a.id}>
    <span className="activity-list-index">{String(i+1).padStart(2,'0')}</span>
@@ -120,10 +125,8 @@ export default function Home(){
        {lang==='fr'?'Demander une réservation':'Request a booking'}<ArrowUpRight size={15}/>
      </a>}
    </div>
-   {(['pedalo-simple','pedalo-double','canoe-simple','canoe-double'] as const).includes(a.id as 'pedalo-simple'|'pedalo-double'|'canoe-simple'|'canoe-double')?
-     <CraftThumbnail kind={a.id as 'pedalo-simple'|'pedalo-double'|'canoe-simple'|'canoe-double'} lang={lang}/>:
      activityVisuals[a.id]?
-     <button className="activity-thumbnail" type="button" onClick={()=>setPreview(a.id)} aria-label={(lang==='fr'?'Agrandir la photo illustrative : ':'Expand illustrative image: ')+(lang==='fr'?a.fr:a.en)}>
+     <button className="activity-thumbnail" type="button" onClick={()=>setPreview(a.id)} aria-label={(lang==='fr'?'Agrandir la photo : ':'Expand photo: ')+(lang==='fr'?a.fr:a.en)}>
        <span className="activity-thumbnail-photo" style={{backgroundImage:`url("${activityVisuals[a.id]}")`}} aria-hidden="true"/>
        <span className="activity-thumbnail-zoom" aria-hidden="true"><ZoomIn size={17}/></span>
      </button>:
@@ -234,8 +237,8 @@ export default function Home(){
     </div>
     <div className="restaurant-v9-grid">
       <div className="restaurant-v9-visual">
-        <div className="restaurant-v9-photo" role="img" aria-label={lang==='fr'?'Photographie culinaire illustrative, pas une photo du restaurant Aquamazone':'Illustrative food photography, not an Aquamazone restaurant photograph'}/>
-        <div className="restaurant-v9-photo-caption"><span>{lang==='fr'?'Une pause au bord de l’eau':'A break by the water'}</span><span>{lang==='fr'?'Photo illustrative · À remplacer':'Illustrative photo · To replace'}</span></div>
+        <div className="restaurant-v9-photo" role="img" aria-label={lang==='fr'?'Poisson braisé servi à Aquamazone':'Grilled fish served at Aquamazone'}/>
+        <div className="restaurant-v9-photo-caption"><span>{lang==='fr'?'Une pause au bord de l’eau':'A break by the water'}</span><span>{lang==='fr'?'Poisson braisé · Aquamazone':'Grilled fish · Aquamazone'}</span></div>
       </div>
       <div className="restaurant-v9-menu">
         <div className="restaurant-v9-menu-top"><span>{lang==='fr'?'À LA CARTE':'ON THE MENU'}</span><span>ADOUNKO · BÉNIN</span></div>
@@ -417,8 +420,8 @@ export default function Home(){
  {preview&&<div className="activity-lightbox" role="presentation" onClick={()=>setPreview(null)}>
   <div className="activity-lightbox-dialog" role="dialog" aria-modal="true" aria-label={lang==='fr'?'Aperçu photo':'Image preview'} onClick={event=>event.stopPropagation()}>
     <button className="activity-lightbox-close" type="button" onClick={()=>setPreview(null)} aria-label={lang==='fr'?'Fermer l’image':'Close image'}><X size={22}/></button>
-    <img src={activityVisuals[preview]} alt={lang==='fr'?'Photographie illustrative de paysage (pas une photo d’Aquamazone)':'Illustrative landscape photo (not Aquamazone)'} />
-    <p>{lang==='fr'?'Photographie illustrative · Visuel officiel Aquamazone à venir':'Illustrative photography · Official Aquamazone image coming soon'}</p>
+    <img src={activityVisuals[preview]} alt={lang==='fr'?'Photographie de l’activité à Aquamazone':'Activity photographed at Aquamazone'} />
+    <p>{lang==='fr'?'Photographie prise à Aquamazone':'Photographed at Aquamazone'}</p>
   </div>
  </div>}
  <AquamazoneAssistant lang={lang}/>

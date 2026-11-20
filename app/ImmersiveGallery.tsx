@@ -6,26 +6,17 @@ import { ArrowDown, ArrowUpRight, ChevronLeft, ChevronRight, X } from 'lucide-re
 type Lang = 'fr' | 'en';
 
 const slides = [
-  { id: 'photo-01', title: { fr: 'Au fil de l’eau', en: 'By the water' }, meta: { fr: 'Évasion', en: 'Escape' }, image: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1200&q=78&auto=format&fit=crop' },
-  { id: 'photo-02', title: { fr: 'La nature en grand', en: 'Into nature' }, meta: { fr: 'Découverte', en: 'Discovery' }, image: 'https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=1200&q=78&auto=format&fit=crop' },
-  { id: 'photo-03', title: { fr: 'L’appel de l’aventure', en: 'The call of adventure' }, meta: { fr: 'Aventure', en: 'Adventure' }, image: 'https://images.unsplash.com/photo-1500534623283-312aade485b7?w=1200&q=78&auto=format&fit=crop' },
-  { id: 'photo-04', title: { fr: 'Des instants à partager', en: 'Moments together' }, meta: { fr: 'Souvenirs', en: 'Memories' }, image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&q=78&auto=format&fit=crop' },
-  { id: 'photo-05', title: { fr: 'Encore un peu de bleu', en: 'A little more blue' }, meta: { fr: 'Détente', en: 'Relaxation' }, image: 'https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=1200&q=78&auto=format&fit=crop' },
-  { id: 'photo-06', title: { fr: 'L’horizon s’ouvre', en: 'The horizon opens' }, meta: { fr: 'Horizon', en: 'Horizon' }, image: 'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=1200&q=78&auto=format&fit=crop' },
-  { id: 'photo-07', title: { fr: 'Échappée belle', en: 'A lovely escape' }, meta: { fr: 'Évasion', en: 'Escape' }, image: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1200&q=78&auto=format&fit=crop' },
-  { id: 'photo-08', title: { fr: 'Nature vivante', en: 'Nature in motion' }, meta: { fr: 'Nature', en: 'Nature' }, image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=78&auto=format&fit=crop' },
-  { id: 'photo-09', title: { fr: 'Prendre de la hauteur', en: 'A wider perspective' }, meta: { fr: 'Découverte', en: 'Discovery' }, image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=78&auto=format&fit=crop' },
-  { id: 'photo-10', title: { fr: 'Le goût de l’ailleurs', en: 'Somewhere new' }, meta: { fr: 'Voyage', en: 'Journey' }, image: 'https://images.unsplash.com/photo-1511497584788-876760111969?w=1200&q=78&auto=format&fit=crop' },
-  { id: 'photo-11', title: { fr: 'Lumière du jour', en: 'Daylight' }, meta: { fr: 'Lumière', en: 'Light' }, image: 'https://images.unsplash.com/photo-1458668383970-8ddd3927deed?w=1200&q=78&auto=format&fit=crop' },
-  { id: 'photo-12', title: { fr: 'L’appel des grands espaces', en: 'Into the open' }, meta: { fr: 'Paysage', en: 'Landscape' }, image: 'https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=1200&q=78&auto=format&fit=crop' },
-  { id: 'photo-13', title: { fr: 'Des vues inoubliables', en: 'Views to remember' }, meta: { fr: 'Souvenirs', en: 'Memories' }, image: 'https://images.unsplash.com/photo-1472396961693-142e6e269027?w=1200&q=78&auto=format&fit=crop' },
-  { id: 'photo-14', title: { fr: 'Une parenthèse douce', en: 'A gentle pause' }, meta: { fr: 'Détente', en: 'Relaxation' }, image: 'https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=1200&q=78&auto=format&fit=crop' },
-  { id: 'photo-15', title: { fr: 'Loin du quotidien', en: 'A world away' }, meta: { fr: 'Évasion', en: 'Escape' }, image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1200&q=78&auto=format&fit=crop' },
-  { id: 'photo-16', title: { fr: 'Au rythme de l’eau', en: 'In rhythm with water' }, meta: { fr: 'Eau', en: 'Water' }, image: 'https://images.unsplash.com/photo-1439853949212-09789ba454ca?w=1200&q=78&auto=format&fit=crop' },
-  { id: 'photo-17', title: { fr: 'Moments de liberté', en: 'Moments of freedom' }, meta: { fr: 'Aventure', en: 'Adventure' }, image: 'https://images.unsplash.com/photo-1482192596544-9eb780fc7f66?w=1200&q=78&auto=format&fit=crop' },
-  { id: 'photo-18', title: { fr: 'Respirer autrement', en: 'A breath of fresh air' }, meta: { fr: 'Nature', en: 'Nature' }, image: 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=1200&q=78&auto=format&fit=crop' },
-  { id: 'photo-19', title: { fr: 'Face à l’immensité', en: 'Endless horizons' }, meta: { fr: 'Horizon', en: 'Horizon' }, image: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1200&q=78&auto=format&fit=crop' },
-  { id: 'photo-20', title: { fr: 'La détente au fil de l’eau', en: 'Relaxation by the water' }, meta: { fr: 'AQUAMAZONE', en: 'AQUAMAZONE' }, image: 'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=1200&q=78&auto=format&fit=crop' },
+  { id:'gallery-01', title:{fr:"Des moments à partager",en:"Moments together"}, meta:{fr:"Pédalo",en:"Pedalo"}, image:'/images/gallery/gallery-01.webp', alt:{fr:"Deux visiteuses sur une embarcation à pédales",en:"Two visitors on a pedal-powered craft"} },
+  { id:'gallery-02', title:{fr:"Profiter du lac",en:"Enjoying the lake"}, meta:{fr:"Détente",en:"Relaxation"}, image:'/images/gallery/gallery-02.webp', alt:{fr:"Deux visiteurs sur une embarcation à pédales",en:"Two visitors on a pedal-powered craft"} },
+  { id:'gallery-03', title:{fr:"À bord du kayak",en:"Kayaking together"}, meta:{fr:"Canoë-kayak",en:"Canoe-kayak"}, image:'/images/gallery/gallery-03.webp', alt:{fr:"Deux personnes en kayak orange",en:"Two people in an orange kayak"} },
+  { id:'gallery-04', title:{fr:"Au cœur de la nature",en:"Close to nature"}, meta:{fr:"Lac",en:"Lake"}, image:'/images/gallery/gallery-04.webp', alt:{fr:"Bateau à pédales près de la végétation",en:"Pedal-powered boat near vegetation"} },
+  { id:'gallery-06', title:{fr:"L’espace de loisirs",en:"The adventure area"}, meta:{fr:"Base nautique",en:"Waterfront"}, image:'/images/gallery/gallery-06.webp', alt:{fr:"Zone nautique avec structures gonflables",en:"Waterfront area with inflatables"} },
+  { id:'gallery-11', title:{fr:"La vie au bord de l’eau",en:"Life by the water"}, meta:{fr:"Embarcations",en:"Boats"}, image:'/images/gallery/gallery-11.webp', alt:{fr:"Embarcations sur le lac",en:"Boats on the lake"} },
+  { id:'gallery-14', title:{fr:"Ensemble sur le lac",en:"Out on the lake"}, meta:{fr:"Balade",en:"Boat trip"}, image:'/images/gallery/gallery-14.webp', alt:{fr:"Visiteurs à bord d’un bateau à moteur",en:"Visitors aboard a motorboat"} },
+  { id:'gallery-15', title:{fr:"Des souvenirs sur l’eau",en:"Memories on the water"}, meta:{fr:"Visiteurs",en:"Visitors"}, image:'/images/gallery/gallery-15.webp', alt:{fr:"Visiteurs sur des embarcations",en:"Visitors on boats"} },
+  { id:'gallery-17', title:{fr:"Sur une planche",en:"On a paddleboard"}, meta:{fr:"Paddle",en:"Paddle"}, image:'/images/gallery/gallery-17.webp', alt:{fr:"Stand-up paddle sur le lac",en:"Stand-up paddle on the lake"} },
+  { id:'gallery-18', title:{fr:"L’aventure en canoë",en:"Canoe adventure"}, meta:{fr:"Canoë",en:"Canoe"}, image:'/images/gallery/gallery-18.webp', alt:{fr:"Plusieurs canoës sur le lac",en:"Several canoes on the lake"} },
+  { id:'gallery-19', title:{fr:"Bienvenue à Aquamazone",en:"Welcome to Aquamazone"}, meta:{fr:"La base",en:"The venue"}, image:'/images/gallery/gallery-19.webp', alt:{fr:"Vue de la base nautique Aquamazone",en:"View of the Aquamazone waterfront base"} },
 ];
 
 export default function ImmersiveGallery({ lang }: { lang: Lang }) {
@@ -112,7 +103,7 @@ export default function ImmersiveGallery({ lang }: { lang: Lang }) {
             {slides.map((slide, index) => (
               <figure className={'gallery-frame gallery-frame-' + (index % 3)} key={slide.id}>
                 <button type="button" className="gallery-photo-button" onClick={() => setLightboxIndex(index)} aria-label={(lang === 'fr' ? 'Agrandir : ' : 'Expand: ') + slide.title[lang]}>
-                  <img src={slide.image} alt={lang === 'fr' ? 'Photographie paysagère illustrative, non prise à Aquamazone' : 'Illustrative landscape photography, not taken at Aquamazone'} loading="lazy" decoding="async"/>
+                  <img src={slide.image} alt={slide.alt[lang]} loading="lazy" decoding="async"/>
                   <span className="gallery-view-hint">{lang === 'fr' ? 'Voir la photo' : 'View photo'} <ArrowUpRight size={16} aria-hidden="true"/></span>
                 </button>
                 <figcaption>
@@ -125,7 +116,7 @@ export default function ImmersiveGallery({ lang }: { lang: Lang }) {
           </div>
         </div>
         <div className="gallery-immersive-footer">
-          <span>{lang === 'fr' ? 'Images d’illustration — photos officielles à venir' : 'Illustrative imagery — official photos coming soon'}</span>
+          <span>{lang === 'fr' ? 'Photos prises à Aquamazone Adventure' : 'Photographs taken at Aquamazone Adventure'}</span>
           <div className="gallery-progress" aria-hidden="true"><div ref={progressRef}/></div>
           <span className="gallery-progress-label">01 — {String(slides.length).padStart(2,'0')}</span>
         </div>
@@ -134,10 +125,10 @@ export default function ImmersiveGallery({ lang }: { lang: Lang }) {
         <div className="gallery-modal" role="presentation" onMouseDown={(e) => { if (e.target === e.currentTarget) setLightboxIndex(null); }}>
           <div className="gallery-modal-inner" role="dialog" aria-modal="true" aria-label={lang === 'fr' ? 'Photo agrandie' : 'Enlarged photograph'}>
             <button className="gallery-modal-close" onClick={() => setLightboxIndex(null)} aria-label={lang === 'fr' ? 'Fermer' : 'Close'}><X size={24}/></button>
-            <img src={slides[lightboxIndex].image} alt={lang === 'fr' ? 'Image illustrative, pas une photo d’Aquamazone' : 'Illustrative image, not a photo of Aquamazone'}/>
+            <img src={slides[lightboxIndex].image} alt={slides[lightboxIndex].alt[lang]}/>
             <div className="gallery-modal-bottom">
               <button onClick={() => setLightboxIndex((lightboxIndex + slides.length - 1) % slides.length)} aria-label={lang === 'fr' ? 'Précédente' : 'Previous'}><ChevronLeft size={22}/></button>
-              <p>{slides[lightboxIndex].title[lang]} <span>· {lang === 'fr' ? 'Illustration' : 'Illustrative'}</span></p>
+              <p>{slides[lightboxIndex].title[lang]} <span>· Aquamazone Adventure</span></p>
               <button onClick={() => setLightboxIndex((lightboxIndex + 1) % slides.length)} aria-label={lang === 'fr' ? 'Suivante' : 'Next'}><ChevronRight size={22}/></button>
             </div>
           </div>
