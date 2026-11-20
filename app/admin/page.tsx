@@ -52,7 +52,8 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
   if(!await isAdminAuthenticated())redirect('/admin/login');
   const params=await searchParams;
   const notice=params.intake;
-  const holdNotice=params.hold;\n  const statusNotice=params.status;
+  const holdNotice=params.hold;
+  const statusNotice=params.status;
   let reservations:ReservationRow[]=[];
   let alerts:AlertRow[]=[];
   let usage:CapacityUsageRow[]=[];
@@ -236,17 +237,17 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
                   <p><strong>Expérience</strong> {row.experience_selection ? (row.experience_selection.package ? row.experience_selection.package.toUpperCase()+' · ' : '') + (row.experience_selection.activities.map(x=>x.toUpperCase()).join(' · ') || 'Forfait') : row.experience.toUpperCase()}</p>
                   {row.experience_selection?.package==='glele'&&row.experience_selection.choice?<p><strong>Choix GLÈLÈ</strong> {row.experience_selection.choice.toUpperCase()}</p>:''}
                   <p><strong>Montant estimé</strong> {formatMoney(row.quote_amount_xof)}</p>
-                  <p><strong>Paiement</strong> <span className="az-admin-pill" data-status="{row.payment_status}">{label(row.payment_status)}</span></p>
+                  <p><strong>Paiement</strong> <span className="az-admin-pill" data-status={row.payment_status}>{label(row.payment_status)}</span></p>
                   {row.status==='awaiting_payment'&&row.expires_at?<p><strong>Retenue interne</strong> Retenue jusqu’au {dateTime(row.expires_at)}. Aucun paiement lancé.</p>:''}
                 </div>
               </details>
             </td>
             <td>{formatMoney(row.quote_amount_xof)}</td>
-            <td><span className="az-admin-pill" data-status="{row.status}">{label(row.status)}</span></td>
+            <td><span className="az-admin-pill" data-status={row.status}>{label(row.status)}</span></td>
             <td>
-              {row.status==='inquiry'?<form action="/api/admin/reservations/status" method="post"><input type="hidden" name="reference" value="{row.reference}"/><input type="hidden" name="status" value="pending_review"/><button type="submit" className="az-admin-action">Examiner</button></form>:''}
-              {row.status==='pending_review'?<div className="az-admin-actions"><form action="/api/admin/reservations/status" method="post"><input type="hidden" name="reference" value="{row.reference}"/><input type="hidden" name="status" value="confirmed"/><button type="submit" className="az-admin-action">Confirmer</button></form><form action="/api/admin/reservations/status" method="post"><input type="hidden" name="reference" value="{row.reference}"/><input type="hidden" name="status" value="cancelled"/><button type="submit" className="az-admin-action az-admin-action-secondary">Annuler</button></form></div>:''}
-              {row.status==='confirmed'?<div className="az-admin-actions"><form action="/api/admin/reservations/status" method="post"><input type="hidden" name="reference" value="{row.reference}"/><input type="hidden" name="status" value="completed"/><button type="submit" className="az-admin-action">Terminée</button></form><form action="/api/admin/reservations/status" method="post"><input type="hidden" name="reference" value="{row.reference}"/><input type="hidden" name="status" value="cancelled"/><button type="submit" className="az-admin-action az-admin-action-secondary">Annuler</button></form></div>:''}
+              {row.status==='inquiry'?<form action="/api/admin/reservations/status" method="post"><input type="hidden" name="reference" value={row.reference}/><input type="hidden" name="status" value="pending_review"/><button type="submit" className="az-admin-action">Examiner</button></form>:''}
+              {row.status==='pending_review'?<div className="az-admin-actions"><form action="/api/admin/reservations/status" method="post"><input type="hidden" name="reference" value={row.reference}/><input type="hidden" name="status" value="confirmed"/><button type="submit" className="az-admin-action">Confirmer</button></form><form action="/api/admin/reservations/status" method="post"><input type="hidden" name="reference" value={row.reference}/><input type="hidden" name="status" value="cancelled"/><button type="submit" className="az-admin-action az-admin-action-secondary">Annuler</button></form></div>:''}
+              {row.status==='confirmed'?<div className="az-admin-actions"><form action="/api/admin/reservations/status" method="post"><input type="hidden" name="reference" value={row.reference}/><input type="hidden" name="status" value="completed"/><button type="submit" className="az-admin-action">Terminée</button></form><form action="/api/admin/reservations/status" method="post"><input type="hidden" name="reference" value={row.reference}/><input type="hidden" name="status" value="cancelled"/><button type="submit" className="az-admin-action az-admin-action-secondary">Annuler</button></form></div>:''}
               {['cancelled','completed','awaiting_payment','expired'].includes(row.status)?<small>—</small>:''}
             </td>
           </tr>)}</tbody>
