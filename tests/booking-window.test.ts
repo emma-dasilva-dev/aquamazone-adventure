@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {bookingWindow,checkBookingWindow,validateReservation,validateActivitySelection} from '../lib/reservation-rules.ts';
+import {validatePlan} from '../lib/reservation-plan.ts';
 
 const request=(date:string)=>({experience:'pedalo',date,time:'12:00',adults:2,children:0});
 const benin=(date:string,time:string)=>new Date(date+'T'+time+':00+01:00');
@@ -212,4 +213,35 @@ test('Public activity enquiries require adult accompaniment for under-12 visitor
   const combined=validateActivitySelection({...childrenOnly,activities:['pedalo','paddle']},now);
   assert.equal(combined.ok,false);
   if(!combined.ok)assert.equal(combined.code,'accompanying_adult');
+});
+
+
+test('Four-step plan: GUÉZO plus lake visit costs 22,000 without duplicate crossing',()=>{
+ const result=validatePlan({adults:2,children:0,date:'2026-11-21',time:'14:00',mode:'package',packageId:'guezo',lines:[{id:'lake',adults:2,children:0}]},benin('2026-11-16','09:00'));
+ assert.equal(result.ok,true);
+ if(result.ok){assert.equal(result.quote.packageTotal,12000);assert.equal(result.quote.activityTotal,10000);assert.equal(result.quote.crossing,0);assert.equal(result.quote.total,22000);assert.equal(result.quote.bookingConfirmed,false);}
+});
+
+test('Custom participant-specific activities are priced separately, crossing once for full visiting party',()=>{
+ const result=validatePlan({adults:2,children:1,date:'2026-11-21',time:'12:00',mode:'custom',lines:[{id:'paddle',adults:1,children:0},{id:'lake',adults:1,children:1}]},benin('2026-11-16','09:00'));
+ assert.equal(result.ok,true);
+ if(result.ok){assert.equal(result.quote.activityTotal,10500);assert.equal(result.quote.crossing,3500);assert.equal(result.quote.total,14000);}
+});
+
+test('Plan rejects mismatched package eligibility, duplicated extras, invalid seat counts and expired dates',()=>{
+ const now=benin('2026-11-16','09:00');
+ const base={adults:2,children:0,date:'2026-11-21',time:'14:00',mode:'package',packageId:'guezo',lines:[]};
+ assert.equal(validatePlan({...base,packageId:'behanzin'},now).ok,false);
+ assert.equal(validatePlan({...base,lines:[{id:'canoe',adults:2,children:0},{id:'canoe',adults:1,children:0}]},now).ok,false);
+ assert.equal(validatePlan({...base,lines:[{id:'pedalboat',adults:1,children:0}]},now).ok,false);
+ assert.equal(validatePlan({...base,lines:[{id:'lake',adults:3,children:0}]},now).ok,false);
+ assert.equal(validatePlan({...base,date:'2026-11-16'},now).ok,false);
+});
+
+test('GLÈLÈ extras do not change the included crossing and choices must match each guest',()=>{
+ const now=benin('2026-11-16','09:00');
+ const base={adults:1,children:1,date:'2026-11-21',time:'12:00',mode:'package',packageId:'glele',gleleChoices:['canoe','pedalo'],lines:[{id:'waterball',adults:1,children:0}]};
+ const result=validatePlan(base,now);assert.equal(result.ok,true);
+ if(result.ok){assert.equal(result.quote.total,11500);assert.equal(result.quote.crossing,0);}
+ assert.equal(validatePlan({...base,gleleChoices:['canoe']},now).ok,false);
 });

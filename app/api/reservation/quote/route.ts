@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { validateReservation, validateActivitySelection } from '../../../../lib/reservation-rules';
 import { validateBookingContact } from '../../../../lib/booking-contact';
+import { validatePlan } from '../../../../lib/reservation-plan';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -38,6 +39,11 @@ export async function POST(request: NextRequest) {
     {ok:false,code:contact.code,field:contact.field},
     {status:422,headers}
   );
+  if(body && typeof body==='object' && !Array.isArray(body) && 'mode' in body && 'lines' in body){
+    const plan=validatePlan(body);
+    if(!plan.ok)return NextResponse.json(plan,{status:422,headers});
+    return NextResponse.json({ok:true,quote:plan.quote,contactVerification:'not_verified',message:'This is an unconfirmed enquiry; no booking or payment has occurred.'},{headers});
+  }
   const result=(body && typeof body==='object' && !Array.isArray(body) && 'activities' in body)
     ?validateActivitySelection(body)
     :validateReservation(body);

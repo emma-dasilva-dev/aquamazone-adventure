@@ -962,3 +962,100 @@ img,video,iframe{max-width:100%}
 /* Official activity photos in the reservation picker. */
 .reservation-v15-fields .az-activity-art{display:block;background:#e4f3fa}
 .reservation-v15-fields .az-activity-photo{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+
+/* Guided, mobile-first reservation journey (V1 enquiry only). */
+.reservation-wizard .reservation-v15-shell{max-width:1050px}
+.reservation-wizard .reservation-v15-heading{margin-bottom:32px}
+.reservation-wizard .reservation-v15-heading h2{font-size:clamp(36px,5vw,62px)}
+.az-wizard-shell{background:#fff;border:1px solid #cfdfe8;color:#062047;box-shadow:0 15px 50px rgba(6,32,71,.06)}
+.az-wizard-top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:20px 28px;background:#062047;color:#fff;font-size:12px;font-weight:800;letter-spacing:.08em}
+.az-wizard-top span:last-child{font-weight:500;color:#d0e0ef;letter-spacing:0}
+.az-wizard-progress{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:0;background:#062047}
+.az-wizard-progress span{height:4px;background:#49617d}
+.az-wizard-progress span.active{background:#FFD326}
+.az-wizard-content{padding:clamp(22px,4vw,44px);max-width:760px;margin:auto}
+.az-wizard-kicker{font-size:11px;color:#0055A4;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+.az-wizard-content h3{font-family:Georgia,serif;font-weight:400;letter-spacing:-.05em;font-size:clamp(29px,4vw,42px);line-height:1.15;margin:0 0 12px}
+.az-wizard-muted{font-size:13px;line-height:1.7;color:#597083;margin:0 0 25px}
+.az-wizard-counter{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:19px 0;border-bottom:1px solid #dce6ec}
+.az-wizard-counter>div:first-child{display:flex;flex-direction:column;gap:4px}
+.az-wizard-counter strong{font-size:15px}
+.az-wizard-counter small{color:#61778a;font-size:12px}
+.az-wizard-counter>div:last-child{display:flex;align-items:center;gap:16px}
+.az-wizard-counter button,.az-wizard-participants button{display:grid;place-items:center;width:42px;height:42px;border:1px solid #a8c5d5;background:#fff;color:#062047;cursor:pointer}
+.az-wizard-counter button:disabled,.az-wizard-participants button:disabled{opacity:.4;cursor:not-allowed}
+.az-wizard-note{font-size:12px;line-height:1.65;color:#42647b;background:#eef6fa;border-left:3px solid #0055A4;padding:12px 15px;margin:20px 0}
+.az-wizard-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid #c7d8e2;margin:0 0 23px}
+.az-wizard-tabs button{min-height:48px;padding:9px 7px;background:#fff;border:0;border-right:1px solid #c7d8e2;font-weight:700;color:#34566d;font-size:12px;cursor:pointer}
+.az-wizard-tabs button:last-child{border-right:0}
+.az-wizard-tabs button.active{background:#062B60;color:#fff}
+.az-wizard-package-list,.az-wizard-activities{display:grid;gap:11px}
+.az-wizard-package,.az-wizard-activity{border:1px solid #d4e2e8;background:#fff}
+.az-wizard-package{width:100%;display:flex;align-items:center;gap:15px;text-align:left;padding:8px;color:#062047;cursor:pointer}
+.az-wizard-package.chosen,.az-wizard-activity.chosen{border-color:#0055A4;box-shadow:inset 3px 0 #0055A4;background:#f5fbfe}
+.az-wizard-package img{width:120px;height:98px;object-fit:cover;flex:none}
+.az-wizard-package>span,.az-wizard-activity-toggle>span:nth-child(2){display:flex;flex:1;flex-direction:column;align-items:flex-start;gap:5px;min-width:0}
+.az-wizard-package strong,.az-wizard-activity strong{font-size:14px}
+.az-wizard-package small,.az-wizard-activity small{font-size:12px;line-height:1.45;color:#536f81}
+.az-wizard-package b{font-size:13px}
+.az-wizard-package em{font-size:11px;color:#236c4b;font-style:normal;font-weight:700}
+.az-wizard-addons{font-family:inherit;letter-spacing:0;font-size:15px;margin:24px 0 12px}
+.az-wizard-activity-toggle{display:flex;align-items:center;gap:14px;padding:8px;width:100%;min-height:90px;background:transparent;border:0;text-align:left;color:#062047;cursor:pointer}
+.az-wizard-activity-toggle img{width:112px;height:76px;object-fit:cover;flex:none}
+.az-wizard-plus{width:32px;height:32px;border:1px solid #bdd2dd;display:grid;place-items:center;flex:none}
+.az-wizard-activity.chosen .az-wizard-plus{background:#0055A4;color:#fff;border-color:#0055A4}
+.az-wizard-participants{padding:12px 15px 15px;border-top:1px solid #d6e4ea;display:flex;flex-wrap:wrap;align-items:center;gap:10px 17px}
+.az-wizard-participants>span{font-size:12px;font-weight:700;width:100%}
+.az-wizard-participants>div{display:flex;gap:8px;align-items:center}
+.az-wizard-participants>div span{font-size:12px}
+.az-wizard-participants button{height:29px;width:29px}
+.az-wizard-participants b{font-size:13px;min-width:14px;text-align:center}
+.az-wizard-participants>strong{margin-left:auto;font-size:13px}
+.az-wizard-participants>small{width:100%;color:#a13d35}
+.az-wizard-glele{display:grid;gap:9px;background:#edf6fb;border:1px solid #d2e4ed;padding:15px}
+.az-wizard-glele>strong{font-size:13px}
+.az-wizard-glele label{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px}
+.az-wizard-glele select,.az-wizard-date-label select{padding:11px;border:1px solid #b4cbda;background:#fff;color:#062047;font-size:14px;min-height:45px;max-width:100%}
+.az-wizard-private{background:#eff7fb;padding:25px;border:1px solid #d4e4ee}
+.az-wizard-private strong{font-size:17px}
+.az-wizard-private p{font-size:13px;line-height:1.7;margin:12px 0}
+.az-wizard-private button{background:#062B60;border:0;color:#fff;padding:13px 17px;display:flex;align-items:center;gap:8px;cursor:pointer}
+.az-wizard-days{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.az-wizard-days button{display:flex;flex-direction:column;align-items:flex-start;gap:7px;background:#fff;border:1px solid #aac8d9;color:#062047;padding:17px;cursor:pointer;text-align:left}
+.az-wizard-days button.chosen{border:2px solid #0055A4;background:#f0f8fe}
+.az-wizard-days button:disabled{opacity:.5;cursor:not-allowed}
+.az-wizard-days button small{color:#4a6b82}
+.az-wizard-date-label{margin:24px 0 0;display:flex;flex-direction:column;gap:9px;font-size:13px;font-weight:700}
+.az-wizard-recap{border:1px solid #d5e4ec;background:#f8fbfd;padding:19px}
+.az-wizard-recap>div{display:flex;justify-content:space-between;gap:15px;align-items:start;padding:9px 0;font-size:13px}
+.az-wizard-recap>div span{color:#4e6c80}
+.az-wizard-recap strong{text-align:right}
+.az-wizard-recap .az-wizard-total{border-top:1px solid #cddfe9;margin-top:10px;padding-top:16px;font-size:17px}
+.az-wizard-contact{display:grid;gap:16px;margin-top:23px}
+.az-wizard-contact label{display:grid;gap:7px;font-size:13px;font-weight:700}
+.az-wizard-contact input{height:49px;padding:12px;border:1px solid #b5cdda;border-radius:0;background:#fff;color:#062047;font:inherit;font-size:15px;width:100%}
+.az-wizard-error{color:#a82e2e;font-size:13px}
+.az-wizard-actions{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:29px;border-top:1px solid #dfe8ef;padding-top:20px}
+.az-wizard-actions button{display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:11px 16px;font-size:13px;font-weight:700;cursor:pointer}
+.az-wizard-back{border:1px solid #bdd0de;background:#fff;color:#062047}
+.az-wizard-next{background:#FFD326;color:#062047;border:1px solid #FFD326}
+.az-wizard-actions button:disabled{opacity:.45;cursor:not-allowed}
+.az-wizard-summary{padding:16px 28px;border-top:1px solid #d5e5ed;display:flex;align-items:center;gap:12px;background:#f3f9fc;font-size:13px}
+.az-wizard-summary strong{font-size:19px;margin-left:auto}
+.az-wizard-summary small{color:#547085}
+.az-wizard-shell button:focus-visible,.az-wizard-shell input:focus-visible,.az-wizard-shell select:focus-visible{outline:3px solid #FFD326;outline-offset:2px}
+@media(max-width:640px){
+ .az-wizard-top{padding:16px}
+ .az-wizard-content{padding:22px 16px}
+ .az-wizard-tabs button{font-size:11px}
+ .az-wizard-package img{width:84px;height:91px}
+ .az-wizard-activity-toggle img{width:76px;height:75px}
+ .az-wizard-summary{padding:14px 16px;flex-wrap:wrap}
+ .az-wizard-summary strong{font-size:16px}
+ .az-wizard-summary small{width:100%}
+ .az-wizard-participants{gap:10px}
+ .az-wizard-participants>strong{width:100%;text-align:right}
+ .az-wizard-days{gap:8px}
+ .az-wizard-days button{padding:11px}
+}
+@media(prefers-reduced-motion:reduce){.az-wizard-shell *{scroll-behavior:auto}}
