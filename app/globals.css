@@ -1059,3 +1059,13 @@ img,video,iframe{max-width:100%}
  .az-wizard-days button{padding:11px}
 }
 @media(prefers-reduced-motion:reduce){.az-wizard-shell *{scroll-behavior:auto}}
+
+/* Text-only forfait quote request; no package photography or automatic totals. */
+.az-wizard-package-text{min-height:86px;padding:17px 20px}
+.az-wizard-package-text>span{gap:7px}
+.az-wizard-package-request{margin-top:24px;border-top:1px solid #d6e4ed;padding-top:20px}
+.az-wizard-package-request h4{font-family:inherit;letter-spacing:0;font-size:17px;margin:0 0 8px}
+.az-wizard-package-request>p{font-size:13px;line-height:1.65;color:#526f83}
+.az-wizard-package-request>label{display:grid;gap:8px;font-size:13px;font-weight:700;margin:18px 0 8px}
+.az-wizard-package-request select{min-height:48px;width:100%;border:1px solid #b5cbda;background:white;color:#062047;padding:11px;font-size:14px}
+.az-wizard-quote-button{margin-top:18px;width:100%;justify-content:center;min-height:50px;display:flex;align-items:center;gap:9px;cursor:pointer}

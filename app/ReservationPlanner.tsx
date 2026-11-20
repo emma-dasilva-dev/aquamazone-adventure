@@ -29,9 +29,10 @@ export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{act
  const [step,setStep]=useState(0);
  const [adults,setAdults]=useState(2);
  const [children,setChildren]=useState(0);
- const [path,setPath]=useState<'package'|'custom'|'private'>('package');
+ const [path,setPath]=useState<'package'|'custom'|'private'>('custom');
  const [pkg,setPkg]=useState<PackageId>('guezo');
  const [lines,setLines]=useState<Line[]>([]);
+ const [packageActivity,setPackageActivity]=useState<ActivityId>('canoe');
  const [gleleChoices,setGleleChoices]=useState<('canoe'|'pedalo'|'paddle')[]>(['canoe','canoe']);
  const [date,setDate]=useState('');
  const [time,setTime]=useState('14:00');
@@ -51,8 +52,8 @@ export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{act
  const schedule=now?bookingWindow(now):null;
  const dateValid=!!now&&!!date&&checkBookingWindow(date,now).ok;
  const contact=validateBookingContact({fullName:name,phone});
- const eligible=packageData.filter(p=>isPackageEligible(p.id,{adults,children}));
- const activePackage=eligible.some(p=>p.id===pkg)?pkg:eligible[0]?.id;
+ const eligible=packageData;
+ const activePackage=pkg;
  const effectiveLines=lines.map(line=>({...line,adults:Math.min(adults,line.adults),children:Math.min(children,line.children)}));
  const model={adults,children,date,time,mode:path==='package'?'package' as const:'custom' as const,packageId:path==='package'?activePackage:undefined,lines:effectiveLines,gleleChoices:Array.from({length:totalGuests},(_,i)=>gleleChoices[i]??'canoe')};
  const quote=useMemo(()=>dateValid&&path!=='private'?validatePlan(model,now!):null,[dateValid,path,adults,children,date,time,activePackage,lines,gleleChoices,now]);
@@ -85,6 +86,19 @@ export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{act
    window.location.assign(WA+encodeURIComponent(message));
   }catch{setError(fr?'Impossible de vérifier le devis. Réessayez ou contactez-nous directement.':'Could not validate the quote. Please try again or contact us directly.');setBusy(false);}
  };
+ const requestPackage=()=>{
+  if(totalGuests<1)return;
+  const chosen=packageData.find(p=>p.id===pkg);
+  const msg=[
+   fr?'Bonjour AQUAMAZONE, je souhaite connaître le tarif total et les conditions d’un forfait.':'Hello AQUAMAZONE, I would like a total quote and details for a package.',
+   (fr?'Forfait souhaité : ':'Requested package: ')+(chosen?.[lang]??pkg.toUpperCase()),
+   (fr?'Activité souhaitée : ':'Preferred activity: ')+activityData[packageActivity][lang],
+   (fr?'Adultes (12 ans et plus) : ':'Adults (12 and over): ')+adults,
+   (fr?'Enfants (moins de 12 ans) : ':'Children (under 12): ')+children,
+   fr?'Merci de confirmer les activités incluses, le prix total, la traversée et les disponibilités. Ceci est une demande de devis, pas une réservation.':'Please confirm included activities, total price, crossing and availability. This is a quotation request, not a confirmed booking.'
+  ].join('\\n');
+  window.location.assign(WA+encodeURIComponent(msg));
+ };
  const openPrivate=()=>{
   const msg=fr?'Bonjour AQUAMAZONE, je souhaite organiser une sortie de groupe ou demander un devis pour une location embarcation + moteur + machiniste. Merci de me communiquer les disponibilités et conditions.':'Hello AQUAMAZONE, I would like to organize a group visit or request a boat, motor and operator rental quote. Please share availability and conditions.';
   window.location.assign(WA+encodeURIComponent(msg));
@@ -110,19 +124,32 @@ export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{act
      </>}
      {step===1&&<>
       <h3>{fr?'Choisissez votre expérience':'Choose your experience'}</h3>
-      <p className="az-wizard-muted">{fr?'Un forfait conseillé ou des activités à la carte. Ajoutez des activités à votre forfait si vous le souhaitez.':'Choose a recommended package or individual activities. Package extras are optional.'}</p>
+      <p className="az-wizard-muted">{fr?'Choisissez vos activités à la carte, ou demandez un devis personnalisé pour un forfait.':'Choose individual activities or request a personalized package quote.'}</p>
       <div className="az-wizard-tabs" role="group" aria-label={fr?'Type de visite':'Visit type'}>
-       {([{id:'package',fr:'Forfaits',en:'Packages'},{id:'custom',fr:'À la carte',en:'Activities'},{id:'private',fr:'Groupes & privé',en:'Groups & private'}] as const).map(p=><button type="button" key={p.id} aria-pressed={path===p.id} className={path===p.id?'active':''} onClick={()=>setPath(p.id)}>{p[lang]}</button>)}
+       {([{id:'custom',fr:'À la carte',en:'Activities'},{id:'package',fr:'Forfaits',en:'Packages'},{id:'private',fr:'Groupes & privé',en:'Groups & private'}] as const).map(p=><button type="button" key={p.id} aria-pressed={path===p.id} className={path===p.id?'active':''} onClick={()=>setPath(p.id)}>{p[lang]}</button>)}
       </div>
       {path==='private'?<div className="az-wizard-private"><strong>{fr?'Sorties de groupe et locations sur devis':'Group visits and rentals by quotation'}</strong><p>{fr?'Pour les groupes en semaine (6 personnes minimum), événements et locations embarcation + moteur + machiniste, notre équipe prépare une proposition personnalisée.':'For weekday groups (minimum six), events, and boat/motor/operator hire, our team prepares an individual quote.'}</p><button type="button" onClick={openPrivate}>{fr?'Demander un devis sur WhatsApp':'Request a WhatsApp quote'} <ArrowRight size={17}/></button></div>:<>
-       {path==='package'&&<div className="az-wizard-package-list">
-        {eligible.map(p=><button type="button" key={p.id} className={'az-wizard-package'+(activePackage===p.id?' chosen':'')} aria-pressed={activePackage===p.id} onClick={()=>setPkg(p.id)}>
-         <img src={p.image} alt="" loading="lazy"/><span><strong>{p[lang]}</strong><small>{fr?p.infoFr:p.infoEn}</small><b>{p.id==='glele'?money(adults*5000+children*3500):money(p.id==='guezo'?12000:p.id==='toffa'?18000:36000)}</b><em>{fr?'Traversée incluse':'Crossing included'}</em></span>{activePackage===p.id&&<Check size={19}/>}
-        </button>)}
-        {activePackage==='glele'&&<div className="az-wizard-glele"><strong>{fr?'Une activité par personne incluse':'One included activity per guest'}</strong>{Array.from({length:totalGuests},(_,i)=><label key={i}>{i<adults?(fr?'Adulte ':'Adult ')+(i+1):(fr?'Enfant ':'Child ')+(i-adults+1)}<select value={gleleChoices[i]??'canoe'} onChange={e=>setGleleChoices(prev=>Array.from({length:totalGuests},(_,j)=>j===i?e.target.value as 'canoe'|'pedalo'|'paddle':prev[j]??'canoe'))}><option value="canoe">{fr?'Canoë simple':'Single canoe'}</option><option value="pedalo">{fr?'Pédalo simple':'Single pedalo'}</option><option value="paddle">Paddle</option></select></label>)}</div>}
-       </div>}
-       {path==='package'&&<h4 className="az-wizard-addons">{fr?'Activités supplémentaires (facultatif)':'Extra activities (optional)'}</h4>}
-       <div className="az-wizard-activities">
+       {path==='package'&&<>
+        <div className="az-wizard-package-list">
+         {eligible.map(item=><button type="button" key={item.id} className={'az-wizard-package az-wizard-package-text'+(activePackage===item.id?' chosen':'')} aria-pressed={activePackage===item.id} onClick={()=>setPkg(item.id)}>
+          <span><strong>{item[lang]}</strong><small>{fr?item.infoFr:item.infoEn}</small><em>{fr?'Sélectionner pour demander le tarif':'Select to request a quote'}</em></span>{activePackage===item.id&&<Check size={19}/>}
+         </button>)}
+        </div>
+        <div className="az-wizard-package-request">
+         <h4>{fr?'Personnalisez votre demande':'Customize your enquiry'}</h4>
+         <p>{fr?'Choisissez une activité souhaitée et indiquez vos participants. Notre équipe vérifiera le forfait adapté et vous communiquera le total.':'Choose a preferred activity and your group size. Our team will check the right package and provide the total.'}</p>
+         <label>{fr?'Activité souhaitée':'Preferred activity'}
+          <select value={packageActivity} onChange={e=>setPackageActivity(e.target.value as ActivityId)}>
+           {ACTIVITIES.map(id=><option key={id} value={id}>{activityData[id][lang]}</option>)}
+          </select>
+         </label>
+         <div className="az-wizard-counter"><div><strong>{fr?'Adultes':'Adults'}</strong><small>{fr?'12 ans et plus':'Age 12 and over'}</small></div><div><button type="button" disabled={adults<=1} onClick={()=>changeGuests('adults',-1)} aria-label={fr?'Retirer un adulte':'Remove an adult'}><Minus size={17}/></button><strong>{adults}</strong><button type="button" disabled={totalGuests>=20} onClick={()=>changeGuests('adults',1)} aria-label={fr?'Ajouter un adulte':'Add an adult'}><Plus size={17}/></button></div></div>
+         <div className="az-wizard-counter"><div><strong>{fr?'Enfants':'Children'}</strong><small>{fr?'Moins de 12 ans':'Under 12 years'}</small></div><div><button type="button" disabled={children===0} onClick={()=>changeGuests('children',-1)} aria-label={fr?'Retirer un enfant':'Remove a child'}><Minus size={17}/></button><strong>{children}</strong><button type="button" disabled={totalGuests>=20} onClick={()=>changeGuests('children',1)} aria-label={fr?'Ajouter un enfant':'Add a child'}><Plus size={17}/></button></div></div>
+         <p className="az-wizard-note">{fr?'Le tarif dépend du forfait et des participants. La sélection de l’activité exprime une préférence, sans modifier automatiquement les activités incluses. Aucun paiement ni réservation confirmée.':'The price depends on the package and guests. Your activity selection is a preference, not an automatic change to the package inclusions. No payment or confirmed booking.'}</p>
+         <button type="button" className="az-wizard-next az-wizard-quote-button" onClick={requestPackage}><MessageCircle size={17}/>{fr?'Nous contacter pour le tarif total':'Ask us for the total price'} <ArrowRight size={17}/></button>
+        </div>
+       </>}
+       {path==='custom'&&       <div className="az-wizard-activities">
         {ACTIVITIES.map(activity=>{
          const d=activityData[activity],line=effectiveLines.find(x=>x.id===activity);
          const total=line?activityAmount(line):null;
@@ -137,7 +164,7 @@ export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{act
            {total===null&&<small role="alert">{fr?'Le bateau à pédales demande 2 à 4 participants. Chaque activité demande au moins une personne.':'Pedal boat requires 2–4 participants. Other activities require at least one.'}</small>}
           </div>}
          </div>})}
-       </div>
+       </div>}
       </>}
      </>}
      {step===2&&<>
@@ -167,10 +194,10 @@ export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{act
      </>}
      <div className="az-wizard-actions">
       <button type="button" className="az-wizard-back" disabled={step===0||busy} onClick={()=>{setError('');setStep(s=>Math.max(0,s-1));}}><ArrowLeft size={17}/>{fr?'Retour':'Back'}</button>
-      {step<3?<button type="button" className="az-wizard-next" disabled={path==='private'&&step===1||step===1&&(hasInvalidLine||path==='custom'&&effectiveLines.length===0)||step===2&&!dateValid} onClick={()=>setStep(s=>Math.min(3,s+1))}>{fr?'Continuer':'Continue'} <ArrowRight size={17}/></button>:<button type="button" className="az-wizard-next" disabled={!contact.ok||!selected||busy} onClick={send}><MessageCircle size={17}/>{busy?(fr?'Vérification…':'Validating…'):(fr?'Continuer sur WhatsApp':'Continue on WhatsApp')}</button>}
+      {step<3?<button type="button" className="az-wizard-next" disabled={step===1&&(path!=='custom'||hasInvalidLine||effectiveLines.length===0)||step===2&&!dateValid} onClick={()=>setStep(s=>Math.min(3,s+1))}>{fr?'Continuer':'Continue'} <ArrowRight size={17}/></button>:<button type="button" className="az-wizard-next" disabled={!contact.ok||!selected||busy} onClick={send}><MessageCircle size={17}/>{busy?(fr?'Vérification…':'Validating…'):(fr?'Continuer sur WhatsApp':'Continue on WhatsApp')}</button>}
      </div>
     </div>
-    {step>0&&step<3&&path!=='private'&&<div className="az-wizard-summary"><span>{fr?'Estimation actuelle':'Current estimate'}</span><strong>{money(estimated)}</strong><small>{path==='package'?(fr?'Traversée incluse':'Crossing included'):(fr?'Traversée comprise dans ce total':'Crossing included in this total')}</small></div>}
+    {step>0&&step<3&&path==='custom'&&<div className="az-wizard-summary"><span>{fr?'Estimation actuelle':'Current estimate'}</span><strong>{money(estimated)}</strong><small>{path==='package'?(fr?'Traversée incluse':'Crossing included'):(fr?'Traversée comprise dans ce total':'Crossing included in this total')}</small></div>}
    </div>
   </div>
  </section>;
