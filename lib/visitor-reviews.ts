@@ -8,11 +8,11 @@ export type ReviewStatus='pending'|'approved'|'rejected';
 export type PendingReview=PublicReview & {status:ReviewStatus};
 
 export function reviewsConfigured(){
- return Boolean(process.env.DATABASE_URL_REVIEWS && process.env.REVIEW_RATE_LIMIT_SECRET && process.env.REVIEW_RATE_LIMIT_SECRET.length>=32);
+ return Boolean(process.env.DATABASE_URL_INTAKE && process.env.ADMIN_SESSION_SECRET && process.env.ADMIN_SESSION_SECRET.length>=32);
 }
 function client(){
  if(!reviewsConfigured())throw Error('Visitor reviews are not configured');
- const url=process.env.DATABASE_URL_REVIEWS!;
+ const url=process.env.DATABASE_URL_INTAKE!;
  const parsed=new URL(url);
  if(!['postgres:','postgresql:'].includes(parsed.protocol)||parsed.pathname!=='/aquamazone')
   throw Error('Expected Aquamazone dedicated database');
@@ -34,7 +34,7 @@ export function validateReview(input:unknown):{ok:true;name:string;comment:strin
  return {ok:true,name,comment,source:source as DiscoverySource,rating:typeof r.rating==='number'?r.rating:null};
 }
 export function reviewFingerprint(ip:string){
- return createHmac('sha256',process.env.REVIEW_RATE_LIMIT_SECRET!).update(ip).digest('hex');
+ return createHmac('sha256',process.env.ADMIN_SESSION_SECRET!).update('aquamazone-reviews-v1:'+ip).digest('hex');
 }
 export async function readApprovedReviews(limit=12):Promise<PublicReview[]>{
  const sql=client();

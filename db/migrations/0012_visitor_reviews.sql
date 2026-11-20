@@ -15,5 +15,8 @@ CREATE INDEX IF NOT EXISTS visitor_reviews_public_order
  ON visitor_reviews(approved_at DESC,id DESC) WHERE status='approved';
 CREATE INDEX IF NOT EXISTS visitor_reviews_rate_limit
  ON visitor_reviews(ip_fingerprint,created_at DESC);
--- For production, use a dedicated least-privilege database role, not the owner.
--- The runtime role needs SELECT/INSERT and UPDATE(status,approved_at) on visitor_reviews.
+-- Reuse the pre-existing server-only Aquamazone intake role (not exposed to browsers).
+-- Application routes separately enforce administrative session authorization for moderation.
+REVOKE ALL ON public.visitor_reviews FROM PUBLIC;
+GRANT SELECT, INSERT ON public.visitor_reviews TO aquamazone_intake;
+GRANT UPDATE (status, approved_at) ON public.visitor_reviews TO aquamazone_intake;

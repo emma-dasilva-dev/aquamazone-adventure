@@ -1,23 +1,28 @@
-# Visitor reviews setup
+# Visitor reviews — Aquamazone Adventure
 
-The public website section **Votre aventure, vos mots** comes after reservations, before the footer. It intentionally starts with **no fake testimonials**. A visitor may leave a display name, how they discovered Aquamazone, an optional rating, and a comment.
+The public section **Votre aventure, vos mots** appears immediately before the footer. Visitors can write their name, how they discovered Aquamazone, an optional 1–5 rating, and their experience (20–1000 characters). Approved visitor comments are shown to everyone; there are **no fabricated or automatically published testimonials**.
 
-All submissions enter the database as **pending**. Only **approved** comments appear publicly. Approve or reject from **/admin/reviews** using the existing private administrator login.
+## Database and server setup
 
-## Activation
+- Migration: `db/migrations/0012_visitor_reviews.sql`, installed on the existing Neon `aquamazone` database on 20 November 2026.
+- The migration creates `public.visitor_reviews`, public ordering and abuse-throttle indexes, and scoped grants to the existing `aquamazone_intake` PostgreSQL role.
+- The server reuses the existing `DATABASE_URL_INTAKE` and `ADMIN_SESSION_SECRET` environment variables. **No new secrets or database credentials are necessary.** Both must remain server-only and present on whichever environment is running the website.
+- To run locally, update the Git branch and restart Next.js to load the changed code. For production, deploy that commit and ensure the same existing environment variables are configured.
+- If either variable is absent or a database request fails, the site fails closed (no fake success message); no comments are exposed.
 
-1. In the dedicated PostgreSQL database `aquamazone`, run `db/migrations/0012_visitor_reviews.sql` once. Use your normal controlled migration workflow.
-2. Create a *dedicated restricted* role that can SELECT and INSERT `visitor_reviews`, and UPDATE only `status` and `approved_at`. Do not use your database owner or expose credentials through `NEXT_PUBLIC_`.
-3. Set `DATABASE_URL_REVIEWS` to that role's pooled Neon connection URL. Set `REVIEW_RATE_LIMIT_SECRET` to a distinct 32+-character random value. Configure both in `.env.local` for development and in the deployed environment.
-4. Restart or redeploy. Open **/admin/login** then **/admin/reviews** to moderate submissions.
+## Moderate submissions
 
-Until both environment values and the migration are present, the form shows **“Le formulaire d’avis sera bientôt disponible.”** No visitor review is falsely reported as submitted.
+1. Log in through the existing `/admin/login` page.
+2. Open `/admin/reviews` (also linked from the dashboard).
+3. Check each submitted review; approve it to publish it or reject it. You can also retract a previously approved review.
 
-## Operational policy
+Reviews appear publicly only if `status='approved'`. Neither pending nor rejected comments are returned from the public endpoint.
 
-- Entries are **not** testimonials verified by purchase or visit; do not describe them as verified guests.
-- Moderators should remove abusive, defamatory, identifying or promotional content; do not rewrite customer opinions to create misleading praise.
-- Names are display names only; never request phone numbers.
-- A pseudonymous HMAC fingerprint of network metadata is retained for abuse throttling; rotate the secret on an appropriate retention schedule and set a data retention period for pending/rejected entries.
-- A one-hour network cooldown and link filter reduce basic spam; production traffic may require a provider-side challenge and monitoring.
-- The public API does not expose pending, rejected, or fingerprint data.
+## Trust and safety
+
+- Reviews are self-reported, **not purchase-verified**; avoid claiming they were verified visits.
+- Visitors only supply a public display name, discovery source, optional rating and comment, not a phone number.
+- The server validates text lengths, rejects markup and links, uses a honeypot and applies a per-network submission cooldown.
+- HMAC IP fingerprints are not visible to clients or site administrators. The HMAC uses purpose-separated ADMIN_SESSION_SECRET; it does not reveal admin credentials.
+- Review moderation is protected by the existing administrator session plus same-origin checks.
+- Establish a retention period for rejected/old pending reviews and monitor abuse. More advanced bot protection may be required at higher traffic.
