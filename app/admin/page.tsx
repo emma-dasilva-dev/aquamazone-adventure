@@ -61,6 +61,8 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
   const momoConfigured=process.env.MTN_MOMO_ENABLED==='true' && Boolean(process.env.MTN_MOMO_SUBSCRIPTION_KEY&&process.env.MTN_MOMO_API_USER&&process.env.MTN_MOMO_API_KEY);
   const momoProduction=momoConfigured&&process.env.MTN_MOMO_ENVIRONMENT==='mtnbenin';
   let capacity={dailyVisitors:70,dailyReservations:40,slotVisitors:10};
+  let weekly={visitors:0,reservations:0,start:'',end:''};
+  let todayCapacity={visitors:0,reservations:0,slotVisitors:0};
   let databaseError=false;
   let databaseStep='connection';
   try{
@@ -107,6 +109,32 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
       reservation_count:Number(row.reservation_count),
       visitor_count:Number(row.visitor_count)
     }));
+    databaseStep='weekly_usage';
+    const weeklyRows=await sql`
+      WITH bounds AS (
+        SELECT ((now() AT TIME ZONE 'Africa/Porto-Novo')::date -
+          EXTRACT(DOW FROM (now() AT TIME ZONE 'Africa/Porto-Novo')::date)::integer) AS week_start,
+          (now() AT TIME ZONE 'Africa/Porto-Novo')::date AS today
+      )
+      SELECT bounds.week_start::text AS week_start,
+             (bounds.week_start+6)::text AS week_end,
+             COALESCE(SUM(u.reservation_count) FILTER
+              (WHERE u.visit_date>=bounds.week_start AND u.visit_date<bounds.week_start+7),0)::integer AS weekly_reservations,
+             COALESCE(SUM(u.visitor_count) FILTER
+              (WHERE u.visit_date>=bounds.week_start AND u.visit_date<bounds.week_start+7),0)::integer AS weekly_visitors,
+             COALESCE(SUM(u.reservation_count) FILTER
+              (WHERE u.visit_date=bounds.today),0)::integer AS today_reservations,
+             COALESCE(SUM(u.visitor_count) FILTER
+              (WHERE u.visit_date=bounds.today),0)::integer AS today_visitors
+      FROM bounds LEFT JOIN reservation_capacity_usage u ON
+        u.visit_date>=bounds.week_start AND u.visit_date<bounds.week_start+7
+      GROUP BY bounds.week_start
+    `;
+    if(weeklyRows.length===1){
+      weekly={visitors:Number(weeklyRows[0].weekly_visitors),reservations:Number(weeklyRows[0].weekly_reservations),
+        start:String(weeklyRows[0].week_start),end:String(weeklyRows[0].week_end)};
+      todayCapacity={visitors:Number(weeklyRows[0].today_visitors),reservations:Number(weeklyRows[0].today_reservations),slotVisitors:0};
+    }
     databaseStep='transform_results';
     total=Number(summary[0]?.total||0);
     pending=Number(summary[0]?.pending||0);
@@ -227,42 +255,64 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
             </table></div>}
         </div>
       </section>
-      <section id="capacity" className="az-admin-panel" aria-labelledby="az-admin-capacity-title">
-        <div className="az-admin-panel-header"><h2 id="az-admin-capacity-title">Limites de réservation</h2><p>Politique enregistrée · contrôle administrateur</p></div>
-        <div className="az-admin-capacity-grid">
-          <div><small>Visiteurs / jour</small><strong>{capacity.dailyVisitors}</strong></div>
-          <div><small>Réservations / jour</small><strong>{capacity.dailyReservations}</strong></div>
-          <div><small>Visiteurs / créneau</small><strong>{capacity.slotVisitors}</strong></div>
+      <section id="capacity" className="az-admin-panel az-capacity-panel" aria-labelledby="az-admin-capacity-title">
+        <div className="az-admin-panel-header">
+          <div><span className="az-admin-section-eyebrow">CAPACITÉ & SUIVI</span><h2 id="az-admin-capacity-title">Places disponibles</h2></div>
+          <p>Semaine du {dateOnly(weekly.start)} au {dateOnly(weekly.end)}</p>
         </div>
-        <p className="az-admin-capacity-note">
-          Plafonds appliqués dans la base aux réservations confirmées et aux retenues de paiement encore actives.
-          Les demandes non confirmées ne bloquent pas de places. Le paiement public reste désactivé.
-        </p>
+        <div className="az-capacity-focus">
+          <div className="az-capacity-focus-label"><strong>Solde hebdomadaire</strong><span>Remise à zéro chaque dimanche à 00h00 · heure du Bénin</span></div>
+          <div className="az-capacity-kpis">
+            <div><small>Visiteurs restants cette semaine</small><strong>{Math.max(0,capacity.dailyVisitors-weekly.visitors)}<span> / {capacity.dailyVisitors}</span></strong><div className="az-capacity-progress" role="progressbar" aria-label="Capacité visiteurs hebdomadaire utilisée" aria-valuemin={0} aria-valuemax={capacity.dailyVisitors} aria-valuenow={Math.min(capacity.dailyVisitors,weekly.visitors)}><span style={{width:Math.min(100,weekly.visitors/capacity.dailyVisitors*100)+'%'}}/></div><p>{weekly.visitors} place{weekly.visitors===1?'':'s'} engagée{weekly.visitors===1?'':'s'}</p></div>
+            <div><small>Réservations restantes cette semaine</small><strong>{Math.max(0,capacity.dailyReservations-weekly.reservations)}<span> / {capacity.dailyReservations}</span></strong><div className="az-capacity-progress" role="progressbar" aria-label="Réservations hebdomadaires utilisées" aria-valuemin={0} aria-valuemax={capacity.dailyReservations} aria-valuenow={Math.min(capacity.dailyReservations,weekly.reservations)}><span style={{width:Math.min(100,weekly.reservations/capacity.dailyReservations*100)+'%'}}/></div><p>{weekly.reservations} réservation{weekly.reservations===1?'':'s'} engagée{weekly.reservations===1?'':'s'}</p></div>
+          </div>
+        </div>
+        <div className="az-capacity-daily">
+          <div><strong>Aujourd’hui</strong><span>{Math.max(0,capacity.dailyVisitors-todayCapacity.visitors)} / {capacity.dailyVisitors} visiteurs disponibles</span><span>{Math.max(0,capacity.dailyReservations-todayCapacity.reservations)} / {capacity.dailyReservations} réservations disponibles</span></div>
+          <div><strong>Par créneau</strong><span>Maximum {capacity.slotVisitors} visiteurs à la même heure</span><span>Les disponibilités varient selon le créneau choisi</span></div>
+        </div>
+        <p className="az-admin-capacity-note">Seules les réservations <strong>confirmées</strong> et les retenues de paiement <strong>encore actives</strong> diminuent les places restantes. Une demande WhatsApp non confirmée ne bloque rien. Les limites quotidiennes et par créneau restent appliquées pour éviter les surréservations. Les réservations futures sont comptées dans leur propre semaine, sans suppression de l’historique.</p>
         <div className="az-admin-capacity-usage">
           <h3>Occupation à venir — 14 jours</h3>
           {usage.length===0?<p>Aucune réservation confirmée ni retenue active sur cette période.</p>:
             <div className="az-admin-capacity-usage-list">{usage.map(day=>
               <div key={day.visit_date}>
-                <strong>{day.visit_date}</strong>
-                <span>{day.visitor_count} / {capacity.dailyVisitors} visiteurs</span>
-                <span>{day.reservation_count} / {capacity.dailyReservations} réservations</span>
+                <strong>{dateOnly(day.visit_date)}</strong>
+                <span>{Math.max(0,capacity.dailyVisitors-day.visitor_count)} / {capacity.dailyVisitors} places restantes</span>
+                <span>{Math.max(0,capacity.dailyReservations-day.reservation_count)} / {capacity.dailyReservations} réservations restantes</span>
               </div>)}</div>}
         </div>
       </section>
-      <section id="intake" className="az-admin-panel" aria-labelledby="az-admin-intake-title">
-        <div className="az-admin-panel-header"><h2 id="az-admin-intake-title">Enregistrer une demande WhatsApp</h2><p>Une demande en semaine ou pour aujourd'hui peut être enregistrée, sans confirmation de disponibilité</p></div>
+      <section id="intake" className="az-admin-panel az-intake-panel" aria-labelledby="az-admin-intake-title">
+        <div className="az-admin-panel-header">
+          <div><span className="az-admin-section-eyebrow">RÉSERVATION MANUELLE</span><h2 id="az-admin-intake-title">Nouvelle demande WhatsApp</h2></div>
+          <p>Enregistrez une demande reçue par téléphone ou WhatsApp</p>
+        </div>
         <div className="az-admin-intake-content">
-          {notice==='created'&&<p className="az-admin-success" role="status">La demande a été enregistrée. Des notifications email et WhatsApp ont été mises en attente dans la base.</p>}
+          {notice==='created'&&<p className="az-admin-success" role="status">Demande enregistrée. Elle reste à confirmer ; aucune place ni paiement n’a été bloqué.</p>}
           {notice && notice!=='created'&&<p className="az-admin-form-error" role="alert">{intakeErrorMessages[notice]||'Enregistrement impossible. Vérifiez les informations et la connexion.'}</p>}
           <form action="/api/admin/reservations" method="post" className="az-admin-intake-form">
-            <label>Nom du client<input name="contactName" required maxLength={100} autoComplete="off" placeholder="Nom et prénom"/></label>
-            <label>Téléphone du client<input name="contactPhone" required maxLength={24} autoComplete="off" inputMode="tel" placeholder="+229 ..."/></label>
+            <div className="az-intake-form-lead">
+              <span>DEMANDE NON CONFIRMÉE</span>
+              <h3>Préparez la visite en quelques étapes.</h3>
+              <p>Complétez les informations ci-dessous. L’enregistrement ne confirme ni disponibilité ni encaissement.</p>
+            </div>
+            <div className="az-intake-contact">
+              <div className="az-intake-section-head"><span className="az-intake-step">01</span><div><h3>Coordonnées du client</h3><p>Informations pour retrouver et contacter le demandeur.</p></div></div>
+              <div className="az-intake-contact-fields">
+                <label>Nom du client<input name="contactName" required maxLength={100} autoComplete="off" placeholder="Nom et prénom"/></label>
+                <label>Numéro WhatsApp / téléphone<input name="contactPhone" required maxLength={24} autoComplete="off" inputMode="tel" placeholder="+229 01 ..."/></label>
+              </div>
+            </div>
             <AdminExperienceFields/>
-            <label>Date de visite<input name="date" type="date" required/></label>
-            <label>Heure de départ<select name="time" defaultValue="12:00">{['12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00'].map(x=><option value={x} key={x}>{x}</option>)}</select></label>
-            <label>Adultes<input type="number" name="adults" min={0} max={20} defaultValue={2} required/></label>
-            <label>Enfants de moins de 12 ans<input type="number" name="children" min={0} max={20} defaultValue={0} required/></label>
-            <div className="az-admin-form-footer"><p>Le client et son paiement restent non vérifiés. Aucune place n'est bloquée et aucun encaissement n'est enregistré.</p><button type="submit">Enregistrer la demande ↗</button></div>
+            <div className="az-intake-schedule">
+              <div className="az-intake-section-head"><span className="az-intake-step">04</span><div><h3>Date et heure</h3><p>Arrivée souhaitée du client.</p></div></div>
+              <div className="az-intake-contact-fields">
+                <label>Date de visite<input name="date" type="date" required/></label>
+                <label>Heure d’arrivée<select name="time" defaultValue="12:00">{['12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00'].map(x=><option value={x} key={x}>{x}</option>)}</select></label>
+              </div>
+            </div>
+            <div className="az-admin-form-footer"><p>Aucune place n’est bloquée et aucun paiement n’est enregistré avant validation par l’équipe.</p><button type="submit">Enregistrer la demande <ArrowUpRight size={18}/></button></div>
           </form>
         </div>
       </section>
