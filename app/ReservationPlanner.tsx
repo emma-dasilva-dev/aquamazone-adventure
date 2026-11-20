@@ -197,7 +197,7 @@ export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{act
       {step<3?<button type="button" className="az-wizard-next" disabled={step===1&&(path!=='custom'||hasInvalidLine||effectiveLines.length===0)||step===2&&!dateValid} onClick={()=>setStep(s=>Math.min(3,s+1))}>{fr?'Continuer':'Continue'} <ArrowRight size={17}/></button>:<button type="button" className="az-wizard-next" disabled={!contact.ok||!selected||busy} onClick={send}><MessageCircle size={17}/>{busy?(fr?'Vérification…':'Validating…'):(fr?'Continuer sur WhatsApp':'Continue on WhatsApp')}</button>}
      </div>
     </div>
-    {step>0&&step<3&&path==='custom'&&<div className="az-wizard-summary"><span>{fr?'Estimation actuelle':'Current estimate'}</span><strong>{money(estimated)}</strong><small>{path==='package'?(fr?'Traversée incluse':'Crossing included'):(fr?'Traversée comprise dans ce total':'Crossing included in this total')}</small></div>}
+    {step>0&&step<3&&path==='custom'&&<div className="az-wizard-summary"><span>{fr?'Estimation actuelle':'Current estimate'}</span><strong>{money(estimated)}</strong><small>{fr?'Traversée comprise dans ce total':'Crossing included in this total'}</small></div>}
    </div>
   </div>
  </section>;
