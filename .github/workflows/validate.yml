@@ -20,5 +20,7 @@ jobs:
       - run: npm ci
       - run: npm run test:inventory
       - run: npm run test:contact
+      - run: npm run test:booking
+      - run: npm run test:payments
       - run: npx tsc --noEmit
       - run: npm run build

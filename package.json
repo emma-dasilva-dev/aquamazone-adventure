@@ -10,7 +10,8 @@
     "setup:admin": "node scripts/setup-admin.mjs",
     "setup:contact": "node scripts/setup-contact.mjs",
     "test:contact": "node --experimental-strip-types --test tests/booking-contact.test.ts",
-    "test:payments": "node --experimental-strip-types --test tests/payment-status.test.ts"
+    "test:payments": "node --experimental-strip-types --test tests/payment-status.test.ts",
+    "test:booking": "node --experimental-strip-types --test tests/booking-window.test.ts"
   },
   "dependencies": {
     "next": "^15.5.0",
