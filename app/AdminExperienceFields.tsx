@@ -22,6 +22,11 @@ export default function AdminExperienceFields(){
  const [choice,setChoice]=useState<'canoe'|'pedalo'>('canoe');
  const [adults,setAdults]=useState(2);
  const [children,setChildren]=useState(0);
+ const choosePackage=(id:AdminPackage)=>{
+  setSelectedPackage(id);
+  const counts:Record<AdminPackage,[number,number]>={glele:[1,0],guezo:[2,0],toffa:[2,2],behanzin:[4,0]};
+  setAdults(counts[id][0]);setChildren(counts[id][1]);
+ };
  const toggle=(id:AdminActivity)=>setSelected(old=>old.includes(id)?old.filter(a=>a!==id):[...old,id]);
  const change=(key:'adults'|'children',diff:number)=>{
   if(key==='adults')setAdults(a=>Math.max(0,Math.min(20-children,a+diff)));
@@ -43,7 +48,7 @@ export default function AdminExperienceFields(){
    </div>:
    <div className="az-intake-choices az-intake-package-choices">
     {ADMIN_PACKAGES.map(id=><label key={id} className={'az-intake-choice'+(selectedPackage===id?' is-selected':'')}>
-     <input type="radio" name="package-option" value={id} checked={selectedPackage===id} onChange={()=>setSelectedPackage(id)}/>
+     <input type="radio" name="package-option" value={id} checked={selectedPackage===id} onChange={()=>choosePackage(id)}/>
      <span className="az-intake-choice-copy"><strong>{packages[id].title}</strong><small>{packages[id].detail}</small></span>
      <span className="az-intake-check" aria-hidden="true">{selectedPackage===id?<Check size={15}/>:<Plus size={16}/>}</span>
     </label>)}
