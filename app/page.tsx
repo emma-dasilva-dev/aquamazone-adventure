@@ -39,7 +39,7 @@ const faqItems=[
 ] as const;
 
 const bookingWhatsApp='https://wa.me/2290154284444?text=Bonjour%2C%20je%20souhaite%20r%C3%A9server%20une%20activit%C3%A9%20%C3%A0%20Aquamazone.';
-// Official Aquamazone imagery. Unverified inflatable structure is intentionally excluded.
+// Official Aquamazone imagery; Water Ball uses the supplied inflatable-equipment photo, and rental uses a boat-trip scene.
 const activityVisuals:Record<string,string>={
  'pedalo-simple':'/images/activities/pedalo-simple.webp',
  'pedalo-double':'/images/activities/pedalo-double.webp',
@@ -47,8 +47,10 @@ const activityVisuals:Record<string,string>={
  'canoe-double':'/images/activities/canoe-double.webp',
  paddle:'/images/activities/paddle.webp',
  boat:'/images/activities/bateau-a-pedales.webp',
+ ball:'/images/activities/structure-gonflable.webp',
  tour:'/images/activities/mangrove-paysage.webp',
- jetski:'/images/activities/jet-ski.webp'
+ jetski:'/images/activities/jet-ski.webp',
+ rental:'/images/gallery/gallery-14.webp'
 };
 function CraftThumbnail({kind,lang}:{kind:'pedalo-simple'|'pedalo-double'|'canoe-simple'|'canoe-double';lang:Lang}){
  const tandem=kind.endsWith('-double');
