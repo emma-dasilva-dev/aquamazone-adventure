@@ -25,8 +25,6 @@ export default function VisitorReviews({lang}:{lang:Lang}){
  const [sending,setSending]=useState(false);
  const [success,setSuccess]=useState(false);
  const [error,setError]=useState('');
- const [promptVisible,setPromptVisible]=useState(false);
- const [formOpen,setFormOpen]=useState(false);
 
  useEffect(()=>{
   let active=true;
@@ -34,16 +32,6 @@ export default function VisitorReviews({lang}:{lang:Lang}){
    if(active){setEnabled(data.ok===true&&data.enabled===true);setReviews(Array.isArray(data.reviews)?data.reviews:[]);}
   }).catch(()=>{}).finally(()=>{if(active)setLoading(false);});
   return()=>{active=false};
- },[]);
-
- useEffect(()=>{
-  const section=document.getElementById('avis');
-  if(!section)return;
-  const observer=new IntersectionObserver(entries=>{
-   if(entries.some(entry=>entry.isIntersecting)){setPromptVisible(true);observer.disconnect();}
-  },{threshold:.28});
-  observer.observe(section);
-  return()=>observer.disconnect();
  },[]);
 
  const submit=async(event:FormEvent)=>{
@@ -86,7 +74,7 @@ export default function VisitorReviews({lang}:{lang:Lang}){
 
     <div className="visitor-reviews-form-area">
      <h3>{fr?'Partagez votre expérience':'Share your experience'}</h3>
-     <p>{fr?'Commencez simplement par une note. Le commentaire et les informations complémentaires restent facultatifs.':'Start with a rating. The comment and additional details are optional.'}</p>
+     <p>{fr?'Votre avis est lu par notre équipe avant publication. Aucun numéro ni compte requis.':'Our team reviews submissions before publishing. No account or phone number required.'}</p>
 
      {!loading&&!enabled?<div className="visitor-reviews-disabled" role="status">{fr?'Le formulaire d’avis sera bientôt disponible.':'The review form will be available soon.'}</div>:
       success?<div className="visitor-reviews-success" role="status">
@@ -94,29 +82,16 @@ export default function VisitorReviews({lang}:{lang:Lang}){
        <p>{fr?'Votre avis a été reçu et sera examiné avant sa publication.':'Your review was received and will be checked before publication.'}</p>
        <button type="button" onClick={()=>setSuccess(false)}>{fr?'Écrire un autre avis':'Write another review'}</button>
       </div>:
-      !formOpen?<div className={'visitor-review-prompt'+(promptVisible?' is-visible':'')} aria-live="polite">
-       <span className="visitor-review-prompt-kicker">{fr?'VOTRE EXPÉRIENCE':'YOUR EXPERIENCE'}</span>
-       <strong>{fr?'Comment s’est passée votre visite ?':'How was your visit?'}</strong>
-       <p>{fr?'Choisissez une note. Le reste est facultatif.':'Choose a rating. Everything else is optional.'}</p>
-       <div className="visitor-review-prompt-stars" role="group" aria-label={fr?'Choisir une note sur 5':'Choose a rating out of 5'}>
-        {[1,2,3,4,5].map(n=><button key={n} type="button" className={rating===n?'active':''} aria-label={fr?n+' étoile(s)':n+' star(s)'} aria-pressed={rating===n} onClick={()=>{setRating(n);setFormOpen(true);}}>
-         <Star size={24} fill={n<=rating?'currentColor':'none'} aria-hidden="true"/>
-        </button>)}
-       </div>
-      </div>:
-      <div className="visitor-review-form-reveal">
-       <button type="button" className="visitor-reviews-back-rating" onClick={()=>setFormOpen(false)}>{fr?'Modifier ma note':'Change my rating'}</button>
        <form onSubmit={submit} className="visitor-reviews-form">
         <label>{fr?'Votre prénom ou nom affiché':'Your display name'}<input value={name} onChange={e=>setName(e.target.value)} minLength={2} maxLength={60} required autoComplete="name" placeholder={fr?'Ex. : Aïcha':'E.g. Aïcha'}/></label>
         <label>{fr?'Comment avez-vous connu Aquamazone ?':'How did you find Aquamazone?'}<select value={source} onChange={e=>setSource(e.target.value as DiscoverySource)}>{sources.map(s=><option key={s} value={s}>{sourceNames[s][lang]}</option>)}</select></label>
         <fieldset className="visitor-reviews-rating"><legend>{fr?'Votre note':'Your rating'}</legend><div>{[1,2,3,4,5].map(n=><button key={n} type="button" aria-label={fr?n+' étoile(s)':n+' star(s)'} aria-pressed={rating===n} onClick={()=>setRating(rating===n?0:n)}><Star size={23} fill={n<=rating?'currentColor':'none'} aria-hidden="true"/></button>)}</div></fieldset>
-        <label>{fr?'Votre commentaire (facultatif)':'Your review (optional)'}<textarea value={comment} onChange={e=>setComment(e.target.value)} maxLength={1000} rows={5} placeholder={fr?'Quelques mots sur votre visite…':'A few words about your visit…'}/><small>{comment.length} / 1000</small></label>
+        <label>{fr?'Votre commentaire':'Your review'}<textarea value={comment} onChange={e=>setComment(e.target.value)} maxLength={1000} rows={5} placeholder={fr?'Quelques mots sur votre visite…':'A few words about your visit…'}/><small>{comment.length} / 1000</small></label>
         <div className="visitor-reviews-honeypot" aria-hidden="true"><label>Website<input value={website} onChange={e=>setWebsite(e.target.value)} tabIndex={-1} autoComplete="off"/></label></div>
         <label className="visitor-reviews-consent"><input type="checkbox" checked={consent} onChange={e=>setConsent(e.target.checked)} required/><span>{fr?'J’accepte la publication de mon nom affiché et de mon avis, après validation par l’équipe.':'I agree to publication of my display name and review after team approval.'}</span></label>
         {error&&<p className="visitor-reviews-error" role="alert">{error}</p>}
-        <button className="visitor-reviews-submit" disabled={sending||!enabled||!consent||!name.trim()} type="submit">{sending?(fr?'Envoi en cours…':'Submitting…'):(fr?'Envoyer mon avis':'Submit my review')}<ArrowRight size={18}/></button>
-       </form>
-      </div>}
+        <button className="visitor-reviews-submit" disabled={sending||!enabled||!consent} type="submit">{sending?(fr?'Envoi en cours…':'Submitting…'):(fr?'Envoyer mon avis':'Submit my review')}<ArrowRight size={18}/></button>
+       </form>      </div>}
     </div>
    </div>
   </div>
