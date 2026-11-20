@@ -230,24 +230,24 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
               <small>{row.experience_selection?.activities.length ? row.experience_selection.activities.map(x=>x.toUpperCase()).join(' · ') : 'Forfait / détail'}</small>
               <details className="az-admin-details"><summary>Détails</summary>
                 <div className="az-admin-details-body">
-                  <p><strong>Référence</strong> ${row.reference}</p>
-                  <p><strong>Contact</strong> ${row.contact_name||'—'} · ${row.contact_phone||'—'}</p>
-                  <p><strong>Participants</strong> ${row.adults} adulte(s) · ${row.children} enfant(s)</p>
-                  <p><strong>Expérience</strong> ${row.experience_selection ? (row.experience_selection.package ? row.experience_selection.package.toUpperCase()+' · ' : '') + (row.experience_selection.activities.map(x=>x.toUpperCase()).join(' · ') || 'Forfait') : row.experience.toUpperCase()}</p>
-                  ${row.experience_selection?.package==='glele'&&row.experience_selection.choice?<p><strong>Choix GLÈLÈ</strong> ${row.experience_selection.choice.toUpperCase()}</p>:''}
-                  <p><strong>Montant estimé</strong> ${formatMoney(row.quote_amount_xof)}</p>
-                  <p><strong>Paiement</strong> <span className="az-admin-pill" data-status="${row.payment_status}">${label(row.payment_status)}</span></p>
-                  ${row.status==='awaiting_payment'&&row.expires_at?<p><strong>Retenue interne</strong> Retenue jusqu’au ${dateTime(row.expires_at)}. Aucun paiement lancé.</p>:''}
+                  <p><strong>Référence</strong> {row.reference}</p>
+                  <p><strong>Contact</strong> {row.contact_name||'—'} · {row.contact_phone||'—'}</p>
+                  <p><strong>Participants</strong> {row.adults} adulte(s) · {row.children} enfant(s)</p>
+                  <p><strong>Expérience</strong> {row.experience_selection ? (row.experience_selection.package ? row.experience_selection.package.toUpperCase()+' · ' : '') + (row.experience_selection.activities.map(x=>x.toUpperCase()).join(' · ') || 'Forfait') : row.experience.toUpperCase()}</p>
+                  {row.experience_selection?.package==='glele'&&row.experience_selection.choice?<p><strong>Choix GLÈLÈ</strong> {row.experience_selection.choice.toUpperCase()}</p>:''}
+                  <p><strong>Montant estimé</strong> {formatMoney(row.quote_amount_xof)}</p>
+                  <p><strong>Paiement</strong> <span className="az-admin-pill" data-status="{row.payment_status}">{label(row.payment_status)}</span></p>
+                  {row.status==='awaiting_payment'&&row.expires_at?<p><strong>Retenue interne</strong> Retenue jusqu’au {dateTime(row.expires_at)}. Aucun paiement lancé.</p>:''}
                 </div>
               </details>
             </td>
-            <td>${formatMoney(row.quote_amount_xof)}</td>
-            <td><span className="az-admin-pill" data-status="${row.status}">${label(row.status)}</span></td>
+            <td>{formatMoney(row.quote_amount_xof)}</td>
+            <td><span className="az-admin-pill" data-status="{row.status}">{label(row.status)}</span></td>
             <td>
-              ${row.status==='inquiry'?<form action="/api/admin/reservations/status" method="post"><input type="hidden" name="reference" value="${row.reference}"/><input type="hidden" name="status" value="pending_review"/><button type="submit" className="az-admin-action">Examiner</button></form>:''}
-              ${row.status==='pending_review'?<div className="az-admin-actions"><form action="/api/admin/reservations/status" method="post"><input type="hidden" name="reference" value="${row.reference}"/><input type="hidden" name="status" value="confirmed"/><button type="submit" className="az-admin-action">Confirmer</button></form><form action="/api/admin/reservations/status" method="post"><input type="hidden" name="reference" value="${row.reference}"/><input type="hidden" name="status" value="cancelled"/><button type="submit" className="az-admin-action az-admin-action-secondary">Annuler</button></form></div>:''}
-              ${row.status==='confirmed'?<div className="az-admin-actions"><form action="/api/admin/reservations/status" method="post"><input type="hidden" name="reference" value="${row.reference}"/><input type="hidden" name="status" value="completed"/><button type="submit" className="az-admin-action">Terminée</button></form><form action="/api/admin/reservations/status" method="post"><input type="hidden" name="reference" value="${row.reference}"/><input type="hidden" name="status" value="cancelled"/><button type="submit" className="az-admin-action az-admin-action-secondary">Annuler</button></form></div>:''}
-              ${['cancelled','completed','awaiting_payment','expired'].includes(row.status)?<small>—</small>:''}
+              {row.status==='inquiry'?<form action="/api/admin/reservations/status" method="post"><input type="hidden" name="reference" value="{row.reference}"/><input type="hidden" name="status" value="pending_review"/><button type="submit" className="az-admin-action">Examiner</button></form>:''}
+              {row.status==='pending_review'?<div className="az-admin-actions"><form action="/api/admin/reservations/status" method="post"><input type="hidden" name="reference" value="{row.reference}"/><input type="hidden" name="status" value="confirmed"/><button type="submit" className="az-admin-action">Confirmer</button></form><form action="/api/admin/reservations/status" method="post"><input type="hidden" name="reference" value="{row.reference}"/><input type="hidden" name="status" value="cancelled"/><button type="submit" className="az-admin-action az-admin-action-secondary">Annuler</button></form></div>:''}
+              {row.status==='confirmed'?<div className="az-admin-actions"><form action="/api/admin/reservations/status" method="post"><input type="hidden" name="reference" value="{row.reference}"/><input type="hidden" name="status" value="completed"/><button type="submit" className="az-admin-action">Terminée</button></form><form action="/api/admin/reservations/status" method="post"><input type="hidden" name="reference" value="{row.reference}"/><input type="hidden" name="status" value="cancelled"/><button type="submit" className="az-admin-action az-admin-action-secondary">Annuler</button></form></div>:''}
+              {['cancelled','completed','awaiting_payment','expired'].includes(row.status)?<small>—</small>:''}
             </td>
           </tr>)}</tbody>
         </table></div>}
