@@ -97,41 +97,50 @@ export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{act
     weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:'UTC'
    }).format(new Date(date+'T12:00:00Z'));
    const arrival=time.replace(':','h');
-   const guests=[adults+' '+(fr?(adults===1?'adulte':'adultes'):(adults===1?'adult':'adults')),
-    ...(children?[children+' '+(fr?(children===1?'enfant':'enfants'):(children===1?'child':'children'))]:[])].join(', ');
+   const participants=[
+    (fr?'Adultes : ':'Adults: ')+adults,
+    (fr?'Enfants (moins de 12 ans) : ':'Children (under 12): ')+children
+   ];
    const detail=effectiveLines.map(line=>{
-    const participants=[line.adults?line.adults+' '+(fr?(line.adults===1?'adulte':'adultes'):(line.adults===1?'adult':'adults')):'',
-      line.children?line.children+' '+(fr?(line.children===1?'enfant':'enfants'):(line.children===1?'child':'children')):''].filter(Boolean).join(', ');
-    return '• '+activityData[line.id][lang]+' ('+participants+') : '+money(activityAmount(line)??0);
+    const people=[
+     line.adults?line.adults+' '+(fr?(line.adults===1?'adulte':'adultes'):(line.adults===1?'adult':'adults')):'',
+     line.children?line.children+' '+(fr?(line.children===1?'enfant':'enfants'):(line.children===1?'child':'children')):''
+    ].filter(Boolean).join(', ');
+    return '• '+activityData[line.id][lang]+' — '+people+' : '+money(activityAmount(line)??0);
    });
    const packageLines=path==='package'?[
-    '*'+(fr?'Forfait':'Package')+'*',
+    '*'+(fr?'Forfait choisi':'Selected package')+'*',
     activePackage!.toUpperCase()+' : '+money(packagePrice),
     ...(activePackage==='glele'?[(fr?'Activités incluses : ':'Included activities: ')+model.gleleChoices.map(a=>activityData[a][lang]).join(', ')]:[]),
     ''
    ]:[];
    const crossingLabel=path==='package'
-    ?(fr?'Traversée : incluse':'Crossing: included')
-    :(fr?'Traversée':'Return crossing')+' ('+adults+' × 1 500'+(children?' + '+children+' × 500':'')+') : '+money(adults*1500+children*500);
+    ?(fr?'Traversée aller-retour : incluse':'Return crossing: included')
+    :(fr?'Traversée aller-retour':'Return crossing')+' ('+adults+' × 1 500'+(children?' + '+children+' × 500':'')+') : '+money(adults*1500+children*500);
    const message=[
-    '*'+(fr?'DEMANDE DE RÉSERVATION':'BOOKING ENQUIRY')+' — AQUAMAZONE*',
+    '*'+(fr?'DEMANDE DE RÉSERVATION':'BOOKING REQUEST')+' — AQUAMAZONE ADVENTURE*',
     '',
-    '*'+(fr?'Votre visite':'Visit details')+'*',
-    visitDate.charAt(0).toUpperCase()+visitDate.slice(1)+' · '+(fr?'Arrivée':'Arrival')+' '+arrival,
-    guests,
+    '*'+(fr?'Coordonnées du client':'Customer details')+'*',
+    (fr?'Nom : ':'Name: ')+contact.contact.fullName,
+    (fr?'Téléphone / WhatsApp : ':'Phone / WhatsApp: ')+contact.contact.phone,
+    '',
+    '*'+(fr?'Personnes':'Guests')+'*',
+    ...participants,
+    '',
+    '*'+(fr?'Date et arrivée':'Date and arrival')+'*',
+    (fr?'Date : ':'Date: ')+visitDate.charAt(0).toUpperCase()+visitDate.slice(1),
+    (fr?'Heure d’arrivée souhaitée : ':'Preferred arrival time: ')+arrival,
     '',
     ...packageLines,
-    '*'+(fr?'Activités':'Activities')+'*',
+    '*'+(fr?'Activités choisies':'Selected activities')+'*',
     ...detail,
-    ...(detail.length?['']:[]),
-    '*'+(fr?'Récapitulatif':'Price summary')+'*',
+    '',
+    '*'+(fr?'Récapitulatif des tarifs':'Price summary')+'*',
     crossingLabel,
-    '*'+(fr?'Total estimé':'Estimated total')+' : '+money(data.quote.total)+'*',
+    '*'+(fr?'Total estimé : ':'Estimated total: ')+money(data.quote.total)+'*',
     '',
-    '*'+(fr?'Contact':'Contact')+'*',
-    contact.contact.fullName+' · '+contact.contact.phone,
-    '',
-    '_'+(fr?'Demande à confirmer par l’équipe, sous réserve de disponibilité et de validation du tarif final.':'Subject to team confirmation, availability and final price verification.')+'_'
+    fr?'Merci de nous confirmer la disponibilité des activités ainsi que le montant final de la réservation.':'Please confirm activity availability and the final booking amount.',
+    '_'+(fr?'Demande en attente de confirmation. Aucun paiement effectué.':'Enquiry awaiting confirmation. No payment has been made.')+'_'
    ].join('\n');
    window.location.assign(WA+encodeURIComponent(message));
   }catch{setError(fr?'Impossible de vérifier le devis. Réessayez ou contactez-nous directement.':'Could not validate the quote. Please try again or contact us directly.');setBusy(false);}
