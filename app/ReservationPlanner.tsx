@@ -93,9 +93,46 @@ export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{act
    const response=await fetch('/api/reservation/quote',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
    const data=await response.json() as {ok:boolean;code?:string;quote?:{total:number}};
    if(!response.ok||!data.ok||!data.quote||data.quote.total!==selected.total)throw new Error(data.code??'price_changed');
-   const label=path==='package'?activePackage!.toUpperCase():(fr?'À la carte':'Custom activities');
-   const detail=effectiveLines.map(line=>activityData[line.id][lang]+': '+line.adults+' '+(fr?'adulte(s)':'adult(s)')+', '+line.children+' '+(fr?'enfant(s)':'child(ren)')+' — '+money(activityAmount(line)??0));
-   const message=[fr?'Bonjour AQUAMAZONE, je souhaite demander une réservation.':'Hello AQUAMAZONE, I would like to request a booking.',(fr?'Nom':'Name')+': '+name,(fr?'WhatsApp':'WhatsApp')+': '+phone,(fr?'Date':'Date')+': '+date,(fr?'Arrivée souhaitée':'Preferred arrival')+': '+time,(fr?'Participants':'Guests')+': '+adults+' '+(fr?'adultes':'adults')+', '+children+' '+(fr?'enfants (<12 ans)':'children (under 12)'),(fr?'Expérience':'Experience')+': '+label,...(path==='package'?[(fr?'Forfait':'Package')+': '+money(packagePrice)]:[]),...(path==='package'&&activePackage==='glele'?[(fr?'Choix GLÈLÈ':'GLÈLÈ choices')+': '+model.gleleChoices.join(', ')]:[]),...detail,(fr?'Traversée aller-retour':'Return crossing')+': '+(path==='package'?(fr?'Incluse':'Included'):money(adults*1500+children*500)),(fr?'Total estimé':'Estimated total')+': '+money(data.quote.total),fr?'DEMANDE NON CONFIRMÉE. Merci de confirmer les disponibilités et le prix final.':'UNCONFIRMED ENQUIRY. Please verify availability and final price.'].join('\n');
+   const visitDate=new Intl.DateTimeFormat(fr?'fr-FR':'en-GB',{
+    weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:'UTC'
+   }).format(new Date(date+'T12:00:00Z'));
+   const arrival=time.replace(':','h');
+   const guests=[adults+' '+(fr?(adults===1?'adulte':'adultes'):(adults===1?'adult':'adults')),
+    ...(children?[children+' '+(fr?(children===1?'enfant':'enfants'):(children===1?'child':'children'))]:[])].join(', ');
+   const detail=effectiveLines.map(line=>{
+    const participants=[line.adults?line.adults+' '+(fr?(line.adults===1?'adulte':'adultes'):(line.adults===1?'adult':'adults')):'',
+      line.children?line.children+' '+(fr?(line.children===1?'enfant':'enfants'):(line.children===1?'child':'children')):''].filter(Boolean).join(', ');
+    return '• '+activityData[line.id][lang]+' ('+participants+') : '+money(activityAmount(line)??0);
+   });
+   const packageLines=path==='package'?[
+    '*'+(fr?'Forfait':'Package')+'*',
+    activePackage!.toUpperCase()+' : '+money(packagePrice),
+    ...(activePackage==='glele'?[(fr?'Activités incluses : ':'Included activities: ')+model.gleleChoices.map(a=>activityData[a][lang]).join(', ')]:[]),
+    ''
+   ]:[];
+   const crossingLabel=path==='package'
+    ?(fr?'Traversée : incluse':'Crossing: included')
+    :(fr?'Traversée':'Return crossing')+' ('+adults+' × 1 500'+(children?' + '+children+' × 500':'')+') : '+money(adults*1500+children*500);
+   const message=[
+    '*'+(fr?'DEMANDE DE RÉSERVATION':'BOOKING ENQUIRY')+' — AQUAMAZONE*',
+    '',
+    '*'+(fr?'Votre visite':'Visit details')+'*',
+    visitDate.charAt(0).toUpperCase()+visitDate.slice(1)+' · '+(fr?'Arrivée':'Arrival')+' '+arrival,
+    guests,
+    '',
+    ...packageLines,
+    '*'+(fr?'Activités':'Activities')+'*',
+    ...detail,
+    ...(detail.length?['']:[]),
+    '*'+(fr?'Récapitulatif':'Price summary')+'*',
+    crossingLabel,
+    '*'+(fr?'Total estimé':'Estimated total')+' : '+money(data.quote.total)+'*',
+    '',
+    '*'+(fr?'Contact':'Contact')+'*',
+    contact.contact.fullName+' · '+contact.contact.phone,
+    '',
+    '_'+(fr?'Demande à confirmer par l’équipe, sous réserve de disponibilité et de validation du tarif final.':'Subject to team confirmation, availability and final price verification.')+'_'
+   ].join('\n');
    window.location.assign(WA+encodeURIComponent(message));
   }catch{setError(fr?'Impossible de vérifier le devis. Réessayez ou contactez-nous directement.':'Could not validate the quote. Please try again or contact us directly.');setBusy(false);}
  };
