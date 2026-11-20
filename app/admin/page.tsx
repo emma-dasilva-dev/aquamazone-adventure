@@ -48,11 +48,11 @@ const intakeErrorMessages:Record<string,string>={
   rules:'Vérifiez les activités, le forfait, la date et les participants.'
 };
 
-export default async function AdminDashboard({searchParams}:{searchParams:Promise<{intake?:string;hold?:string}>}){
+export default async function AdminDashboard({searchParams}:{searchParams:Promise<{intake?:string;hold?:string;status?:string}>}){
   if(!await isAdminAuthenticated())redirect('/admin/login');
   const params=await searchParams;
   const notice=params.intake;
-  const holdNotice=params.hold;
+  const holdNotice=params.hold;\n  const statusNotice=params.status;
   let reservations:ReservationRow[]=[];
   let alerts:AlertRow[]=[];
   let usage:CapacityUsageRow[]=[];
@@ -200,7 +200,10 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
         </section>
       </div>
       <section id="reservations" className="az-admin-panel" aria-labelledby="az-admin-res-title">
-        <div className="az-admin-panel-header"><h2 id="az-admin-res-title">Réservations et demandes</h2><p>40 dernières demandes</p></div>
+        <div className="az-admin-panel-header">
+          <div><span className="az-admin-section-eyebrow">SUIVI DES DEMANDES</span><h2 id="az-admin-res-title">Réservations</h2></div>
+          <p>40 derniers dossiers · WhatsApp / saisie manuelle</p>
+        </div>
         {holdNotice&&<p className={holdNotice==='created'?'az-admin-success':'az-admin-form-error'} role="status">
           {holdNotice==='created'?'Retenue de 10 minutes créée. Aucun paiement n’a été demandé ni encaissé.':
            holdNotice==='not_configured'?'La connexion Neon dédiée aux retenues n’est pas configurée (DATABASE_URL_HOLDS).':
@@ -208,27 +211,44 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
            holdNotice==='invalid'?'Référence de réservation invalide.':
            'Impossible de créer la retenue. Vérifiez la date, le prix ou les conditions de cette expérience.'}
         </p>}
+        {statusNotice&&<p className={statusNotice==='updated'?'az-admin-success':'az-admin-form-error'} role="status">
+          {statusNotice==='updated'?'Statut de la réservation mis à jour.':
+           statusNotice==='transition'?'Cette évolution de statut n’est pas autorisée.':
+           statusNotice==='not_found'?'Réservation introuvable.':
+           statusNotice==='not_configured'?'La connexion privée de gestion n’est pas configurée.':
+           statusNotice==='invalid'?'Action de réservation invalide.':
+           'Impossible de mettre à jour la réservation. Vérifiez la connexion à la base.'}
+        </p>}
         {reservations.length===0?<p className="az-admin-empty">Aucune demande enregistrée. Les messages WhatsApp ne sont pas automatiquement importés.</p>:<div className="az-admin-scroll"><table className="az-admin-table">
-          <thead><tr><th>Référence</th><th>Client / téléphone</th><th>Expérience</th><th>Date / heure</th><th>Personnes</th><th>Montant</th><th>Réservation</th><th>Paiement</th><th>Retenue interne</th></tr></thead>
+          <thead><tr><th>Client</th><th>Date</th><th>Heure</th><th>Personnes</th><th>Expérience</th><th>Total</th><th>Statut</th><th>Action</th></tr></thead>
           <tbody>{reservations.map(row=><tr key={row.reference}>
-            <td><strong>{row.reference}</strong></td><td>{row.contact_name||'—'}<br/><small>{row.contact_phone||'—'}</small></td><td>{row.experience_selection ? <><strong>{row.experience_selection.package ? row.experience_selection.package.toUpperCase() : 'Sans forfait'}</strong><br/><small>{row.experience_selection.activities.length ? row.experience_selection.activities.map(x=>x.toUpperCase()).join(' · ') : 'Aucune activité ajoutée'}{row.experience_selection.package==='glele'&&row.experience_selection.choice ? ' · GLÈLÈ : '+row.experience_selection.choice.toUpperCase():''}</small></> : row.experience.toUpperCase()}</td>
-            <td>{dateOnly(row.visit_date)} · {row.requested_time.slice(0,5)}</td>
-            <td>{Number(row.adults)+Number(row.children)}</td><td>{formatMoney(row.quote_amount_xof)}</td>
-            <td><span className="az-admin-pill" data-status={row.status}>{label(row.status)}</span></td>
-            <td><span className="az-admin-pill" data-status={row.payment_status}>{label(row.payment_status)}</span></td>
-            <td>{row.status==='awaiting_payment'&&row.expires_at?
-              <span className="az-admin-hold-expiry">Retenue jusqu’au {dateTime(row.expires_at)}. Aucun paiement lancé.</span>:
-              ['inquiry','pending_review'].includes(row.status)&&Boolean(row.quote_amount_xof)&&
-              (row.experience==='glele'&&row.experience_selection?.choice!=='paddle'&&Number(row.adults)+Number(row.children)===1||
-               ['canoe','pedalo'].includes(row.experience)&&Number(row.adults)+Number(row.children)<=2||
-               row.experience==='pedalboat'&&Number(row.adults)+Number(row.children)>=2&&Number(row.adults)+Number(row.children)<=4)&&
-              !(row.experience_selection&&(
-                row.experience_selection.activities.length>1||
-                Boolean(row.experience_selection.package&&row.experience_selection.activities.length)))?
-              <form action="/api/admin/reservations/hold" method="post">
-                <input type="hidden" name="reference" value={row.reference}/>
-                <button type="submit" className="az-admin-hold-action">Tester une retenue de 10 min</button>
-              </form>:<small>Non applicable</small>}</td>
+            <td><strong>{row.contact_name||'—'}</strong><br/><small>{row.contact_phone||'—'}</small></td>
+            <td>{dateOnly(row.visit_date)}</td>
+            <td>{row.requested_time.slice(0,5)}</td>
+            <td>{Number(row.adults)+Number(row.children)}<br/><small>{row.adults} ad. · {row.children} enf.</small></td>
+            <td><strong>{row.experience_selection?.package ? row.experience_selection.package.toUpperCase() : row.experience.toUpperCase()}</strong><br/>
+              <small>{row.experience_selection?.activities.length ? row.experience_selection.activities.map(x=>x.toUpperCase()).join(' · ') : 'Forfait / détail'}</small>
+              <details className="az-admin-details"><summary>Détails</summary>
+                <div className="az-admin-details-body">
+                  <p><strong>Référence</strong> ${row.reference}</p>
+                  <p><strong>Contact</strong> ${row.contact_name||'—'} · ${row.contact_phone||'—'}</p>
+                  <p><strong>Participants</strong> ${row.adults} adulte(s) · ${row.children} enfant(s)</p>
+                  <p><strong>Expérience</strong> ${row.experience_selection ? (row.experience_selection.package ? row.experience_selection.package.toUpperCase()+' · ' : '') + (row.experience_selection.activities.map(x=>x.toUpperCase()).join(' · ') || 'Forfait') : row.experience.toUpperCase()}</p>
+                  ${row.experience_selection?.package==='glele'&&row.experience_selection.choice?<p><strong>Choix GLÈLÈ</strong> ${row.experience_selection.choice.toUpperCase()}</p>:''}
+                  <p><strong>Montant estimé</strong> ${formatMoney(row.quote_amount_xof)}</p>
+                  <p><strong>Paiement</strong> <span className="az-admin-pill" data-status="${row.payment_status}">${label(row.payment_status)}</span></p>
+                  ${row.status==='awaiting_payment'&&row.expires_at?<p><strong>Retenue interne</strong> Retenue jusqu’au ${dateTime(row.expires_at)}. Aucun paiement lancé.</p>:''}
+                </div>
+              </details>
+            </td>
+            <td>${formatMoney(row.quote_amount_xof)}</td>
+            <td><span className="az-admin-pill" data-status="${row.status}">${label(row.status)}</span></td>
+            <td>
+              ${row.status==='inquiry'?<form action="/api/admin/reservations/status" method="post"><input type="hidden" name="reference" value="${row.reference}"/><input type="hidden" name="status" value="pending_review"/><button type="submit" className="az-admin-action">Examiner</button></form>:''}
+              ${row.status==='pending_review'?<div className="az-admin-actions"><form action="/api/admin/reservations/status" method="post"><input type="hidden" name="reference" value="${row.reference}"/><input type="hidden" name="status" value="confirmed"/><button type="submit" className="az-admin-action">Confirmer</button></form><form action="/api/admin/reservations/status" method="post"><input type="hidden" name="reference" value="${row.reference}"/><input type="hidden" name="status" value="cancelled"/><button type="submit" className="az-admin-action az-admin-action-secondary">Annuler</button></form></div>:''}
+              ${row.status==='confirmed'?<div className="az-admin-actions"><form action="/api/admin/reservations/status" method="post"><input type="hidden" name="reference" value="${row.reference}"/><input type="hidden" name="status" value="completed"/><button type="submit" className="az-admin-action">Terminée</button></form><form action="/api/admin/reservations/status" method="post"><input type="hidden" name="reference" value="${row.reference}"/><input type="hidden" name="status" value="cancelled"/><button type="submit" className="az-admin-action az-admin-action-secondary">Annuler</button></form></div>:''}
+              ${['cancelled','completed','awaiting_payment','expired'].includes(row.status)?<small>—</small>:''}
+            </td>
           </tr>)}</tbody>
         </table></div>}
       </section>
@@ -261,10 +281,10 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
           <p>Semaine du {dateOnly(weekly.start)} au {dateOnly(weekly.end)}</p>
         </div>
         <div className="az-capacity-focus">
-          <div className="az-capacity-focus-label"><strong>Solde hebdomadaire</strong><span>Remise à zéro chaque dimanche à 00h00 · heure du Bénin</span></div>
+          <div className="az-capacity-focus-label"><strong>Comptage de la semaine</strong><span>Le compteur d’activité se réinitialise chaque dimanche à 00h00 · heure du Bénin. Les réservations historiques restent conservées.</span></div>
           <div className="az-capacity-kpis">
-            <div><small>Visiteurs restants cette semaine</small><strong>{Math.max(0,capacity.dailyVisitors-weekly.visitors)}<span> / {capacity.dailyVisitors}</span></strong><div className="az-capacity-progress" role="progressbar" aria-label="Capacité visiteurs hebdomadaire utilisée" aria-valuemin={0} aria-valuemax={capacity.dailyVisitors} aria-valuenow={Math.min(capacity.dailyVisitors,weekly.visitors)}><span style={{width:Math.min(100,weekly.visitors/capacity.dailyVisitors*100)+'%'}}/></div><p>{weekly.visitors} place{weekly.visitors===1?'':'s'} engagée{weekly.visitors===1?'':'s'}</p></div>
-            <div><small>Réservations restantes cette semaine</small><strong>{Math.max(0,capacity.dailyReservations-weekly.reservations)}<span> / {capacity.dailyReservations}</span></strong><div className="az-capacity-progress" role="progressbar" aria-label="Réservations hebdomadaires utilisées" aria-valuemin={0} aria-valuemax={capacity.dailyReservations} aria-valuenow={Math.min(capacity.dailyReservations,weekly.reservations)}><span style={{width:Math.min(100,weekly.reservations/capacity.dailyReservations*100)+'%'}}/></div><p>{weekly.reservations} réservation{weekly.reservations===1?'':'s'} engagée{weekly.reservations===1?'':'s'}</p></div>
+            <div><small>Visiteurs engagés cette semaine</small><strong>${weekly.visitors}<span> visiteurs</span></strong><div className="az-capacity-progress" role="progressbar" aria-label="Visiteurs engagés cette semaine" aria-valuemin={0} aria-valuemax={weekly.visitors||1} aria-valuenow={weekly.visitors}><span style={{width:'100%'}}/></div><p>Réservations confirmées / retenues actives de cette semaine</p></div>
+            <div><small>Réservations engagées cette semaine</small><strong>${weekly.reservations}<span> dossiers</span></strong><div className="az-capacity-progress" role="progressbar" aria-label="Réservations engagées cette semaine" aria-valuemin={0} aria-valuemax={weekly.reservations||1} aria-valuenow={weekly.reservations}><span style={{width:'100%'}}/></div><p>Le plafond reste appliqué par journée et par créneau.</p></div>
           </div>
         </div>
         <div className="az-capacity-daily">
