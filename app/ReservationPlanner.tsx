@@ -33,8 +33,9 @@ function estimate(id:string,adults:number,children:number){
  if(id==='guezo')return adults===2&&children===0?{total:12000,crossingIncluded:true}:null;
  if(id==='behanzin')return adults===4&&children===0?{total:36000,crossingIncluded:true}:null;
  if(id==='toffa')return adults===2&&children===2?{total:18000,crossingIncluded:true}:null;
- if(id==='mangrove')return {total:adults*5000+children*2500+adults*1500+children*500,crossingIncluded:false};
- if(id==='lake')return null;
+ if(id==='mangrove')return {total:count*10000+adults*1500+children*500,crossingIncluded:false};
+ if(id==='lake')return {total:count*5000+adults*1500+children*500,crossingIncluded:false};
+
  if(id==='pedalboat')return count>=2&&count<=4?{total:count*(count===2?5000:3000)+adults*1500+children*500,crossingIncluded:false}:null;
  return {total:count*3000+adults*1500+children*500,crossingIncluded:false};
 }
@@ -178,9 +179,9 @@ export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{act
  };
  const bookingNotice=lang==='fr'?
   (!schedule?'Chargement du calendrier…':!saturdayOpen&&!sundayOpen?'Réservations clôturées. Réouverture lundi.':
-   'Ouverture lundi pour le week-end à venir. Samedi : jusqu’au vendredi 22h. Dimanche : jusqu’au samedi 22h (heure du Bénin).'):
+   'Ouverture lundi pour le week-end à venir. Samedi : jusqu’au vendredi 23h59. Dimanche : jusqu’au samedi 23h59 (heure du Bénin).'):
   (!schedule?'Loading booking dates…':!saturdayOpen&&!sundayOpen?'Bookings are closed. Reopening Monday.':
-   'Bookings open Monday for the upcoming weekend. Saturday: until Friday 10pm. Sunday: until Saturday 10pm (Benin time).');
+   'Bookings open Monday for the upcoming weekend. Saturday: until Friday 11:59pm. Sunday: until Saturday 11:59pm (Benin time).');
  const dateNotice=date&&!dateValid?(lang==='fr'?
    'Cette date ne peut pas être demandée en ligne. Choisissez un jour encore ouvert ou contactez-nous sur WhatsApp.':
    'This date cannot be requested online. Choose an open date or message us on WhatsApp.'):null;
@@ -255,8 +256,8 @@ export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{act
              const picked=activityIds.includes(option.id);
              const price=option.id==='pedalboat'
                ?(lang==='fr'?'2 pers. : 10 000 · 3–4 : 3 000/pers.':'2 guests: 10,000 · 3–4: 3,000 each')
-               :option.id==='lake'?(lang==='fr'?'Tarif à confirmer':'Price to confirm')
-               :option.id==='mangrove'?(lang==='fr'?'Adulte 5 000 · Enfant 2 500':'Adult 5,000 · Child 2,500')
+               :option.id==='lake'?'5 000 FCFA / pers.'
+               :option.id==='mangrove'?'10 000 FCFA / pers.'
                :'3 000 FCFA / pers.';
              return <button type="button" key={option.id}
                className={'az-activity-pick'+(picked?' is-picked':'')}

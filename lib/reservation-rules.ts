@@ -54,7 +54,7 @@ export function isNormalOpeningDay(date: string): boolean {
 }
 /**
  * Public online enquiry calendar: only the NEXT weekend, opening each Monday.
- * Benin local time is authoritative, including the 22:00 cutoffs.
+ * Benin local time is authoritative, including the no-same-day cutoff at midnight.
  * This is NOT a capacity check or a payment authorization.
  */
 export type BookingWindowResult =
@@ -81,11 +81,11 @@ export function bookingWindow(now:Date=new Date()):{saturday:string;sunday:strin
 export function checkBookingWindow(date:string,now:Date=new Date()):BookingWindowResult{
   const window=bookingWindow(now);
   const dates={saturday:window.saturday,sunday:window.sunday};
-  if(window.weekday===0||(window.weekday===6&&window.hour>=22))
+  if(window.weekday===0)
     return {ok:false,code:'booking_closed',...dates};
   if(date!==window.saturday&&date!==window.sunday)
     return {ok:false,code:'outside_booking_weekend',...dates};
-  if(date===window.saturday&&(window.weekday===6||window.weekday===5&&window.hour>=22))
+  if(date===window.saturday&&window.weekday===6)
     return {ok:false,code:'saturday_cutoff',...dates};
   return {ok:true,...dates};
 }
@@ -110,8 +110,8 @@ export function validateReservation(input: unknown, now: Date = new Date(), opti
   if(!options.manualIntake&&!window.ok) return error(window.code,{
     booking_closed:'Online enquiries reopen Monday for the next weekend.',
     outside_booking_weekend:'Please choose a date in the upcoming weekend.',
-    saturday_cutoff:'Saturday bookings close Friday at 22:00, Benin time.',
-    sunday_cutoff:'Sunday bookings close Saturday at 22:00, Benin time.'
+    saturday_cutoff:'Saturday bookings close at 23:59 on Friday, Benin time.',
+    sunday_cutoff:'Sunday bookings close at 23:59 on Saturday, Benin time.'
   }[window.code]);
   if (typeof obj.time !== 'string' || !(RESERVATION_SLOTS as readonly string[]).includes(obj.time))
     return error('invalid_time','Choose a displayed time slot.');
@@ -155,8 +155,9 @@ export function validateReservation(input: unknown, now: Date = new Date(), opti
   else if (experience==='toffa') total = 18000;
   else if (experience==='pedalboat') total = count*(count===2?5000:3000) + crossingAmount;
   else if (['pedalo','canoe','paddle','waterball'].includes(experience)) total = count*3000 + crossingAmount;
-  else if (experience==='mangrove') total = adults*5000+children*2500+crossingAmount;
-  // Lake outings have no publicly approved quotation.
+  else if (experience==='mangrove') total = count*10000+crossingAmount;
+  else if (experience==='lake') total = count*5000+crossingAmount;
+  // Lake and mangrove experiences use the approved per-person tariffs.
   const reservation: ReservationRequest = {experience,date:obj.date,time:obj.time,adults,children,...(choice?{choice}:{}),...(choices?{choices}:{})};
   return {ok:true,reservation,quote:{
     total,currency:'XOF',crossingIncluded,crossingAmount,

@@ -35,8 +35,8 @@ export const businessKnowledge = {
     { name:'Stand-up paddle', duration:'30 min', rate:'3 000 FCFA/personne' },
     { name:'Bateau à pédales', duration:'30 min', rate:'5 000 FCFA/personne pour 2 participants ; à partir de 3 personnes, 3 000 FCFA/personne', capacity:'2 bateaux, maximum 4 passagers chacun' },
     { name:'Bulle gonflable / Water Ball', duration:'20 min', rate:'3 000 FCFA/personne' },
-    { name:'Balade sur le lac', duration:'30 min', rate:'Tarif à confirmer directement avec l’équipe' },
-    { name:'Découverte des mangroves', duration:'Durée variable', rate:'Tarif à confirmer directement avec l’équipe' },
+    { name:'Balade sur le lac', duration:'30 min', rate:'5 000 FCFA/personne' },
+    { name:'Découverte des mangroves', duration:'1 h', rate:'10 000 FCFA/personne' },
     { name:'Jet-ski', status:'INDISPONIBLE — maintenance, pas de réservation' }
   ],
   packages: [
@@ -46,7 +46,7 @@ export const businessKnowledge = {
     { name:'BÉHANZIN', type:'Groupe (4 adultes)', rate:'36 000 FCFA/groupe', includes:'Traversée aller-retour, canoë double, balade sur le lac, pédalo, eau offerte.' }
   ],
   restaurant: {
-    availability: 'Restaurant ouvert les week-ends et jours fériés. Bar et carpe braisés selon arrivage ; confirmer la disponibilité du poisson et la commande avant arrivée.',
+    availability: 'Restaurant ouvert les week-ends et jours fériés. Bar et carpe braisés selon arrivage. Commandes à l’avance exclusivement avec paiement intégral vérifié ; aucun module de précommande ou paiement en ligne n’est actif actuellement. Informations et demandes sur WhatsApp, sans confirmation de commande impayée.',
     grillades: ['Poissons (selon arrivages) : bar, carpe braisés','Brochettes de poulet'],
     otherDishes: ['Gari Gnignan + œufs brouillés : 3 000 FCFA'],
     sides: ['Riz','Aloco','Légumes sautés','Pommes frites','Pommes sautées','Igname','Patate douce'],

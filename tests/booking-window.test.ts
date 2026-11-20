@@ -13,16 +13,16 @@ test('Monday opens only the upcoming weekend',()=>{
   assert.equal(checkBookingWindow('2026-11-28',monday).ok,false);
 });
 
-test('Saturday booking closes at Friday 22h Benin time',()=>{
-  assert.equal(checkBookingWindow('2026-11-21',benin('2026-11-20','21:59')).ok,true);
-  assert.equal(checkBookingWindow('2026-11-21',benin('2026-11-20','22:00')).ok,false);
-  assert.equal(checkBookingWindow('2026-11-22',benin('2026-11-20','22:00')).ok,true);
+test('Saturday booking closes at Friday midnight Benin time',()=>{
+  assert.equal(checkBookingWindow('2026-11-21',benin('2026-11-20','23:59')).ok,true);
+  assert.equal(checkBookingWindow('2026-11-21',benin('2026-11-21','00:00')).ok,false);
+  assert.equal(checkBookingWindow('2026-11-22',benin('2026-11-20','23:59')).ok,true);
 });
 
-test('Sunday booking closes at Saturday 22h, Saturday never accepts same-day requests',()=>{
+test('Sunday booking closes at Saturday midnight, Saturday never accepts same-day requests',()=>{
   assert.equal(checkBookingWindow('2026-11-21',benin('2026-11-21','08:00')).ok,false);
-  assert.equal(checkBookingWindow('2026-11-22',benin('2026-11-21','21:59')).ok,true);
-  assert.equal(checkBookingWindow('2026-11-22',benin('2026-11-21','22:00')).ok,false);
+  assert.equal(checkBookingWindow('2026-11-22',benin('2026-11-21','23:59')).ok,true);
+  assert.equal(checkBookingWindow('2026-11-22',benin('2026-11-22','00:00')).ok,false);
 });
 
 test('Sunday has no new online enquiries; booking reopens on Monday',()=>{
@@ -31,7 +31,7 @@ test('Sunday has no new online enquiries; booking reopens on Monday',()=>{
 });
 
 test('Server validation enforces cutoff even if user bypasses calendar',()=>{
-  const friday=benin('2026-11-20','22:00');
+  const friday=benin('2026-11-21','00:00');
   const blocked=validateReservation(request('2026-11-21'),friday);
   assert.equal(blocked.ok,false);
   if(!blocked.ok)assert.equal(blocked.code,'saturday_cutoff');
@@ -83,7 +83,7 @@ test('Pedal-powered boat accepts 2 to 4 guests and rejects 1 or 5',()=>{
   }
 });
 
-test('Mangrove discovery charges adults and under-12s separately, plus mandatory crossing',()=>{
+test('Mangrove discovery uses the approved per-person price plus mandatory crossing',()=>{
   const result=validateReservation({
     experience:'mangrove',date:'2026-11-21',time:'12:00',adults:2,children:2
   },benin('2026-11-16','09:00'));
@@ -91,7 +91,7 @@ test('Mangrove discovery charges adults and under-12s separately, plus mandatory
   if(result.ok){
     assert.equal(result.quote.crossingIncluded,false);
     assert.equal(result.quote.crossingAmount,4000);
-    assert.equal(result.quote.total,19000);
+    assert.equal(result.quote.total,44000);
   }
 });
 
@@ -176,19 +176,19 @@ test('Multi-activity quote combines different prices without duplicating the cro
   },benin('2026-11-16','09:00'));
   assert.equal(result.ok,true);
   if(result.ok){
-    assert.equal(result.quote.total,15500); // 6,000 + 7,500 + 2,000 crossing
+    assert.equal(result.quote.total,28000); // 6,000 pedalo + 20,000 mangrove + 2,000 crossing
     assert.equal(result.quote.crossingAmount,2000);
   }
 });
 
-test('Unknown-price lake tour leaves multi-activity total for staff confirmation',()=>{
+test('Approved-price lake tour combines with pedalo without duplicating crossing',()=>{
   const result=validateActivitySelection({
     activities:['pedalo','lake'],date:'2026-11-21',time:'12:00',adults:2,children:0
   },benin('2026-11-16','09:00'));
   assert.equal(result.ok,true);
   if(result.ok){
-    assert.equal(result.quote.total,null);
-    assert.equal(result.quote.status,'confirm_with_team');
+    assert.equal(result.quote.total,19000); // 6,000 pedalo + 10,000 lake + 3,000 crossing
+    assert.equal(result.quote.status,'estimate');
   }
 });
 
