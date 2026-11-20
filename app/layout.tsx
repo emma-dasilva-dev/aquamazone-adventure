@@ -39,7 +39,7 @@ export const metadata: Metadata = {
       'Activités nautiques, détente et découvertes naturelles à Adounko, Cotonou.',
     images: [
       {
-        url: '/images/hero/hero.jpg',
+        url: '/images/gallery/gallery-01.webp',
         width: 1600,
         height: 900,
         alt: 'Aquamazone Adventure à Adounko, Cotonou',
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     title: 'Aquamazone Adventure | La détente au fil de l’eau',
     description:
       'Activités nautiques, détente et découvertes naturelles à Adounko, Cotonou.',
-    images: ['/images/hero/hero.jpg'],
+    images: ['/images/gallery/gallery-01.webp'],
   },
 };
 
