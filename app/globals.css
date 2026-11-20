@@ -958,3 +958,7 @@ img,video,iframe{max-width:100%}
  .restaurant-v9-menu-group .restaurant-v9-fish-list li span{min-width:0;flex:1}
  .restaurant-v9-menu-group .restaurant-v9-fish-list li strong{font-size:12px;text-align:right}
 }
+
+/* Official activity photos in the reservation picker. */
+.reservation-v15-fields .az-activity-art{display:block;background:#e4f3fa}
+.reservation-v15-fields .az-activity-photo{display:block;width:100%;height:100%;object-fit:cover;object-position:center}

@@ -49,57 +49,14 @@ function ReservationActivityMini({id,choice}:{id:string;choice:'canoe'|'pedalo'|
   </>:<><circle cx="48" cy="32" r="15" fill="#0055A4"/><path d="M48 9V55 M25 32H71" stroke="#FFD326" strokeWidth="4" strokeLinecap="round"/></>}
  </svg>;
 }
-function ActivityChoiceIcon({id}:{id:string}){
- return <svg viewBox="0 0 112 84" width="104" height="78" focusable="false" aria-hidden="true">
-   <path d="M4 70q12-7 24 0t24 0t24 0t28 0" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" opacity=".35" fill="none"/>
-   {id==='pedalo'&&<g>
-     <path d="M13 52h86l-10 16H23Z" fill="currentColor" opacity=".87"/>
-     <path d="M28 49V29h55v20" fill="none" stroke="currentColor" strokeWidth="3"/>
-     <path d="M35 33h18m9 0h14" stroke="#FFD326" strokeWidth="4" strokeLinecap="round"/>
-     <circle cx="38" cy="53" r="7" fill="#FFD326"/><circle cx="73" cy="53" r="7" fill="#FFD326"/>
-     <path d="M37 19h38l9 7H28Z" fill="currentColor" opacity=".4"/>
-   </g>}
-   {id==='canoe'&&<g>
-     <path d="M9 55q47-20 94 0L90 68H23Z" fill="currentColor" opacity=".84"/>
-     <path d="M19 54q37-14 74 0" stroke="#FFD326" strokeWidth="2.5" fill="none"/>
-     <path d="M35 20l24 45M75 18L53 62" stroke="currentColor" strokeWidth="4" strokeLinecap="round"/>
-     <path d="M30 16l10 10M70 14l10 10" stroke="#FFD326" strokeWidth="4" strokeLinecap="round"/>
-   </g>}
-   {id==='paddle'&&<g>
-     <path d="M18 65q39-11 77 0q-39 13-77 0Z" fill="currentColor" opacity=".84"/>
-     <circle cx="54" cy="22" r="8" fill="currentColor"/>
-     <path d="M54 32l-4 17 10 14m-10-14-10 14m15-27 15 8" stroke="currentColor" strokeWidth="5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-     <path d="M78 16L69 69" stroke="#FFD326" strokeWidth="4" strokeLinecap="round"/>
-     <path d="M68 69q3 8 10 7l3-10" fill="#FFD326"/>
-   </g>}
-   {id==='waterball'&&<g>
-     <circle cx="56" cy="44" r="29" fill="none" stroke="currentColor" strokeWidth="4"/>
-     <circle cx="56" cy="44" r="22" fill="currentColor" opacity=".11"/>
-     <path d="M28 44h56M56 15q-20 30 0 58M56 15q20 30 0 58" stroke="currentColor" strokeWidth="2" opacity=".5" fill="none"/>
-     <circle cx="53" cy="35" r="5" fill="#FFD326"/>
-     <path d="M53 41l-2 15m2-11 12-4" stroke="#FFD326" strokeWidth="4" strokeLinecap="round"/>
-   </g>}
-   {id==='pedalboat'&&<g>
-     <path d="M8 54h96l-11 15H19Z" fill="currentColor"/>
-     <path d="M28 54V31q29-15 56 0v23" fill="none" stroke="currentColor" strokeWidth="4"/>
-     <path d="M31 35h50" stroke="#FFD326" strokeWidth="3" strokeLinecap="round"/>
-     {[39,60,80].map(x=><circle key={x} cx={x} cy="47" r="5" fill="#FFD326"/>)}
-     <path d="M31 23q27-13 51 0" stroke="currentColor" strokeWidth="3" fill="none"/>
-   </g>}
-   {id==='lake'&&<g>
-     <path d="M10 52h92L89 69H25Z" fill="currentColor" opacity=".85"/>
-     <path d="M24 52V32h64v20" fill="none" stroke="currentColor" strokeWidth="3"/>
-     <path d="M20 31h72l-13-9H34Z" fill="#FFD326"/>
-     <path d="M38 36v12m18-12v12m18-12v12" stroke="currentColor" strokeWidth="3"/>
-     <circle cx="82" cy="14" r="7" fill="#FFD326"/>
-   </g>}
-   {id==='mangrove'&&<g>
-     <path d="M23 64l13-18-8-16m8 16 13-11m-13 11-2-27m-4 48 6-20 13 20M75 63l-7-19 11-14m-11 14-12-9m12 9 4-28m-9 48 5-20 11 20" stroke="currentColor" strokeWidth="4" strokeLinecap="round" fill="none"/>
-     <path d="M35 20q-22 0-15 17q-19-22 9-31q18-7 24 17q2 17-18 17q-12-7 0-20ZM72 18q-18-3-23 16q-8-21 13-28q19-10 30 10q11 19-11 26q-19-3-9-24Z" fill="currentColor" opacity=".75"/>
-     <path d="M39 18q9 3 10 11m25-9 10 9" stroke="#FFD326" strokeWidth="3" fill="none"/>
-   </g>}
- </svg>;
-}
+const activityImages:Record<string,string>={
+ pedalo:'/images/activities/pedalo-double.webp',
+ canoe:'/images/activities/canoe-double.webp',
+ paddle:'/images/activities/paddle.webp',
+ waterball:'/images/activities/structure-gonflable.webp',
+ pedalboat:'/images/activities/bateau-a-pedales.webp',
+ lake:'/images/activities/mangrove-paysage.webp'
+};
 export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{activity:string;version:number}|null}){
  const [now,setNow]=useState<Date|null>(null);
  useEffect(()=>{const refresh=()=>setNow(new Date());refresh();const timer=setInterval(refresh,60000);return ()=>clearInterval(timer);},[]);
@@ -250,7 +207,7 @@ export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{act
            <span aria-live="polite">{activityIds.length} {lang==='fr'?'activité(s) sélectionnée(s)':'activities selected'}</span>
          </div>
          <div className="az-activity-picker-grid">
-           {options.filter(option=>option.kind==='activity').map((option,index)=>{
+           {options.filter(option=>option.kind==='activity').map((option)=>{
              const picked=activityIds.includes(option.id);
              const price=option.id==='pedalboat'
                ?(lang==='fr'?'2 pers. : 10 000 · 3–4 : 3 000/pers.':'2 guests: 10,000 · 3–4: 3,000 each')
@@ -260,10 +217,8 @@ export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{act
                className={'az-activity-pick'+(picked?' is-picked':'')}
                aria-pressed={picked} aria-label={option[lang]+(picked?(lang==='fr'?' — retirer':' — remove'):(lang==='fr'?' — ajouter':' — add'))}
                onClick={()=>toggleActivity(option.id)}>
-               <span className={'az-activity-art az-activity-art-'+index} aria-hidden="true">
-                 <span className="az-activity-art-orbit"/>
-                 <ActivityChoiceIcon id={option.id}/>
-                 <span className="az-activity-art-wave"/>
+               <span className="az-activity-art" aria-hidden="true">
+                 <img className="az-activity-photo" src={activityImages[option.id]} alt="" loading="lazy" decoding="async"/>
                </span>
                <span className="az-activity-pick-copy">
                  <strong>{option[lang]}</strong>
