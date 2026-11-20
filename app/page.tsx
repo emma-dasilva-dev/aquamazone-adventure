@@ -113,7 +113,7 @@ export default function Home(){
  <div className="activity-v3-heading"><div><p className="kicker">{lang==='fr'?'02 / NOS ACTIVITÉS':'02 / OUR ACTIVITIES'}</p><h2>{lang==='fr'?'Des expériences uniques sur l’eau':'Unforgettable moments on the water'}</h2></div><p>{lang==='fr'?'Pédalo, kayak, paddle et bien plus encore. Trouvez l’expérience qui vous ressemble.':'Pedal boats, kayaks, paddleboards and more. Find your kind of adventure.'}</p></div>
  
  <div className="activity-vertical-list">
- {activities.slice(0,4).map((a,i)=><article className="activity-list-item" key={a.id}>
+ {activities.map((a,i)=><article className="activity-list-item" key={a.id}>
    <span className="activity-list-index">{String(i+1).padStart(2,'0')}</span>
    <div className="activity-list-copy">
      <h3>{lang==='fr'?a.fr:a.en}</h3>
@@ -244,12 +244,9 @@ export default function Home(){
       <p>{lang==='fr'?'Après les activités, prenez le temps de savourer un bon repas dans un cadre paisible au bord de l’eau.':'After your activities, take time to enjoy a good meal in a peaceful waterfront setting.'}</p>
     </div>
     <div className="restaurant-v9-grid">
-      <div className="restaurant-v9-visual restaurant-v9-visual-stack" aria-label={lang==='fr'?'Photographies du restaurant et des moments au bord de l’eau':'Restaurant and waterfront photographs'}>
-        <div className="restaurant-v9-stack-intro"><span>01</span><strong>{lang==='fr'?'Une pause au bord de l’eau':'A break by the water'}</strong></div>
-        <div className="restaurant-v9-stack-card restaurant-v9-stack-card-1"><img src="/images/gallery/gallery-01.webp" alt={lang==='fr'?'Visiteurs profitant d’un moment au bord de l’eau':'Visitors enjoying time by the water'} loading="lazy"/></div>
-        <div className="restaurant-v9-stack-card restaurant-v9-stack-card-2"><img src="/images/gallery/gallery-03.webp" alt={lang==='fr'?'Visiteurs en canoë-kayak':'Visitors canoeing and kayaking'} loading="lazy"/></div>
-        <div className="restaurant-v9-stack-card restaurant-v9-stack-card-3"><img src="/images/gallery/gallery-14.webp" alt={lang==='fr'?'Balade sur le lac':'Boat ride on the lake'} loading="lazy"/></div>
-        <div className="restaurant-v9-stack-caption"><span>{lang==='fr'?'Des moments qui se prolongent après les activités':'Moments that continue after the activities'}</span><span>Aquamazone · Adounko</span></div>
+      <div className="restaurant-v9-visual">
+        <div className="restaurant-v9-photo" role="img" aria-label={lang==='fr'?'Poisson braisé servi à Aquamazone':'Grilled fish served at Aquamazone'}/>
+        <div className="restaurant-v9-photo-caption"><span>{lang==='fr'?'Une pause au bord de l’eau':'A break by the water'}</span><span>{lang==='fr'?'Poisson braisé · Aquamazone':'Grilled fish · Aquamazone'}</span></div>
       </div>
       <div className="restaurant-v9-menu">
         <div className="restaurant-v9-menu-top"><span>{lang==='fr'?'À LA CARTE':'ON THE MENU'}</span><span>ADOUNKO · BÉNIN</span></div>
