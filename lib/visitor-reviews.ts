@@ -25,7 +25,7 @@ export function validateReview(input:unknown):{ok:true;name:string;comment:strin
  const comment=typeof r.comment==='string'?r.comment.trim().replace(/\s+/g,' '):'';
  const source=r.source;
  if(name.length<2||name.length>60||/[<>\x00-\x1f\x7f]/.test(name))return {ok:false,code:'name'};
- if(comment.length<20||comment.length>1000||/[<>\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/.test(comment))return {ok:false,code:'comment'};
+ if((comment.length>0&&comment.length<20)||comment.length>1000||/[<>\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/.test(comment))return {ok:false,code:'comment'};
  if(/https?:\/\/|www\.|@\w+\.\w+/i.test(comment))return {ok:false,code:'links'};
  if(typeof source!=='string'||!(sources as readonly string[]).includes(source))return {ok:false,code:'source'};
  if(r.rating!==null&&r.rating!==undefined&&(!Number.isInteger(r.rating)||typeof r.rating!=='number'||r.rating<1||r.rating>5))return {ok:false,code:'rating'};
