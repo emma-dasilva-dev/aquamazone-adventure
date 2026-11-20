@@ -3,6 +3,7 @@ import {useEffect,useState} from 'react';
 import ImmersiveGallery from './ImmersiveGallery';
 import AquamazoneAssistant from './AquamazoneAssistant';
 import ReservationPlanner from './ReservationPlanner';
+import LocationRouteVideo from './LocationRouteVideo';
 import {ArrowDown,ArrowUpRight,ArrowRight,Menu,X,Plus,Minus,MapPin,Clock,MessageCircle,Waves,ZoomIn,Instagram,Youtube} from 'lucide-react';
 
 type Lang='fr'|'en';
@@ -295,6 +296,7 @@ export default function Home(){
       <h2 id="location-title">{lang==='fr'?<>Au bout de la Route des Pêches, <em>le lac vous attend.</em></>:<>At the end of the Coastal Road, <em>the lake awaits.</em></>}</h2>
       <p>{lang==='fr'?'Retrouvez AQUAMAZONE ADVENTURE au Village Adounko, à Cotonou.':'Find AQUAMAZONE ADVENTURE in Adounko Village, Cotonou.'}</p>
     </div>
+    <LocationRouteVideo lang={lang}/>
     <div className="location-v11-layout">
       <div className="location-v11-map">
         <iframe title={lang==='fr'?'Carte de Togbin Plage, Bénin — zone de localisation d’Aquamazone':'Map of Togbin Plage, Benin — Aquamazone location area'} src="https://www.google.com/maps?q=Togbin+Plage,+Benin&output=embed" loading="lazy" referrerPolicy="no-referrer-when-downgrade" allowFullScreen/>
