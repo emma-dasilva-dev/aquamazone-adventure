@@ -14,7 +14,7 @@ const options:Option[]=[
  {id:'paddle',fr:'Paddle / Stand Up',en:'Stand-up paddle',kind:'activity',duration:'30 min'},
  {id:'waterball',fr:'Bulle gonflable / Water Ball',en:'Inflatable Water Ball',kind:'activity',duration:'20 min'},
  {id:'pedalboat',fr:'Bateau à pédales (2 à 4 pers.)',en:'Pedal-powered boat (2–4 people)',kind:'activity',duration:'30 min'},
- {id:'lake',fr:'Balade sur le lac / Visite des mangroves',en:'Lake tour / Mangrove visit',kind:'activity',duration:'30 min'},
+ {id:'lake',fr:'Balade sur le lac / Visite des mangroves',en:'Lake tour / Mangrove visit',kind:'activity',duration:'30–45 min'},
  {id:'glele',fr:'GLÈLÈ — Découverte',en:'GLÈLÈ — Discovery',kind:'package'},
  {id:'guezo',fr:'GUÉZO — Couple',en:'GUÉZO — Couple',kind:'package'},
  {id:'toffa',fr:'TOFFA — Famille',en:'TOFFA — Family',kind:'package'},

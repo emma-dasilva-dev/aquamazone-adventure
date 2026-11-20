@@ -20,7 +20,7 @@ const activities=[
  {id:'paddle',fr:'Paddle / Stand Up',en:'Stand-up paddle',duration:'30 min',price:'3 000 FCFA',note:''},
  {id:'boat',fr:'Bateau à pédales',en:'Pedal-powered boat',duration:'30 min',price:'10 000 FCFA / 2 personnes',note:'3 à 4 personnes : 3 000 FCFA / personne',noteEn:'3 to 4 people: 3,000 FCFA per person'},
  {id:'ball',fr:'Bulle gonflable / Water Ball',en:'Inflatable water ball',duration:'20 min',price:'3 000 FCFA / personne',note:''},
- {id:'tour',fr:'Balade sur le lac / Visite des mangroves',en:'Lake tour / Mangrove visit',duration:'30 min',price:'5 000 FCFA / adulte',note:'Enfant de moins de 12 ans : 2 500 FCFA',noteEn:'Child under 12: 2,500 FCFA'},
+ {id:'tour',fr:'Balade sur le lac / Visite des mangroves',en:'Lake tour / Mangrove visit',duration:'30–45 min',price:'5 000 FCFA / adulte',note:'Enfant de moins de 12 ans : 2 500 FCFA',noteEn:'Child under 12: 2,500 FCFA'},
  {id:'jetski',fr:'Jet-ski',en:'Jet ski',duration:'',price:'',note:'Indisponible — maintenance',noteEn:'Unavailable — maintenance',unavailable:true},
  {id:'rental',fr:'Location embarcation + moteur + machiniste',en:'Boat, motor and operator hire',duration:'Demi-journée / journée',price:'Sur devis',note:'Réservation obligatoire',noteEn:'Advance booking required'}
 ];
