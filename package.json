@@ -11,7 +11,8 @@
     "setup:contact": "node scripts/setup-contact.mjs",
     "test:contact": "node --experimental-strip-types --test tests/booking-contact.test.ts",
     "test:payments": "node --experimental-strip-types --test tests/payment-status.test.ts",
-    "test:booking": "node --experimental-strip-types --test tests/booking-window.test.ts"
+    "test:booking": "node --experimental-strip-types --test tests/booking-window.test.ts",
+    "test:reviews": "node --experimental-strip-types --test tests/visitor-reviews.test.ts"
   },
   "dependencies": {
     "next": "^15.5.0",

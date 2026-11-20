@@ -118,6 +118,7 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
       <div><strong>AQUAMAZONE <span style={{color:'#0055a4'}}>ADVENTURE</span></strong><small>ESPACE ADMINISTRATEUR · ACCÈS PRIVÉ</small></div>
       <form action="/api/admin/logout" method="post"><button type="submit">Déconnexion</button></form>
     </header>
+    <div className="az-admin-reviews-link"><a href="/admin/reviews">Gérer les avis des visiteurs →</a></div>
     <div className="az-admin-head">
       <div><p>VUE D'ENSEMBLE</p><h1>Réservations</h1><p>Demandes, paiements et alertes — une seule interface.</p></div>
       <span className="az-admin-status">Données synchronisées depuis Neon</span>
