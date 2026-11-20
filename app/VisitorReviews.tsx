@@ -43,7 +43,7 @@ export default function VisitorReviews({lang}:{lang:Lang}){
     body:JSON.stringify({name,comment,source,rating:rating||null,consent,website})});
    const data=await response.json();
    if(!response.ok||data.ok!==true)throw Error(String(data.code??'error'));
-   setSuccess(true);setName('');setComment('');setRating(0);setConsent(false);setFormOpen(false);
+   setSuccess(true);setName('');setComment('');setRating(0);setConsent(false);
   }catch(e){
    const code=e instanceof Error?e.message:'';
    setError(code==='rate_limit'?(fr?'Une contribution a déjà été envoyée récemment. Réessayez plus tard.':'A review was submitted recently. Please try later.'):
@@ -86,7 +86,7 @@ export default function VisitorReviews({lang}:{lang:Lang}){
         <label>{fr?'Votre prénom ou nom affiché':'Your display name'}<input value={name} onChange={e=>setName(e.target.value)} minLength={2} maxLength={60} required autoComplete="name" placeholder={fr?'Ex. : Aïcha':'E.g. Aïcha'}/></label>
         <label>{fr?'Comment avez-vous connu Aquamazone ?':'How did you find Aquamazone?'}<select value={source} onChange={e=>setSource(e.target.value as DiscoverySource)}>{sources.map(s=><option key={s} value={s}>{sourceNames[s][lang]}</option>)}</select></label>
         <fieldset className="visitor-reviews-rating"><legend>{fr?'Votre note':'Your rating'}</legend><div>{[1,2,3,4,5].map(n=><button key={n} type="button" aria-label={fr?n+' étoile(s)':n+' star(s)'} aria-pressed={rating===n} onClick={()=>setRating(rating===n?0:n)}><Star size={23} fill={n<=rating?'currentColor':'none'} aria-hidden="true"/></button>)}</div></fieldset>
-        <label>{fr?'Votre commentaire':'Your review'}<textarea value={comment} onChange={e=>setComment(e.target.value)} maxLength={1000} rows={5} placeholder={fr?'Quelques mots sur votre visite…':'A few words about your visit…'}/><small>{comment.length} / 1000</small></label>
+        <label>{fr?'Votre commentaire':'Your review'}<textarea value={comment} onChange={e=>setComment(e.target.value)} minLength={20} maxLength={1000} rows={5} required placeholder={fr?'Racontez votre visite : activités, accueil, ambiance…':'Tell us about your visit: activities, welcome, atmosphere…'}/><small>{comment.length} / 1000</small></label>
         <div className="visitor-reviews-honeypot" aria-hidden="true"><label>Website<input value={website} onChange={e=>setWebsite(e.target.value)} tabIndex={-1} autoComplete="off"/></label></div>
         <label className="visitor-reviews-consent"><input type="checkbox" checked={consent} onChange={e=>setConsent(e.target.checked)} required/><span>{fr?'J’accepte la publication de mon nom affiché et de mon avis, après validation par l’équipe.':'I agree to publication of my display name and review after team approval.'}</span></label>
         {error&&<p className="visitor-reviews-error" role="alert">{error}</p>}
