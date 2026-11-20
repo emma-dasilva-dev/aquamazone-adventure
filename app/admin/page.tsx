@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { neon } from '@neondatabase/serverless';
 import { isAdminAuthenticated } from '../../lib/admin-auth';
 import AdminExperienceFields from '../AdminExperienceFields';
+import {ArrowUpRight,CalendarDays,CreditCard,LayoutDashboard,MessageCircle,ShieldCheck,Users,AlertCircle,ClipboardList,Star,Wallet,Activity} from 'lucide-react';
 
 export const dynamic='force-dynamic';
 
@@ -56,6 +57,9 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
   let alerts:AlertRow[]=[];
   let usage:CapacityUsageRow[]=[];
   let total=0,pending=0,confirmed=0,failedAlerts=0;
+  let paymentPending=0,paymentVerified=0,paymentFailed=0;
+  const momoConfigured=process.env.MTN_MOMO_ENABLED==='true' && Boolean(process.env.MTN_MOMO_SUBSCRIPTION_KEY&&process.env.MTN_MOMO_API_USER&&process.env.MTN_MOMO_API_KEY);
+  const momoProduction=momoConfigured&&process.env.MTN_MOMO_ENVIRONMENT==='mtnbenin';
   let capacity={dailyVisitors:70,dailyReservations:40,slotVisitors:10};
   let databaseError=false;
   let databaseStep='connection';
@@ -67,7 +71,10 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
     const summary=await sql`SELECT
         COUNT(*)::integer AS total,
         COUNT(*) FILTER (WHERE status IN ('inquiry','pending_review','awaiting_payment'))::integer AS pending,
-        COUNT(*) FILTER (WHERE status='confirmed')::integer AS confirmed
+        COUNT(*) FILTER (WHERE status='confirmed')::integer AS confirmed,
+        COUNT(*) FILTER (WHERE payment_status='pending')::integer AS payment_pending,
+        COUNT(*) FILTER (WHERE payment_status='verified')::integer AS payment_verified,
+        COUNT(*) FILTER (WHERE payment_status='failed')::integer AS payment_failed
         FROM reservations`;
     databaseStep='reservations_list';
     const bookings=await sql`SELECT reference,experience,visit_date::text,requested_time::text,adults,children,
@@ -107,6 +114,9 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
     reservations=bookings as unknown as ReservationRow[];
     alerts=notifications as unknown as AlertRow[];
     failedAlerts=alerts.filter(row=>row.status==='failed').length;
+    paymentPending=Number(summary[0]?.payment_pending||0);
+    paymentVerified=Number(summary[0]?.payment_verified||0);
+    paymentFailed=Number(summary[0]?.payment_failed||0);
   }catch(error){
     databaseError=true;
     // Report diagnostics only to the private server log. Never print SQL URLs or credentials.
@@ -115,62 +125,54 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
   }
   return <main className="az-admin-shell">
     <header className="az-admin-top">
-      <div><strong>AQUAMAZONE <span style={{color:'#0055a4'}}>ADVENTURE</span></strong><small>ESPACE ADMINISTRATEUR · ACCÈS PRIVÉ</small></div>
-      <form action="/api/admin/logout" method="post"><button type="submit">Déconnexion</button></form>
+      <a href="/admin" className="az-admin-brand" aria-label="Aquamazone Adventure — Administration">
+        <span className="az-admin-brand-mark">A</span>
+        <span><strong>AQUAMAZONE <em>ADVENTURE</em></strong><small>ESPACE DE GESTION</small></span>
+      </a>
+      <div className="az-admin-top-actions">
+        <a className="az-admin-website" href="/" target="_blank" rel="noopener noreferrer">Voir le site <ArrowUpRight size={15}/></a>
+        <form action="/api/admin/logout" method="post"><button type="submit">Déconnexion</button></form>
+      </div>
     </header>
-    <div className="az-admin-reviews-link"><a href="/admin/reviews">Gérer les avis des visiteurs →</a></div>
-    <div className="az-admin-head">
-      <div><p>VUE D'ENSEMBLE</p><h1>Réservations</h1><p>Demandes, paiements et alertes — une seule interface.</p></div>
-      <span className="az-admin-status">Données synchronisées depuis Neon</span>
+    <nav className="az-admin-nav" aria-label="Navigation de l’administration">
+      <a href="#overview"><LayoutDashboard size={16}/> Vue d’ensemble</a>
+      <a href="#reservations"><ClipboardList size={16}/> Réservations</a>
+      <a href="#payments"><CreditCard size={16}/> Paiements</a>
+      <a href="#intake"><MessageCircle size={16}/> Saisie manuelle</a>
+      <a href="#capacity"><Users size={16}/> Capacité</a>
+      <a href="/admin/reviews"><Star size={16}/> Avis clients</a>
+      <a href="#notifications"><Activity size={16}/> Notifications</a>
+    </nav>
+    <div id="overview" className="az-admin-head">
+      <div><p className="az-admin-overline">TABLEAU DE BORD · AQUAMAZONE</p><h1>Vue d’ensemble</h1><p>Suivez les demandes, préparez les visites et surveillez les paiements.</p></div>
+      <span className="az-admin-status"><span className="az-admin-status-dot"/> {databaseError?'Données indisponibles':'Données de la base Neon'}</span>
     </div>
     {databaseError?<div className="az-admin-panel"><p className="az-admin-empty" role="alert">Impossible de charger les données du tableau de bord. Étape : {databaseStep}. Les informations de connexion restent privées.</p></div>:<>
-      <section className="az-admin-stats" aria-label="Statistiques">
-        <div className="az-admin-stat"><small>Total des demandes</small><strong>{total}</strong></div>
-        <div className="az-admin-stat"><small>À traiter</small><strong>{pending}</strong></div>
-        <div className="az-admin-stat"><small>Confirmées</small><strong>{confirmed}</strong></div>
-        <div className="az-admin-stat"><small>Alertes en échec (40 dernières)</small><strong>{failedAlerts}</strong></div>
+      <section className="az-admin-stats" aria-label="Indicateurs clés">
+        <a className="az-admin-stat" href="#reservations"><span className="az-admin-stat-top"><small>Demandes à traiter</small><ClipboardList size={19}/></span><strong>{pending}</strong><span className="az-admin-stat-caption">En attente d’une action</span></a>
+        <a className="az-admin-stat" href="#reservations"><span className="az-admin-stat-top"><small>Réservations confirmées</small><CalendarDays size={19}/></span><strong>{confirmed}</strong><span className="az-admin-stat-caption">Toutes dates confondues</span></a>
+        <a className="az-admin-stat" href="#payments"><span className="az-admin-stat-top"><small>Paiements en attente</small><Wallet size={19}/></span><strong>{paymentPending}</strong><span className="az-admin-stat-caption">États enregistrés en base</span></a>
+        <a className="az-admin-stat" href="#notifications"><span className="az-admin-stat-top"><small>Alertes en échec</small><AlertCircle size={19}/></span><strong>{failedAlerts}</strong><span className="az-admin-stat-caption">Sur les 40 derniers envois</span></a>
       </section>
-      <section className="az-admin-panel" aria-labelledby="az-admin-capacity-title">
-        <div className="az-admin-panel-header"><h2 id="az-admin-capacity-title">Limites de réservation</h2><p>Politique enregistrée · contrôle administrateur</p></div>
-        <div className="az-admin-capacity-grid">
-          <div><small>Visiteurs / jour</small><strong>{capacity.dailyVisitors}</strong></div>
-          <div><small>Réservations / jour</small><strong>{capacity.dailyReservations}</strong></div>
-          <div><small>Visiteurs / créneau</small><strong>{capacity.slotVisitors}</strong></div>
-        </div>
-        <p className="az-admin-capacity-note">
-          Plafonds appliqués dans la base aux réservations confirmées et aux retenues de paiement encore actives.
-          Les demandes non confirmées ne bloquent pas de places. Le paiement public reste désactivé.
-        </p>
-        <div className="az-admin-capacity-usage">
-          <h3>Occupation à venir — 14 jours</h3>
-          {usage.length===0?<p>Aucune réservation confirmée ni retenue active sur cette période.</p>:
-            <div className="az-admin-capacity-usage-list">{usage.map(day=>
-              <div key={day.visit_date}>
-                <strong>{day.visit_date}</strong>
-                <span>{day.visitor_count} / {capacity.dailyVisitors} visiteurs</span>
-                <span>{day.reservation_count} / {capacity.dailyReservations} réservations</span>
-              </div>)}</div>}
-        </div>
-      </section>
-      <section className="az-admin-panel" aria-labelledby="az-admin-intake-title">
-        <div className="az-admin-panel-header"><h2 id="az-admin-intake-title">Enregistrer une demande WhatsApp</h2><p>Une demande en semaine ou pour aujourd'hui peut être enregistrée, sans confirmation de disponibilité</p></div>
-        <div className="az-admin-intake-content">
-          {notice==='created'&&<p className="az-admin-success" role="status">La demande a été enregistrée. Des notifications email et WhatsApp ont été mises en attente dans la base.</p>}
-          {notice && notice!=='created'&&<p className="az-admin-form-error" role="alert">{intakeErrorMessages[notice]||'Enregistrement impossible. Vérifiez les informations et la connexion.'}</p>}
-          <form action="/api/admin/reservations" method="post" className="az-admin-intake-form">
-            <label>Nom du client<input name="contactName" required maxLength={100} autoComplete="off" placeholder="Nom et prénom"/></label>
-            <label>Téléphone du client<input name="contactPhone" required maxLength={24} autoComplete="off" inputMode="tel" placeholder="+229 ..."/></label>
-            <AdminExperienceFields/>
-            <label>Date de visite<input name="date" type="date" required/></label>
-            <label>Heure de départ<select name="time" defaultValue="12:00">{['12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00'].map(x=><option value={x} key={x}>{x}</option>)}</select></label>
-            <label>Adultes<input type="number" name="adults" min={0} max={20} defaultValue={2} required/></label>
-            <label>Enfants de moins de 12 ans<input type="number" name="children" min={0} max={20} defaultValue={0} required/></label>
-            <div className="az-admin-form-footer"><p>Le client et son paiement restent non vérifiés. Aucune place n'est bloquée et aucun encaissement n'est enregistré.</p><button type="submit">Enregistrer la demande ↗</button></div>
-          </form>
-        </div>
-      </section>
-      <section className="az-admin-panel" aria-labelledby="az-admin-res-title">
-        <div className="az-admin-panel-header"><h2 id="az-admin-res-title">Dernières réservations</h2><p>40 dernières demandes</p></div>
+      <div className="az-admin-primary-grid">
+        <section className="az-admin-priority" aria-labelledby="az-admin-priority-title">
+          <div className="az-admin-priority-heading"><div><span>À FAIRE</span><h2 id="az-admin-priority-title">Priorités du moment</h2></div><a href="#reservations">Voir les demandes <ArrowUpRight size={16}/></a></div>
+          <div className="az-admin-priority-list">
+            <a href="#reservations"><span className="az-admin-priority-icon"><ClipboardList size={18}/></span><span><strong>{pending} demande{pending===1?'':'s'} à examiner</strong><small>Vérifier les visiteurs, l’activité et les disponibilités</small></span><ArrowUpRight size={16}/></a>
+            <a href="#payments"><span className="az-admin-priority-icon"><CreditCard size={18}/></span><span><strong>{paymentPending} paiement{paymentPending===1?'':'s'} en attente</strong><small>Ne pas valider manuellement un paiement non vérifié</small></span><ArrowUpRight size={16}/></a>
+            <a href="#notifications"><span className="az-admin-priority-icon"><AlertCircle size={18}/></span><span><strong>{failedAlerts} notification{failedAlerts===1?'':'s'} en échec</strong><small>Contrôler les tentatives de contact échouées</small></span><ArrowUpRight size={16}/></a>
+          </div>
+        </section>
+        <section className="az-admin-momo-card" aria-labelledby="az-admin-momo-title">
+          <span className="az-admin-momo-overline"><ShieldCheck size={17}/> PAIEMENTS</span>
+          <h2 id="az-admin-momo-title">MTN Mobile Money</h2>
+          <p className="az-admin-momo-state">{momoProduction?'Configuration technique de production détectée':momoConfigured?'Environnement de test / configuration incomplète':'Intégration non activée'}</p>
+          <p>{momoProduction?'La présence des identifiants ne garantit pas que le paiement et sa réconciliation soient opérationnels. Aucun encaissement ne peut être déclenché depuis ce tableau de bord.':'Le paiement en ligne n’est pas encore disponible pour les visiteurs. Le tableau de bord prépare le suivi des transactions sans simuler d’encaissement.'}</p>
+          <a href="#payments">Consulter le suivi <ArrowUpRight size={17}/></a>
+        </section>
+      </div>
+      <section id="reservations" className="az-admin-panel" aria-labelledby="az-admin-res-title">
+        <div className="az-admin-panel-header"><h2 id="az-admin-res-title">Réservations et demandes</h2><p>40 dernières demandes</p></div>
         {holdNotice&&<p className={holdNotice==='created'?'az-admin-success':'az-admin-form-error'} role="status">
           {holdNotice==='created'?'Retenue de 10 minutes créée. Aucun paiement n’a été demandé ni encaissé.':
            holdNotice==='not_configured'?'La connexion Neon dédiée aux retenues n’est pas configurée (DATABASE_URL_HOLDS).':
@@ -202,7 +204,69 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
           </tr>)}</tbody>
         </table></div>}
       </section>
-      <section className="az-admin-panel" aria-labelledby="az-admin-alert-title">
+      <section id="payments" className="az-admin-panel az-admin-payment-panel" aria-labelledby="az-admin-pay-title">
+        <div className="az-admin-panel-header"><div><span className="az-admin-section-eyebrow">GESTION DES TRANSACTIONS</span><h2 id="az-admin-pay-title">Suivi des paiements</h2></div><p>États enregistrés · aucun paiement initié ici</p></div>
+        <div className="az-admin-payment-metrics">
+          <div><small>En attente</small><strong>{paymentPending}</strong><span>À vérifier auprès du prestataire</span></div>
+          <div><small>Vérifiés en base</small><strong>{paymentVerified}</strong><span>Selon les enregistrements existants</span></div>
+          <div><small>Échecs enregistrés</small><strong>{paymentFailed}</strong><span>À examiner si nécessaire</span></div>
+        </div>
+        <div className="az-admin-payment-state"><ShieldCheck size={22}/><p><strong>{momoProduction?'Configuration MTN MoMo détectée':'MTN MoMo : activation en attente'}</strong><br/>Les statuts ci-dessus proviennent de la table des réservations. Ils ne constituent pas un rapport de rapprochement financier MTN. Le paiement en ligne, les remboursements et la synchronisation des transactions restent désactivés jusqu’à l’intégration officielle et sa vérification.</p></div>
+        <div className="az-admin-payment-ledger">
+          <div className="az-admin-payment-ledger-heading"><h3>Derniers dossiers avec statut de paiement</h3><span>Liste des 40 dernières réservations uniquement</span></div>
+          {reservations.filter(row=>row.payment_status!=='unpaid').length===0?
+            <p className="az-admin-payment-ledger-empty">Aucun statut de paiement enregistré dans les dernières demandes. Aucun encaissement n’est déduit des devis.</p>:
+            <div className="az-admin-scroll"><table className="az-admin-table">
+              <thead><tr><th>Référence</th><th>Client</th><th>Montant indiqué</th><th>Statut enregistré</th><th>Créé le</th></tr></thead>
+              <tbody>{reservations.filter(row=>row.payment_status!=='unpaid').map(row=><tr key={row.reference}>
+                <td><strong>{row.reference}</strong></td><td>{row.contact_name||'—'}</td>
+                <td>{formatMoney(row.quote_amount_xof)}</td>
+                <td><span className="az-admin-pill" data-status={row.payment_status}>{label(row.payment_status)}</span></td>
+                <td>{dateTime(row.created_at)}</td>
+              </tr>)}</tbody>
+            </table></div>}
+        </div>
+      </section>
+      <section id="capacity" className="az-admin-panel" aria-labelledby="az-admin-capacity-title">
+        <div className="az-admin-panel-header"><h2 id="az-admin-capacity-title">Limites de réservation</h2><p>Politique enregistrée · contrôle administrateur</p></div>
+        <div className="az-admin-capacity-grid">
+          <div><small>Visiteurs / jour</small><strong>{capacity.dailyVisitors}</strong></div>
+          <div><small>Réservations / jour</small><strong>{capacity.dailyReservations}</strong></div>
+          <div><small>Visiteurs / créneau</small><strong>{capacity.slotVisitors}</strong></div>
+        </div>
+        <p className="az-admin-capacity-note">
+          Plafonds appliqués dans la base aux réservations confirmées et aux retenues de paiement encore actives.
+          Les demandes non confirmées ne bloquent pas de places. Le paiement public reste désactivé.
+        </p>
+        <div className="az-admin-capacity-usage">
+          <h3>Occupation à venir — 14 jours</h3>
+          {usage.length===0?<p>Aucune réservation confirmée ni retenue active sur cette période.</p>:
+            <div className="az-admin-capacity-usage-list">{usage.map(day=>
+              <div key={day.visit_date}>
+                <strong>{day.visit_date}</strong>
+                <span>{day.visitor_count} / {capacity.dailyVisitors} visiteurs</span>
+                <span>{day.reservation_count} / {capacity.dailyReservations} réservations</span>
+              </div>)}</div>}
+        </div>
+      </section>
+      <section id="intake" className="az-admin-panel" aria-labelledby="az-admin-intake-title">
+        <div className="az-admin-panel-header"><h2 id="az-admin-intake-title">Enregistrer une demande WhatsApp</h2><p>Une demande en semaine ou pour aujourd'hui peut être enregistrée, sans confirmation de disponibilité</p></div>
+        <div className="az-admin-intake-content">
+          {notice==='created'&&<p className="az-admin-success" role="status">La demande a été enregistrée. Des notifications email et WhatsApp ont été mises en attente dans la base.</p>}
+          {notice && notice!=='created'&&<p className="az-admin-form-error" role="alert">{intakeErrorMessages[notice]||'Enregistrement impossible. Vérifiez les informations et la connexion.'}</p>}
+          <form action="/api/admin/reservations" method="post" className="az-admin-intake-form">
+            <label>Nom du client<input name="contactName" required maxLength={100} autoComplete="off" placeholder="Nom et prénom"/></label>
+            <label>Téléphone du client<input name="contactPhone" required maxLength={24} autoComplete="off" inputMode="tel" placeholder="+229 ..."/></label>
+            <AdminExperienceFields/>
+            <label>Date de visite<input name="date" type="date" required/></label>
+            <label>Heure de départ<select name="time" defaultValue="12:00">{['12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00'].map(x=><option value={x} key={x}>{x}</option>)}</select></label>
+            <label>Adultes<input type="number" name="adults" min={0} max={20} defaultValue={2} required/></label>
+            <label>Enfants de moins de 12 ans<input type="number" name="children" min={0} max={20} defaultValue={0} required/></label>
+            <div className="az-admin-form-footer"><p>Le client et son paiement restent non vérifiés. Aucune place n'est bloquée et aucun encaissement n'est enregistré.</p><button type="submit">Enregistrer la demande ↗</button></div>
+          </form>
+        </div>
+      </section>
+      <section id="notifications" className="az-admin-panel" aria-labelledby="az-admin-alert-title">
         <div className="az-admin-panel-header"><h2 id="az-admin-alert-title">Journal des notifications</h2><p>WhatsApp et email · 40 dernières</p></div>
         {alerts.length===0?<p className="az-admin-empty">Aucune alerte enregistrée.</p>:<div className="az-admin-scroll"><table className="az-admin-table">
           <thead><tr><th>Réservation</th><th>Événement</th><th>Canal</th><th>État de l'envoi</th><th>Tentatives</th><th>Date</th></tr></thead>
@@ -214,6 +278,6 @@ export default async function AdminDashboard({searchParams}:{searchParams:Promis
         </table></div>}
       </section>
     </>}
-    <p className="az-admin-note">Une demande reçue ne garantit ni disponibilité ni paiement. Une retenue est temporaire et ne constitue pas une confirmation ; son expiration libère la capacité. Aucun paiement en ligne n’est actif. Actualisez cette page pour voir les dernières données.</p>
+    <p className="az-admin-note">Les données affichées proviennent de Neon. Une demande n’est jamais une réservation confirmée ; une retenue de capacité ne constitue pas un paiement. Actualisez la page pour consulter les dernières modifications. Les encaissements MTN ne sont pas actifs.</p>
   </main>;
 }

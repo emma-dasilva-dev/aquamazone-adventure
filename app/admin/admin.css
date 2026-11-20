@@ -94,3 +94,89 @@
 .az-admin-hold-action:hover{background:#dcefff}
 .az-admin-hold-action:focus-visible{outline:3px solid #ffd326;outline-offset:3px}
 .az-admin-hold-expiry{display:block;min-width:170px;font-size:12px;line-height:1.6;color:#35536a}
+
+/* Admin workspace v2 — editorial hierarchy, restrained surfaces, responsive operations. */
+.az-admin-root{background:#f5f7f9;font-family:Arial,'Helvetica Neue',sans-serif;color:#102c42}
+.az-admin-shell{max-width:1460px;padding:28px clamp(18px,3.4vw,52px) 80px}
+.az-admin-top{padding:0 0 24px;gap:20px}
+.az-admin-brand{display:inline-flex;align-items:center;gap:13px;min-width:0}
+.az-admin-brand-mark{width:44px;height:44px;background:#062047;color:#ffd326;display:grid;place-items:center;font-family:Georgia,serif;font-size:27px;font-style:italic;flex:none}
+.az-admin-brand>span:last-child{display:flex;flex-direction:column;gap:4px;min-width:0}
+.az-admin-brand strong{font-size:14px;letter-spacing:.035em;font-weight:800;line-height:1.25}
+.az-admin-brand em{font-style:normal;color:#0055a4}
+.az-admin-brand small{font-size:10px;letter-spacing:.16em;color:#61788a;margin:0}
+.az-admin-top-actions{display:flex;align-items:center;gap:15px}
+.az-admin-top-actions .az-admin-website{display:inline-flex;gap:6px;align-items:center;font-size:12px;font-weight:700;color:#34546e}
+.az-admin-top form button{background:transparent;border-color:#cbd7df;border-radius:2px;min-height:42px}
+.az-admin-nav{display:flex;gap:3px;align-items:center;overflow-x:auto;padding:15px 0;border-bottom:1px solid #d9e3e9;scrollbar-width:thin}
+.az-admin-nav a{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;color:#486178;font-size:12px;font-weight:700;white-space:nowrap;min-height:43px}
+.az-admin-nav a:first-child{color:#0055a4;background:#e5f0f7}
+.az-admin-nav a:hover{color:#062047;background:#eaf1f6}
+.az-admin-head{margin:44px 0 28px;align-items:center}
+.az-admin-head h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(34px,4.4vw,58px);font-weight:400;letter-spacing:-.055em;margin:10px 0 12px}
+.az-admin-head .az-admin-overline{letter-spacing:.16em;color:#0055a4;font-size:10px;font-weight:800}
+.az-admin-head>div>p:last-child{font-size:14px;line-height:1.6;color:#65788a}
+.az-admin-status{display:inline-flex;gap:9px;align-items:center;border-radius:2px;background:#fff;padding:11px 13px;white-space:nowrap;font-size:11px}
+.az-admin-status-dot{width:7px;height:7px;background:#658a9e;border-radius:50%;display:inline-block}
+.az-admin-stats{gap:12px;margin-bottom:18px}
+.az-admin-stat{display:flex;flex-direction:column;border-radius:2px;border:1px solid #dfe7ec;padding:22px;background:#fff;min-height:151px;transition:border-color .16s}
+.az-admin-stat:hover{border-color:#0055a4}
+.az-admin-stat-top{display:flex;justify-content:space-between;align-items:center;gap:8px;color:#58758a}
+.az-admin-stat-top small{font-size:12px;color:#58758a;margin:0}
+.az-admin-stat-top svg{color:#0055a4}
+.az-admin-stat strong{display:block;font-family:Georgia,serif;font-weight:400;font-size:clamp(34px,4vw,49px);letter-spacing:-.06em;line-height:1;margin:16px 0 10px}
+.az-admin-stat-caption{font-size:11px;line-height:1.45;color:#708597}
+.az-admin-primary-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(290px,.65fr);gap:18px;align-items:stretch;margin:0 0 30px}
+.az-admin-priority{background:#fff;border:1px solid #dfe7ec}
+.az-admin-priority-heading{display:flex;align-items:end;justify-content:space-between;gap:14px;padding:22px 24px;border-bottom:1px solid #e4ebf0}
+.az-admin-priority-heading span,.az-admin-section-eyebrow{display:block;color:#0055a4;font-size:10px;font-weight:800;letter-spacing:.14em;margin-bottom:8px}
+.az-admin-priority-heading h2{font-family:Georgia,serif;font-weight:400;letter-spacing:-.035em;font-size:25px;margin:0}
+.az-admin-priority-heading>a{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:#0055a4;white-space:nowrap}
+.az-admin-priority-list>a{display:flex;align-items:center;gap:14px;padding:17px 23px;border-bottom:1px solid #ecf0f3;min-height:85px}
+.az-admin-priority-list>a:last-child{border:0}
+.az-admin-priority-list>a:hover{background:#f6fafd}
+.az-admin-priority-icon{display:grid;place-items:center;width:42px;height:42px;background:#eaf3f9;color:#0055a4;flex:none}
+.az-admin-priority-list>a>span:nth-child(2){display:grid;gap:5px;min-width:0;flex:1}
+.az-admin-priority-list strong{font-size:13px;line-height:1.35}
+.az-admin-priority-list small{font-size:11px;color:#61778a;line-height:1.55}
+.az-admin-priority-list>a>svg{color:#7f95a5;flex:none}
+.az-admin-momo-card{background:#062047;color:white;padding:clamp(22px,2.6vw,36px);display:flex;flex-direction:column}
+.az-admin-momo-overline{display:flex;gap:9px;align-items:center;color:#95c2e1;font-size:11px;font-weight:700;letter-spacing:.13em}
+.az-admin-momo-card h2{font-family:Georgia,serif;font-size:clamp(26px,3vw,38px);font-weight:400;letter-spacing:-.05em;line-height:1.16;margin:35px 0 15px}
+.az-admin-momo-card .az-admin-momo-state{font-size:12px;font-weight:700;color:#ffd326;margin:0 0 13px}
+.az-admin-momo-card>p:not(.az-admin-momo-state){color:#c1d5e6;font-size:12px;line-height:1.75;margin:0 0 27px}
+.az-admin-momo-card>a{display:flex;gap:9px;align-items:center;color:#ffd326;border-bottom:1px solid #ffd326;padding:11px 0;width:max-content;font-size:12px;font-weight:700;margin-top:auto}
+.az-admin-panel{border-radius:2px;border-color:#dfe7ec;margin:18px 0 24px;scroll-margin-top:20px}
+.az-admin-panel-header{padding:22px clamp(18px,2vw,28px)}
+.az-admin-panel-header h2{font-family:Georgia,serif;font-weight:400;font-size:25px;letter-spacing:-.035em}
+.az-admin-panel-header p{line-height:1.5;text-align:right}
+.az-admin-table{min-width:870px}
+.az-admin-table th{background:#f8fafb;color:#5f7386;font-size:10px;letter-spacing:.09em}
+.az-admin-table td{font-size:12px;line-height:1.6}
+.az-admin-table tbody tr:hover{background:#fbfdff}
+.az-admin-pill{border-radius:2px;font-weight:700}
+.az-admin-payment-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-bottom:1px solid #e2eaf0}
+.az-admin-payment-metrics>div{display:grid;gap:8px;padding:26px clamp(18px,2.8vw,36px);border-right:1px solid #e2eaf0}
+.az-admin-payment-metrics>div:last-child{border:0}
+.az-admin-payment-metrics small{font-size:12px;color:#5b7587}
+.az-admin-payment-metrics strong{font-family:Georgia,serif;font-weight:400;letter-spacing:-.05em;font-size:40px}
+.az-admin-payment-metrics span{font-size:11px;color:#687e8f;line-height:1.4}
+.az-admin-payment-state{display:flex;gap:17px;align-items:flex-start;padding:22px clamp(18px,2.8vw,36px);background:#f6fafc}
+.az-admin-payment-state svg{flex:none;color:#0055a4;margin-top:1px}
+.az-admin-payment-state p{margin:0;color:#547082;font-size:12px;line-height:1.7}
+.az-admin-payment-state strong{color:#062047;font-size:13px}
+.az-admin-capacity-grid>div,.az-admin-experience-group{border-radius:2px}
+.az-admin-intake-form input,.az-admin-intake-form select{border-radius:2px}
+.az-admin-form-footer button{border-radius:2px;min-height:47px}
+.az-admin-note{max-width:900px;margin:30px 0;font-size:12px;line-height:1.8}
+.az-admin-shell :is(a,button):focus-visible{outline:3px solid #ffd326;outline-offset:2px}
+@media(max-width:1050px){.az-admin-primary-grid{grid-template-columns:1fr 1fr}.az-admin-priority-heading{align-items:start;flex-direction:column}}
+@media(max-width:800px){.az-admin-primary-grid{grid-template-columns:1fr}.az-admin-nav{margin:0 -18px;padding-left:18px;padding-right:18px}.az-admin-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.az-admin-momo-card h2{margin-top:20px}.az-admin-payment-metrics>div{padding:20px 16px}}
+@media(max-width:560px){.az-admin-shell{padding:16px 16px 65px}.az-admin-brand-mark{width:37px;height:37px;font-size:22px}.az-admin-brand strong{font-size:11px}.az-admin-brand small{font-size:9px}.az-admin-top-actions{gap:9px}.az-admin-website{display:none!important}.az-admin-top form button{padding:10px;font-size:11px}.az-admin-nav{margin:0 -16px;padding-left:16px;padding-right:16px}.az-admin-head{margin:30px 0 20px}.az-admin-head h1{font-size:39px}.az-admin-head>div>p:last-child{font-size:12px}.az-admin-status{margin-top:15px}.az-admin-stat{padding:17px 14px;min-height:137px}.az-admin-stat strong{font-size:38px}.az-admin-stat-top small{font-size:11px}.az-admin-stat-caption{font-size:10px}.az-admin-primary-grid{gap:14px}.az-admin-priority-heading{padding:21px 17px}.az-admin-priority-list>a{padding:15px 14px;gap:11px}.az-admin-priority-icon{width:37px;height:37px}.az-admin-momo-card{padding:24px}.az-admin-panel-header{align-items:start;flex-direction:column;gap:8px}.az-admin-panel-header p{text-align:left}.az-admin-payment-metrics{grid-template-columns:1fr 1fr}.az-admin-payment-metrics>div{padding:16px}.az-admin-payment-metrics>div:last-child{grid-column:1/-1;border-top:1px solid #e2eaf0}.az-admin-payment-metrics strong{font-size:34px}.az-admin-payment-state{padding:18px;gap:11px}}
+
+.az-admin-payment-ledger{border-top:1px solid #e4ebf0}
+.az-admin-payment-ledger-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:22px 28px}
+.az-admin-payment-ledger-heading h3{font-size:14px;margin:0;color:#062047}
+.az-admin-payment-ledger-heading span{font-size:11px;color:#678092}
+.az-admin-payment-ledger-empty{margin:0;padding:0 28px 28px;font-size:12px;line-height:1.7;color:#698193}
+@media(max-width:560px){.az-admin-payment-ledger-heading{flex-direction:column;align-items:flex-start;padding:18px}.az-admin-payment-ledger-empty{padding:0 18px 24px}}
