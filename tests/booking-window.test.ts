@@ -83,15 +83,15 @@ test('Pedal-powered boat accepts 2 to 4 guests and rejects 1 or 5',()=>{
   }
 });
 
-test('Mangrove discovery uses the approved per-person price plus mandatory crossing',()=>{
+test('Combined lake and mangrove visit uses adult and child tariffs plus mandatory crossing',()=>{
   const result=validateReservation({
-    experience:'mangrove',date:'2026-11-21',time:'12:00',adults:2,children:2
+    experience:'lake',date:'2026-11-21',time:'12:00',adults:2,children:2
   },benin('2026-11-16','09:00'));
   assert.equal(result.ok,true);
   if(result.ok){
     assert.equal(result.quote.crossingIncluded,false);
     assert.equal(result.quote.crossingAmount,4000);
-    assert.equal(result.quote.total,44000);
+    assert.equal(result.quote.total,19000);
   }
 });
 
@@ -171,12 +171,12 @@ test('Multi-activity estimate counts mandatory return crossing only once',()=>{
 
 test('Multi-activity quote combines different prices without duplicating the crossing',()=>{
   const result=validateActivitySelection({
-    activities:['pedalo','mangrove'],date:'2026-11-21',time:'12:00',
+    activities:['pedalo','lake'],date:'2026-11-21',time:'12:00',
     adults:1,children:1
   },benin('2026-11-16','09:00'));
   assert.equal(result.ok,true);
   if(result.ok){
-    assert.equal(result.quote.total,28000); // 6,000 pedalo + 20,000 mangrove + 2,000 crossing
+    assert.equal(result.quote.total,15500); // 6,000 pedalo + 7,500 combined visit + 2,000 crossing
     assert.equal(result.quote.crossingAmount,2000);
   }
 });
@@ -187,7 +187,7 @@ test('Approved-price lake tour combines with pedalo without duplicating crossing
   },benin('2026-11-16','09:00'));
   assert.equal(result.ok,true);
   if(result.ok){
-    assert.equal(result.quote.total,19000); // 6,000 pedalo + 10,000 lake + 3,000 crossing
+    assert.equal(result.quote.total,19000); // 6,000 pedalo + 10,000 combined visit + 3,000 crossing
     assert.equal(result.quote.status,'estimate');
   }
 });

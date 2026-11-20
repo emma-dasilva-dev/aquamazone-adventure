@@ -14,8 +14,7 @@ const options:Option[]=[
  {id:'paddle',fr:'Paddle / Stand Up',en:'Stand-up paddle',kind:'activity',duration:'30 min'},
  {id:'waterball',fr:'Bulle gonflable / Water Ball',en:'Inflatable Water Ball',kind:'activity',duration:'20 min'},
  {id:'pedalboat',fr:'Bateau à pédales (2 à 4 pers.)',en:'Pedal-powered boat (2–4 people)',kind:'activity',duration:'30 min'},
- {id:'lake',fr:'Balade sur le lac',en:'Lake outing',kind:'activity',duration:'30–45 min'},
- {id:'mangrove',fr:'Découverte des mangroves',en:'Mangrove discovery',kind:'activity'},
+ {id:'lake',fr:'Balade sur le lac / Visite des mangroves',en:'Lake tour / Mangrove visit',kind:'activity',duration:'30 min'},
  {id:'glele',fr:'GLÈLÈ — Découverte',en:'GLÈLÈ — Discovery',kind:'package'},
  {id:'guezo',fr:'GUÉZO — Couple',en:'GUÉZO — Couple',kind:'package'},
  {id:'toffa',fr:'TOFFA — Famille',en:'TOFFA — Family',kind:'package'},
@@ -33,8 +32,7 @@ function estimate(id:string,adults:number,children:number){
  if(id==='guezo')return adults===2&&children===0?{total:12000,crossingIncluded:true}:null;
  if(id==='behanzin')return adults===4&&children===0?{total:36000,crossingIncluded:true}:null;
  if(id==='toffa')return adults===2&&children===2?{total:18000,crossingIncluded:true}:null;
- if(id==='mangrove')return {total:count*10000+adults*1500+children*500,crossingIncluded:false};
- if(id==='lake')return {total:count*5000+adults*1500+children*500,crossingIncluded:false};
+ if(id==='lake')return {total:adults*5000+children*2500+adults*1500+children*500,crossingIncluded:false};
 
  if(id==='pedalboat')return count>=2&&count<=4?{total:count*(count===2?5000:3000)+adults*1500+children*500,crossingIncluded:false}:null;
  return {total:count*3000+adults*1500+children*500,crossingIncluded:false};
@@ -256,8 +254,7 @@ export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{act
              const picked=activityIds.includes(option.id);
              const price=option.id==='pedalboat'
                ?(lang==='fr'?'2 pers. : 10 000 · 3–4 : 3 000/pers.':'2 guests: 10,000 · 3–4: 3,000 each')
-               :option.id==='lake'?'5 000 FCFA / pers.'
-               :option.id==='mangrove'?'10 000 FCFA / pers.'
+               :option.id==='lake'?(lang==='fr'?'Adulte : 5 000 · Enfant < 12 ans : 2 500':'Adult: 5,000 · Child under 12: 2,500')
                :'3 000 FCFA / pers.';
              return <button type="button" key={option.id}
                className={'az-activity-pick'+(picked?' is-picked':'')}

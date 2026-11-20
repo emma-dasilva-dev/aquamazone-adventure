@@ -155,9 +155,8 @@ export function validateReservation(input: unknown, now: Date = new Date(), opti
   else if (experience==='toffa') total = 18000;
   else if (experience==='pedalboat') total = count*(count===2?5000:3000) + crossingAmount;
   else if (['pedalo','canoe','paddle','waterball'].includes(experience)) total = count*3000 + crossingAmount;
-  else if (experience==='mangrove') total = count*10000+crossingAmount;
-  else if (experience==='lake') total = count*5000+crossingAmount;
-  // Lake and mangrove experiences use the approved per-person tariffs.
+  else if (experience==='lake' || experience==='mangrove') total = adults*5000+children*2500+crossingAmount;
+  // Legacy 'mangrove' requests share the same combined lake/mangrove visit tariff.
   const reservation: ReservationRequest = {experience,date:obj.date,time:obj.time,adults,children,...(choice?{choice}:{}),...(choices?{choices}:{})};
   return {ok:true,reservation,quote:{
     total,currency:'XOF',crossingIncluded,crossingAmount,
@@ -178,7 +177,7 @@ export function validateActivitySelection(
   if(!input||typeof input!=='object'||Array.isArray(input))
     return error('invalid_request','Invalid activity enquiry.');
   const data=input as Record<string,unknown>;
-  const allowed:readonly string[]=['pedalo','canoe','paddle','waterball','pedalboat','lake','mangrove'];
+  const allowed:readonly string[]=['pedalo','canoe','paddle','waterball','pedalboat','lake'];
   if(!Array.isArray(data.activities)||data.activities.length===0||
      data.activities.length>allowed.length||
      !data.activities.every(x=>typeof x==='string'&&allowed.includes(x))||

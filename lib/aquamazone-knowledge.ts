@@ -35,8 +35,7 @@ export const businessKnowledge = {
     { name:'Stand-up paddle', duration:'30 min', rate:'3 000 FCFA/personne' },
     { name:'Bateau à pédales', duration:'30 min', rate:'5 000 FCFA/personne pour 2 participants ; à partir de 3 personnes, 3 000 FCFA/personne', capacity:'2 bateaux, maximum 4 passagers chacun' },
     { name:'Bulle gonflable / Water Ball', duration:'20 min', rate:'3 000 FCFA/personne' },
-    { name:'Balade sur le lac', duration:'30 min', rate:'5 000 FCFA/personne' },
-    { name:'Découverte des mangroves', duration:'1 h', rate:'10 000 FCFA/personne' },
+    { name:'Balade sur le lac / Visite des mangroves', duration:'30 min', rate:'5 000 FCFA/adulte ; 2 500 FCFA/enfant de moins de 12 ans', note:'Une seule expérience combinée, et non deux activités distinctes.' },
     { name:'Jet-ski', status:'INDISPONIBLE — maintenance, pas de réservation' }
   ],
   packages: [
