@@ -1069,3 +1069,15 @@ img,video,iframe{max-width:100%}
 .az-wizard-package-request>label{display:grid;gap:8px;font-size:13px;font-weight:700;margin:18px 0 8px}
 .az-wizard-package-request select{min-height:48px;width:100%;border:1px solid #b5cbda;background:white;color:#062047;padding:11px;font-size:14px}
 .az-wizard-quote-button{margin-top:18px;width:100%;justify-content:center;min-height:50px;display:flex;align-items:center;gap:9px;cursor:pointer}
+
+/* Transparent return-crossing calculation, updated as guest counts change. */
+.az-wizard-crossing{margin:22px 0 16px;padding:18px 20px;border:1px solid #c7dae6;background:#f5fafc;color:#062047}
+.az-wizard-crossing-heading{display:flex;flex-direction:column;gap:5px;padding-bottom:12px;border-bottom:1px solid #d7e5ed}
+.az-wizard-crossing-heading strong{font-size:14px}
+.az-wizard-crossing-heading small{font-size:12px;color:#526e81;line-height:1.5}
+.az-wizard-crossing-line,.az-wizard-crossing-total{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 0;font-size:12px}
+.az-wizard-crossing-line span{color:#4f697d}
+.az-wizard-crossing-line strong,.az-wizard-crossing-total strong{font-variant-numeric:tabular-nums;white-space:nowrap}
+.az-wizard-crossing-total{border-top:1px solid #d7e5ed;font-weight:800;font-size:14px;padding-top:13px}
+.az-wizard-crossing p{font-size:11px;line-height:1.65;color:#46687c;margin:8px 0 0}
+@media(max-width:480px){.az-wizard-crossing{padding:15px 13px}.az-wizard-crossing-line,.az-wizard-crossing-total{gap:8px;font-size:11px}.az-wizard-crossing-heading small{font-size:11px}}

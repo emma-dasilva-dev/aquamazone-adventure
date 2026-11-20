@@ -24,6 +24,19 @@ const packageData:{id:PackageId;fr:string;en:string;infoFr:string;infoEn:string;
  {id:'behanzin',fr:'BÉHANZIN · Groupe',en:'BÉHANZIN · Group',infoFr:'Pour 4 adultes · traversée incluse',infoEn:'For 4 adults · crossing included',image:'/images/gallery/gallery-14.webp'}
 ];
 const steps={fr:['Votre groupe','Votre expérience','Date et arrivée','Vérifier et envoyer'],en:['Your group','Your experience','Date and arrival','Review and enquire']};
+function CrossingBreakdown({adults,children,fr,included=false}:{adults:number;children:number;fr:boolean;included?:boolean}){
+ const adultAmount=adults*1500,childAmount=children*500;
+ return <div className="az-wizard-crossing" aria-live="polite" aria-label={fr?'Tarif de la traversée aller-retour':'Return crossing pricing'}>
+  <div className="az-wizard-crossing-heading">
+   <strong>{fr?'Traversée en pirogue · Aller-retour':'Pirogue crossing · Return trip'}</strong>
+   <small>{fr?'Adulte : 1 500 FCFA · Enfant de moins de 12 ans : 500 FCFA':'Adult: 1,500 FCFA · Child under 12: 500 FCFA'}</small>
+  </div>
+  <div className="az-wizard-crossing-line"><span>{fr?'Adultes':'Adults'} · {adults} × 1 500 FCFA</span><strong>{money(adultAmount)}</strong></div>
+  <div className="az-wizard-crossing-line"><span>{fr?'Enfants':'Children'} · {children} × 500 FCFA</span><strong>{money(childAmount)}</strong></div>
+  <div className="az-wizard-crossing-total"><span>{fr?'Total traversée':'Crossing total'}</span><strong>{money(adultAmount+childAmount)}</strong></div>
+  <p>{included?(fr?'Ce montant est déjà compris dans les forfaits qui incluent la traversée : il ne sera pas ajouté une deuxième fois. Le forfait choisi et son tarif seront confirmés par notre équipe.':'This amount is already covered by packages that include the crossing and will not be charged twice. Our team will confirm the chosen package and its price.'):(fr?'Ce montant sera ajouté une seule fois aux activités à la carte. Si vous choisissez ensuite un forfait incluant la traversée, elle ne sera pas facturée en supplément.':'This amount is added only once to à-la-carte activities. If you choose a package that includes the crossing, it will not be charged again.')}</p>
+ </div>;
+}
 export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{activity:string;version:number}|null}){
  const fr=lang==='fr';
  const [step,setStep]=useState(0);
@@ -121,6 +134,7 @@ export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{act
       <div className="az-wizard-counter"><div><strong>{fr?'Adultes':'Adults'}</strong><small>{fr?'12 ans et plus':'Age 12 and over'}</small></div><div><button type="button" disabled={adults<=1} onClick={()=>changeGuests('adults',-1)} aria-label={fr?'Retirer un adulte':'Remove an adult'}><Minus size={17}/></button><strong>{adults}</strong><button type="button" disabled={totalGuests>=20} onClick={()=>changeGuests('adults',1)} aria-label={fr?'Ajouter un adulte':'Add an adult'}><Plus size={17}/></button></div></div>
       <div className="az-wizard-counter"><div><strong>{fr?'Enfants':'Children'}</strong><small>{fr?'Moins de 12 ans':'Under 12 years'}</small></div><div><button type="button" disabled={!children} onClick={()=>changeGuests('children',-1)} aria-label={fr?'Retirer un enfant':'Remove a child'}><Minus size={17}/></button><strong>{children}</strong><button type="button" disabled={totalGuests>=20} onClick={()=>changeGuests('children',1)} aria-label={fr?'Ajouter un enfant':'Add a child'}><Plus size={17}/></button></div></div>
       <p className="az-wizard-note">{totalGuests} {fr?'participant(s). Les enfants doivent être accompagnés.':'guest(s). Children must be accompanied by an adult.'}</p>
+      <CrossingBreakdown adults={adults} children={children} fr={fr}/>
      </>}
      {step===1&&<>
       <h3>{fr?'Choisissez votre expérience':'Choose your experience'}</h3>
@@ -145,6 +159,7 @@ export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{act
          </label>
          <div className="az-wizard-counter"><div><strong>{fr?'Adultes':'Adults'}</strong><small>{fr?'12 ans et plus':'Age 12 and over'}</small></div><div><button type="button" disabled={adults<=1} onClick={()=>changeGuests('adults',-1)} aria-label={fr?'Retirer un adulte':'Remove an adult'}><Minus size={17}/></button><strong>{adults}</strong><button type="button" disabled={totalGuests>=20} onClick={()=>changeGuests('adults',1)} aria-label={fr?'Ajouter un adulte':'Add an adult'}><Plus size={17}/></button></div></div>
          <div className="az-wizard-counter"><div><strong>{fr?'Enfants':'Children'}</strong><small>{fr?'Moins de 12 ans':'Under 12 years'}</small></div><div><button type="button" disabled={children===0} onClick={()=>changeGuests('children',-1)} aria-label={fr?'Retirer un enfant':'Remove a child'}><Minus size={17}/></button><strong>{children}</strong><button type="button" disabled={totalGuests>=20} onClick={()=>changeGuests('children',1)} aria-label={fr?'Ajouter un enfant':'Add a child'}><Plus size={17}/></button></div></div>
+         <CrossingBreakdown adults={adults} children={children} fr={fr} included/>
          <p className="az-wizard-note">{fr?'Le tarif dépend du forfait et des participants. La sélection de l’activité exprime une préférence, sans modifier automatiquement les activités incluses. Aucun paiement ni réservation confirmée.':'The price depends on the package and guests. Your activity selection is a preference, not an automatic change to the package inclusions. No payment or confirmed booking.'}</p>
          <button type="button" className="az-wizard-next az-wizard-quote-button" onClick={requestPackage}><MessageCircle size={17}/>{fr?'Nous contacter pour le tarif total':'Ask us for the total price'} <ArrowRight size={17}/></button>
         </div>
