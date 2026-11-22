@@ -236,7 +236,7 @@ export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{act
       <h3>{tr("When would you like to visit?","Quand souhaitez-vous venir ?")}</h3>
       <p className="az-wizard-muted">{tr("Online enquiries cover the next weekend. Public holidays and weekday groups are arranged via WhatsApp.","Les demandes en ligne concernent le prochain week-end. Les jours fériés et sorties en semaine sont organisés via WhatsApp.")}</p>
       <div className="az-wizard-days">
-       {schedule?[schedule.saturday,schedule.sunday].map((day,i)=>{const ok=!!now&&checkBookingWindow(day,now).ok;return <button key={day} type="button" disabled={!ok} className={date===day?'chosen':''} onClick={()=>setDate(day)} aria-pressed={date===day}><strong>{i===0?(fr?'Samedi':'Saturday'):(fr?'Dimanche':'Sunday')}</strong><span>{day}</span><small>{ok?(fr?'Demande possible':'Enquiries open'):(fr?'Clôturé':'Closed')}</small></button>}):<p>{tr("Loading calendar…","Chargement du calendrier…")}</p>}
+       {schedule?[schedule.saturday,schedule.sunday].map((day,i)=>{const ok=!!now&&checkBookingWindow(day,now).ok;return <button key={day} type="button" disabled={!ok} className={date===day?'chosen':''} onClick={()=>setDate(day)} aria-pressed={date===day}><strong>{i===0?tr('Saturday','Samedi'):tr('Sunday','Dimanche')}</strong><span>{day}</span><small>{ok?tr('Enquiries open','Demande possible'):tr('Closed','Clôturé')}</small></button>}):<p>{tr("Loading calendar…","Chargement du calendrier…")}</p>}
       </div>
       <label className="az-wizard-date-label">{tr("Preferred arrival time","Heure d’arrivée souhaitée")}<select value={time} onChange={e=>setTime(e.target.value)}>{RESERVATION_SLOTS.map(slot=><option key={slot} value={slot}>{slot}</option>)}</select></label>
       <p className="az-wizard-note">{tr("Your arrival time is not a guaranteed activity slot. Enquiries close at 11:59pm the preceding day, Benin time.","L’heure d’arrivée n’est pas un créneau d’activité garanti. Les demandes ferment à 23h59 la veille, heure du Bénin.")}</p>
@@ -249,7 +249,7 @@ export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{act
        <div><span>{tr("Date · arrival","Date · arrivée")}</span><strong>{date} · {time}</strong></div>
        {path==='package'&&<div><span>{tr("Package","Forfait")} {activePackage?.toUpperCase()}</span><strong>{money(packagePrice)}</strong></div>}
        {effectiveLines.map(line=><div key={line.id}><span>{tr(activityData[line.id].en,activityData[line.id].fr)} ({line.adults}+{line.children})</span><strong>{money(activityAmount(line)??0)}</strong></div>)}
-       <div><span>{tr("Return crossing","Traversée aller-retour")}</span><strong>{path==='package'?(fr?'Incluse':'Included'):money(adults*1500+children*500)}</strong></div>
+       <div><span>{tr("Return crossing","Traversée aller-retour")}</span><strong>{path==='package'?tr('Included','Incluse'):money(adults*1500+children*500)}</strong></div>
        <div className="az-wizard-total"><strong>{tr("Estimated total","Total estimé")}</strong><strong>{money(estimated)}</strong></div>
       </div>
       <p className="az-wizard-note">{tr("Estimate → WhatsApp enquiry → Team confirmation. No booking or payment is confirmed here.","Estimation → Demande WhatsApp → Confirmation par l’équipe. Aucune réservation ni paiement ne sont confirmés ici.")}</p>
@@ -259,7 +259,7 @@ export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{act
      </>}
      <div className="az-wizard-actions">
       <button type="button" className="az-wizard-back" disabled={step===0||busy} onClick={()=>{setError('');setStep(s=>Math.max(0,s-1));}}><ArrowLeft size={17}/>{tr("Back","Retour")}</button>
-      {step<3?<button type="button" className="az-wizard-next" disabled={step===1&&(path!=='custom'||hasInvalidLine||effectiveLines.length===0)||step===2&&!dateValid} onClick={()=>setStep(s=>Math.min(3,s+1))}>{tr("Continue","Continuer")} <ArrowRight size={17}/></button>:<button type="button" className="az-wizard-next" disabled={!contact.ok||!selected||busy} onClick={send}><MessageCircle size={17}/>{busy?(fr?'Vérification…':'Validating…'):(fr?'Continuer sur WhatsApp':'Continue on WhatsApp')}</button>}
+      {step<3?<button type="button" className="az-wizard-next" disabled={step===1&&(path!=='custom'||hasInvalidLine||effectiveLines.length===0)||step===2&&!dateValid} onClick={()=>setStep(s=>Math.min(3,s+1))}>{tr("Continue","Continuer")} <ArrowRight size={17}/></button>:<button type="button" className="az-wizard-next" disabled={!contact.ok||!selected||busy} onClick={send}><MessageCircle size={17}/>{busy?tr('Validating…','Vérification…'):tr('Continue on WhatsApp','Continuer sur WhatsApp')}</button>}
      </div>
     </div>
     {step>0&&step<3&&path==='custom'&&<div className="az-wizard-summary"><span>{tr("Current estimate","Estimation actuelle")}</span><strong>{money(estimated)}</strong><small>{tr("Crossing included in this total","Traversée comprise dans ce total")}</small></div>}
