@@ -442,5 +442,5 @@ export default function Home(){
     <p>{lang!=='en'?'Photographie prise à Aquamazone':'Photographed at Aquamazone'}</p>
   </div>
  </div>}
- <AquamazoneAssistant lang={contentLang}/>
+ <AquamazoneAssistant lang={lang}/>
  </>}
