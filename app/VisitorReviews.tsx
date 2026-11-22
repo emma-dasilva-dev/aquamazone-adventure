@@ -91,7 +91,7 @@ export default function VisitorReviews({lang}:{lang:Lang}){
         <label className="visitor-reviews-consent"><input type="checkbox" checked={consent} onChange={e=>setConsent(e.target.checked)} required/><span>{fr?'J’accepte la publication de mon nom affiché et de mon avis, après validation par l’équipe.':'I agree to publication of my display name and review after team approval.'}</span></label>
         {error&&<p className="visitor-reviews-error" role="alert">{error}</p>}
         <button className="visitor-reviews-submit" disabled={sending||!enabled||!consent} type="submit">{sending?(fr?'Envoi en cours…':'Submitting…'):(fr?'Envoyer mon avis':'Submit my review')}<ArrowRight size={18}/></button>
-       </form>      </div>}
+       </form>}
     </div>
    </div>
   </div>
