@@ -1252,3 +1252,13 @@ img,video,iframe{max-width:100%}
 .activity-see-all:focus-visible{outline:3px solid #ffd326;outline-offset:5px}
 @media(max-width:600px){.activity-featured-cta{align-items:start;flex-direction:column;gap:18px;padding:26px 0 30px}.activity-featured-cta p{font-size:26px}.activity-see-all{min-height:35px}}
 @media(prefers-reduced-motion:reduce){.activity-see-all{transition:none}}
+
+/* Practical information at the very top of the homepage */
+.az-top-info{position:relative;z-index:41;display:flex;align-items:center;justify-content:space-between;gap:12px 24px;min-height:38px;padding:9px clamp(22px,5vw,76px);background:#062047;color:#f0f5f8;font-family:'Sora',sans-serif;font-size:10px;font-weight:500;letter-spacing:.005em;line-height:1.4}
+.az-top-info span{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.az-top-info svg{flex:none;color:#ffd326}
+.az-top-info span:last-child{font-weight:700}
+.site-header{top:38px}
+@media(max-width:950px){.az-top-info{gap:8px 16px;font-size:9px;padding:8px 20px}.az-top-info span{white-space:normal}.site-header{top:40px}}
+@media(max-width:680px){.az-top-info{display:grid;grid-template-columns:1fr auto;gap:5px 10px;padding:9px 18px;font-size:9px}.az-top-info span:nth-child(2){grid-column:1/-1;grid-row:2}.az-top-info span:last-child{grid-column:2;grid-row:1;white-space:nowrap}.site-header{top:58px}}
+@media(max-width:390px){.az-top-info{grid-template-columns:1fr;gap:5px}.az-top-info span:nth-child(2),.az-top-info span:last-child{grid-column:1;grid-row:auto}.site-header{top:79px}}
