@@ -5,7 +5,7 @@ import AquamazoneAssistant from './AquamazoneAssistant';
 import ReservationPlanner from './ReservationPlanner';
 import LocationRouteVideo from './LocationRouteVideo';
 import VisitorReviews from './VisitorReviews';
-import {ArrowDown,ArrowUpRight,ArrowRight,Menu,X,Plus,Minus,MapPin,Clock,MessageCircle,Waves,ZoomIn,Instagram,Youtube} from 'lucide-react';
+import {ArrowDown,ArrowUpRight,ArrowRight,Menu,X,Plus,Minus,MapPin,Clock,UtensilsCrossed,MessageCircle,Waves,ZoomIn,Instagram,Youtube} from 'lucide-react';
 
 type Lang='fr'|'en';
 function TikTokIcon({size=17}:{size?:number}){
@@ -96,7 +96,7 @@ export default function Home(){
  <div className="az-hero-info" aria-label={lang==='fr'?'Informations pratiques':'Visitor information'}>
   <span><MapPin size={13} aria-hidden="true"/>{lang==='fr'?'Adounko Village, Route des Pêches, Cotonou':'Adounko Village, Route des Pêches, Cotonou'}</span>
   <span><Clock size={13} aria-hidden="true"/>{lang==='fr'?'Ouverts Sam / Dim et jours fériés, 11h – 18h':'Open Sat / Sun & public holidays, 11am – 6pm'}</span>
-  <span>{lang==='fr'?'Bar & Restaurant':'Bar & Restaurant'}</span>
+  <span><UtensilsCrossed size={14} aria-hidden="true"/>{lang==='fr'?'Bar & Restaurant':'Bar & Restaurant'}</span>
  </div>
  <span className="image-disclosure">{lang==='fr'?'Photographie prise à Aquamazone':'Photographed at Aquamazone'}</span>
  </section>
