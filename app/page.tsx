@@ -391,7 +391,7 @@ export default function Home(){
   </div>
  </div>
 </section>
- <ReservationPlanner lang={contentLang} intent={reservationIntent}/>
+ <ReservationPlanner lang={lang} intent={reservationIntent}/>
  <VisitorReviews lang={contentLang}/>
  </main>
  <footer className="footer footer-v15" aria-label={lang!=='en'?'Pied de page':'Footer'}>
