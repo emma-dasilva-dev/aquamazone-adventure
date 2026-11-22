@@ -1,7 +1,7 @@
 'use client';
 import {useEffect,useState} from 'react';
 import {ArrowLeft,ArrowUpRight,Clock,MapPin,Play} from 'lucide-react';
-type Lang='fr'|'en';
+type Lang='fr'|'en'|'es'|'hi'|'fon';
 const items=[
  {id:'pedalo-simple',fr:'Pédalo simple',en:'Single pedalo',duration:'30 min',price:'3 000 FCFA / personne',note:'1 personne par pédalo',noteEn:'1 person per craft',image:'/images/activities/pedalo-simple.webp'},
  {id:'pedalo-double',fr:'Pédalo double',en:'Double pedalo',duration:'30 min',price:'3 000 FCFA / personne',note:'2 personnes sur le même pédalo',noteEn:'2 people on the same craft',image:'/images/activities/pedalo-double.webp'},
@@ -17,6 +17,8 @@ const items=[
 export default function ActivitiesPage(){
  const [lang,setLang]=useState<Lang>('fr');
  const fr=lang==='fr';
+ useEffect(()=>{try{const saved=localStorage.getItem('aquamazone-language');if(saved&&['fr','en','es','hi','fon'].includes(saved))setLang(saved as Lang)}catch{}},[]);
+ useEffect(()=>{try{localStorage.setItem('aquamazone-language',lang)}catch{}},[lang]);
  useEffect(()=>{document.documentElement.lang=lang;return()=>{document.documentElement.lang='fr'}},[lang]);
  return <main className="az-catalog">
   <header className="az-catalog-header">
@@ -27,7 +29,7 @@ export default function ActivitiesPage(){
   <section className="az-catalog-hero">
    <p className="az-catalog-kicker">02 / {fr?'NOS ACTIVITÉS':'OUR ACTIVITIES'}</p>
    <h1>{fr?<>Toutes les expériences <em>sur l’eau.</em></>:<>All experiences <em>on the water.</em></>}</h1>
-   <div className="az-catalog-intro"><p>{fr?'Découvrez les activités proposées à Aquamazone Adventure, leurs tarifs et leurs formats.':'Explore Aquamazone Adventure activities, prices and formats.'}</p><span><MapPin size={15}/> Adounko · Bénin <Clock size={15}/> 11h–18h</span></div>
+   <div className="az-catalog-intro"><p>{fr?'Découvrez les activités proposées à Aquamazone Adventure, leurs tarifs et leurs formats.':'Explore Aquamazone Adventure activities, prices and formats.'}</p><span><MapPin size={15}/> Adounko · Bénin <Clock size={15}/> {fr?'11h–18h':lang==='es'?'De 11 a. m. a 6 p. m.':lang==='hi'?'सुबह 11 बजे से शाम 6 बजे तक':'11am to 6pm'}</span></div>
   </section>
   <section className="az-catalog-list" aria-label={fr?'Catalogue des activités':'Activities catalogue'}>
    {items.map((item,i)=><article className="az-catalog-item" key={item.id}>
