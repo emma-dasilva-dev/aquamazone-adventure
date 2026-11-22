@@ -1210,25 +1210,6 @@ img,video,iframe{max-width:100%}
 .az-catalog-footer{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:55px clamp(20px,5vw,65px) 80px;font-family:Georgia,'Times New Roman',serif;font-size:24px}
 .az-catalog-footer a{display:inline-flex;align-items:center;gap:8px;background:#ffd326;color:#062047;text-decoration:none;padding:14px 18px;font-family:Arial,sans-serif;font-size:12px;font-weight:800}
 
-/* Desktop-only restaurant photo composition. Mobile retains original single photo. */
-.restaurant-v9-desktop-photos{display:none}
-@media(min-width:901px){
- .restaurant-v9-visual{position:relative;min-height:730px}
- .restaurant-v9-visual>.restaurant-v9-photo{display:none}
- .restaurant-v9-desktop-photos{display:block;position:sticky;top:95px;height:min(68vh,620px);min-height:490px;margin:18px 15px 20px 0;isolation:isolate}
- .restaurant-v9-desktop-photo{position:absolute;background-position:center;background-size:cover;background-repeat:no-repeat;box-shadow:0 15px 40px rgba(6,32,71,.13);border:5px solid #faf9f5;will-change:transform}
- .restaurant-v9-desktop-photo-one{inset:2% 12% 18% 1%;z-index:1;background-image:url('/images/restaurant/poisson-braise.webp')}
- .restaurant-v9-desktop-photo-two{inset:28% 0 10% 30%;z-index:2;background-image:url('/images/gallery/gallery-04.webp');transform:rotate(3deg)}
- .restaurant-v9-desktop-photo-three{inset:49% 34% 0 5%;z-index:3;background-image:url('/images/gallery/gallery-19.webp');transform:rotate(-3deg)}
- @supports (animation-timeline:view()){
-  .restaurant-v9-desktop-photo-two{animation:az-rest-photo-two linear both;animation-timeline:view(block);animation-range:entry 0% exit 100%}
-  .restaurant-v9-desktop-photo-three{animation:az-rest-photo-three linear both;animation-timeline:view(block);animation-range:entry 0% exit 100%}
- }
-}
-@keyframes az-rest-photo-two{from{transform:translateY(24px) rotate(4deg)}to{transform:translateY(-14px) rotate(1deg)}}
-@keyframes az-rest-photo-three{from{transform:translateY(45px) rotate(-5deg)}to{transform:translateY(-15px) rotate(-1deg)}}
-@media(prefers-reduced-motion:reduce){.restaurant-v9-desktop-photo{animation:none!important;will-change:auto}}
-
 /* Rating-first visitor experience */
 .visitor-rating-experience{opacity:1}
 .visitor-rating-experience.is-visible .visitor-rating-invite{animation:az-rating-reveal .5s ease-out both}
