@@ -132,7 +132,7 @@ export default function Home(){
    <div className="activity-list-copy">
      <h3>{lang!=='en'?a.fr:a.en}</h3>
      <div className="activity-list-facts">{a.duration&&<span>{a.duration}</span>}{a.duration&&a.price&&<span aria-hidden="true">·</span>}{a.price&&<strong>{a.price}</strong>}</div>
-     {a.note&&<p className={a.unavailable?'activity-list-alert':'activity-list-note'}>{lang!=='en'?a.note:(a.noteEn??a.note)}</p>}
+     {a.note&&<p className={a.unavailable?'activity-list-alert':'activity-list-note'}>{lang==='fr'?a.note:tx(a.noteEn??a.note,a.note)}</p>}
      {!a.unavailable&&<a className="activity-list-link" href={a.id==='rental'?bookingWhatsApp:'#reservation'}
        target={a.id==='rental'?'_blank':undefined} rel={a.id==='rental'?'noopener noreferrer':undefined}
        onClick={()=>{if(a.id!=='rental'){
@@ -156,7 +156,7 @@ export default function Home(){
  <section id="packages" className="packages packages-v4" aria-labelledby="packages-title">
  <div className="section-shell">
    <div className="packages-v4-heading">
-     <div><p className="kicker">{tx("03 / OUR PACKAGES","03 / NOS FORFAITS")}</p><h2 id="packages-title">{lang!=='en'?<>L’expérience <em>à votre façon.</em></>:<>Your kind of <em>adventure.</em></>}</h2></div>
+     <div><p className="kicker">{tx("03 / OUR PACKAGES","03 / NOS FORFAITS")}</p><h2 id="packages-title">{lang==='es'?<>La experiencia <em>a tu manera.</em></>:lang==='hi'?<>आपका अनुभव <em>आपके अंदाज़ में।</em></>:lang==='en'?<>Your kind of <em>adventure.</em></>:<>L’expérience <em>à votre façon.</em></>}</h2></div>
      <p>{tx("Solo, as a couple, with family or friends: find the right way to enjoy the lake.","Seul, à deux, en famille ou entre amis : choisissez votre façon de profiter du lac.")}</p>
    </div>
    <div className="packages-v4-featured packages-v6-featured">
@@ -250,7 +250,7 @@ export default function Home(){
   <div className="restaurant-v9-shell">
     <div className="restaurant-v9-intro">
       <p className="kicker"><span aria-hidden="true">04 / </span>{tx("RESTAURANT & BAR","RESTAURANT & BAR")}</p>
-      <h2 id="restaurant-title">{lang!=='en'?<>Une pause gourmande <em>au bord de l’eau.</em></>:<>A delicious break <em>by the water.</em></>}</h2>
+      <h2 id="restaurant-title">{lang==='es'?<>Una pausa deliciosa <em>junto al agua.</em></>:lang==='hi'?<>स्वादिष्ट भोजन <em>पानी के किनारे।</em></>:lang==='en'?<>A delicious break <em>by the water.</em></>:<>Une pause gourmande <em>au bord de l’eau.</em></>}</h2>
       <p>{tx("After your activities, take time to enjoy a good meal in a peaceful waterfront setting.","Après les activités, prenez le temps de savourer un bon repas dans un cadre paisible au bord de l’eau.")}</p>
     </div>
     <div className="restaurant-v9-grid">
@@ -263,7 +263,7 @@ export default function Home(){
         <div className="restaurant-v9-menu-group">
           <h3>{tx("From the grill","Nos grillades")}</h3>
           <ul className="restaurant-v9-fish-list">
-            <li><span>{lang!=='en'?<>Poissons (selon arrivages)<small>Bar, carpe braisés</small></>:<>Fish (subject to availability)<small>Grilled sea bass, carp</small></>}</span><strong>6 500 – 9 000 FCFA</strong></li>
+            <li><span>{lang==='es'?<>Pescado (según disponibilidad)<small>Lubina y carpa a la parrilla</small></>:lang==='hi'?<>मछली (उपलब्धता के अनुसार)<small>ग्रिल्ड सी बास और कार्प</small></>:lang==='en'?<>Fish (subject to availability)<small>Grilled sea bass, carp</small></>:<>Poissons (selon arrivages)<small>Bar, carpe braisés</small></>}</span><strong>6 500 – 9 000 FCFA</strong></li>
             <li><span>{tx("Chicken skewers","Brochettes de poulet")}</span><strong>6 000 FCFA</strong></li>
           </ul>
           <p className="restaurant-v9-included">{lang==='fr'
@@ -308,7 +308,7 @@ export default function Home(){
   <div className="location-v11-shell">
     <div className="location-v11-heading">
       <p className="location-v11-kicker">06 / {tx("FIND US","NOUS TROUVER")}</p>
-      <h2 id="location-title">{lang!=='en'?<>Au bout de la Route des Pêches, <em>le lac vous attend.</em></>:<>At the end of the Coastal Road, <em>the lake awaits.</em></>}</h2>
+      <h2 id="location-title">{lang==='es'?<>Al final de la Route des Pêches, <em>te espera el lago.</em></>:lang==='hi'?<>Route des Pêches के अंत में <em>झील आपका इंतज़ार कर रही है।</em></>:lang==='en'?<>At the end of the Coastal Road, <em>the lake awaits.</em></>:<>Au bout de la Route des Pêches, <em>le lac vous attend.</em></>}</h2>
       <p>{tx("Find AQUAMAZONE ADVENTURE in Adounko Village, Cotonou.","Retrouvez AQUAMAZONE ADVENTURE au Village Adounko, à Cotonou.")}</p>
     </div>
     <LocationRouteVideo lang={lang}/>
@@ -340,7 +340,7 @@ export default function Home(){
   <div className="visit-v12-shell">
     <div className="visit-v12-lead">
       <p className="visit-v12-eyebrow">07 / {tx("PLAN YOUR VISIT","PRÉPARER VOTRE VISITE")}</p>
-      <h2 id="visit-title">{lang!=='en'?<>Le bon moment <em>pour s’évader.</em></>:<>The perfect time <em>to get away.</em></>}</h2>
+      <h2 id="visit-title">{lang==='es'?<>El momento perfecto <em>para desconectar.</em></>:lang==='hi'?<>आराम करने <em>का सही समय।</em></>:lang==='en'?<>The perfect time <em>to get away.</em></>:<>Le bon moment <em>pour s’évader.</em></>}</h2>
       <p className="visit-v12-intro">{tx("Everything you need to know before spending your day by the water.","Les informations essentielles pour profiter pleinement de votre journée au bord de l’eau.")}</p>
     </div>
     <div className="visit-v12-grid">
@@ -377,7 +377,7 @@ export default function Home(){
  <div className="faq-v13-shell">
   <div className="faq-v13-intro">
    <p className="faq-v13-eyebrow">08 / {tx("FREQUENTLY ASKED QUESTIONS","QUESTIONS FRÉQUENTES")}</p>
-   <h2 id="faq-title">{lang!=='en'?<>Tout savoir <em>avant de venir.</em></>:<>Everything to know <em>before you visit.</em></>}</h2>
+   <h2 id="faq-title">{lang==='es'?<>Todo lo que necesitas saber <em>antes de venir.</em></>:lang==='hi'?<>आने से पहले <em>सब कुछ जानें।</em></>:lang==='en'?<>Everything to know <em>before you visit.</em></>:<>Tout savoir <em>avant de venir.</em></>}</h2>
    <p>{tx("The essentials for planning your day by the water, without the guesswork.","Les réponses essentielles pour organiser votre expérience au bord de l’eau, en toute simplicité.")}</p>
    <div className="faq-v13-contact">
     <span>{tx("SOMETHING ELSE?","UNE AUTRE QUESTION ?")}</span>
@@ -400,7 +400,7 @@ export default function Home(){
   <div className="footer-v15-inner">
     <div className="footer-v15-opening">
       <p>{tx("ADVENTURE AWAITS","L’AVENTURE VOUS ATTEND")}</p>
-      <h2>{lang!=='en'?<>On se retrouve <em>au bord de l’eau ?</em></>:<>See you <em>by the water?</em></>}</h2>
+      <h2>{lang==='es'?<>¿Nos vemos <em>junto al agua?</em></>:lang==='hi'?<>पानी के किनारे <em>मिलेंगे?</em></>:lang==='en'?<>See you <em>by the water?</em></>:<>On se retrouve <em>au bord de l’eau ?</em></>}</h2>
       <a href="#reservation">{tx("Plan my visit","Préparer ma visite")} <ArrowUpRight size={20} aria-hidden="true"/></a>
     </div>
     <div className="footer-v15-columns">
