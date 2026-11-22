@@ -113,7 +113,7 @@ export default function Home(){
  <div className="activity-v3-heading"><div><p className="kicker">{lang==='fr'?'02 / NOS ACTIVITÉS':'02 / OUR ACTIVITIES'}</p><h2>{lang==='fr'?'Des expériences uniques sur l’eau':'Unforgettable moments on the water'}</h2></div><p>{lang==='fr'?'Pédalo, kayak, paddle et bien plus encore. Trouvez l’expérience qui vous ressemble.':'Pedal boats, kayaks, paddleboards and more. Find your kind of adventure.'}</p></div>
  
  <div className="activity-vertical-list">
- {activities.map((a,i)=><article className="activity-list-item" key={a.id}>
+ {activities.slice(0,4).map((a,i)=><article className="activity-list-item" key={a.id}>
    <span className="activity-list-index">{String(i+1).padStart(2,'0')}</span>
    <div className="activity-list-copy">
      <h3>{lang==='fr'?a.fr:a.en}</h3>
@@ -246,6 +246,11 @@ export default function Home(){
     <div className="restaurant-v9-grid">
       <div className="restaurant-v9-visual">
         <div className="restaurant-v9-photo" role="img" aria-label={lang==='fr'?'Poisson braisé servi à Aquamazone':'Grilled fish served at Aquamazone'}/>
+        <div className="restaurant-v9-desktop-photos" aria-hidden="true">
+          <div className="restaurant-v9-desktop-photo restaurant-v9-desktop-photo-one"/>
+          <div className="restaurant-v9-desktop-photo restaurant-v9-desktop-photo-two"/>
+          <div className="restaurant-v9-desktop-photo restaurant-v9-desktop-photo-three"/>
+        </div>
         <div className="restaurant-v9-photo-caption"><span>{lang==='fr'?'Une pause au bord de l’eau':'A break by the water'}</span><span>{lang==='fr'?'Poisson braisé · Aquamazone':'Grilled fish · Aquamazone'}</span></div>
       </div>
       <div className="restaurant-v9-menu">
