@@ -63,6 +63,7 @@ const activityVisuals:Record<string,string>={
  rental:'/images/gallery/gallery-14.webp'
 };
 function CraftThumbnail({kind,lang}:{kind:'pedalo-simple'|'pedalo-double'|'canoe-simple'|'canoe-double';lang:Lang}){
+ const tx=(en:string,fr:string)=>publicText(lang,en,fr);
  const tandem=kind.endsWith('-double');
  const pedalo=kind.startsWith('pedalo');
  const people=tandem?2:1;
