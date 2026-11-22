@@ -414,6 +414,8 @@ body{overflow-x:clip}
 .restaurant-v9-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:stretch;gap:clamp(25px,5vw,78px)}
 .restaurant-v9-visual{display:flex;flex-direction:column;min-width:0}
 .restaurant-v9-photo{min-height:570px;flex:1;background:#d7ddd4 url('/images/restaurant/poisson-braise.webp') center/cover no-repeat;position:relative}
+/* Desktop restaurant photo: show the complete dish without aggressive cropping. */
+@media(min-width:951px){.restaurant-v9-photo{background-size:contain;background-position:center center;background-color:#f7f4ec}}
 .restaurant-v9-photo:after{content:'';position:absolute;inset:0;border:1px solid rgba(6,32,71,.08);pointer-events:none}
 .restaurant-v9-photo-caption{display:flex;justify-content:space-between;align-items:center;gap:15px;padding-top:15px;font-size:11px;color:#5b6c74;letter-spacing:.02em}
 .restaurant-v9-photo-caption span:first-child{font-weight:700}
