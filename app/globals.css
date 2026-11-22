@@ -1279,3 +1279,7 @@ img,video,iframe{max-width:100%}
 .language-options button:hover,.language-options button[aria-selected="true"]{background:#eaf2f7}
 .language-options small{font-size:10px;color:#5c7282;letter-spacing:.05em}
 @media(max-width:680px){.language-trigger{gap:4px;padding:8px 3px}.language-options{right:-38px;min-width:178px}}
+
+/* Keep translated opening hours compact without changing the French time treatment. */
+.visit-v12-bigtime .visit-v12-localized-time{font-family:inherit;font-size:clamp(22px,3.3vw,42px);font-weight:500;letter-spacing:-.035em;line-height:1.3;white-space:normal;overflow-wrap:break-word}
+@media(max-width:760px){.visit-v12-bigtime .visit-v12-localized-time{font-size:clamp(20px,5.3vw,29px);line-height:1.35}}
