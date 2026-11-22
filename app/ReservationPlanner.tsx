@@ -39,7 +39,7 @@ function CrossingBreakdown({adults,children,fr,included=false}:{adults:number;ch
  </div>;
 }
 export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{activity:string;version:number}|null}){
- const fr=lang!=='en'&&lang!=='es'&&lang!=='hi';
+ const fr=lang!=='en';
  const contentLang: 'fr'|'en'=lang==='en'?'en':'fr';
  const tr=(en:string,frText:string)=>reservationLabel(lang,en,frText);
  const [step,setStep]=useState(0);
