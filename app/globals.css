@@ -984,7 +984,7 @@ img,video,iframe{max-width:100%}
 .az-wizard-counter>div:last-child{display:flex;align-items:center;gap:16px}
 .az-wizard-counter button,.az-wizard-participants button{display:grid;place-items:center;width:42px;height:42px;border:1px solid #a8c5d5;background:#fff;color:#062047;cursor:pointer}
 .az-wizard-counter button:disabled,.az-wizard-participants button:disabled{opacity:.4;cursor:not-allowed}
-.az-wizard-note{font-size:12px;line-height:1.65;color:#42647b;background:#eef6fa;border-left:3px solid #0055A4;padding:12px 15px;margin:20px 0}
+.az-wizard-note{font-size:12px;line-height:1.65;color:#42647b;background:#eef6fa;padding:12px 15px;margin:20px 0}
 .az-wizard-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid #c7d8e2;margin:0 0 23px}
 .az-wizard-tabs button{min-height:48px;padding:9px 7px;background:#fff;border:0;border-right:1px solid #c7d8e2;font-weight:700;color:#34566d;font-size:12px;cursor:pointer}
 .az-wizard-tabs button:last-child{border-right:0}
