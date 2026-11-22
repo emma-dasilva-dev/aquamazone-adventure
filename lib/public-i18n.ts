@@ -314,6 +314,6 @@ const fonVerified:Record<string,string>={
 export function publicText(lang:PublicLanguage,en:string,fr:string):string{
  if(lang==='fr')return fr;
  if(lang==='en')return en;
- if(lang==='fon')return fonVerified[en]??fr; // Verified vocabulary only; preserve accurate French for complex business rules.
+ if(lang==='fon')return fonVerified[en]??en; // Untranslated Fon text uses English until a complete translation catalog is available.
  return translations[lang][en]??en;
 }
