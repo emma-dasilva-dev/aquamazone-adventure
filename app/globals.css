@@ -1167,3 +1167,95 @@ img,video,iframe{max-width:100%}
 @media(max-width:850px){.visitor-reviews-grid{grid-template-columns:1fr;gap:35px}.visitor-reviews-form-area{max-width:680px}}
 @media(max-width:600px){.visitor-reviews-shell{padding:76px 21px}.visitor-reviews-heading{margin-bottom:31px}.visitor-reviews-heading h2{font-size:clamp(38px,9vw,53px)}.visitor-reviews-form-area{padding:23px 18px}.visitor-reviews-subheading h3{font-size:23px}}
 
+
+/* Dedicated activities: clean editorial catalogue */
+.az-catalog{min-height:100vh;background:#faf9f5;color:#062047}
+.az-catalog-header{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:76px;padding:12px clamp(20px,5vw,70px);border-bottom:1px solid #dbe2e4;background:#fff}
+.az-catalog-header a{text-decoration:none;color:#062047}
+.az-catalog-back{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700}
+.az-catalog-logo{font-size:15px;font-weight:900;letter-spacing:.1em}
+.az-catalog-logo small{display:block;font-size:9px;letter-spacing:.17em;color:#68818f}
+.az-catalog-header-actions{display:flex;align-items:center;gap:18px}
+.az-catalog-header-actions button{border:0;background:transparent;color:#0055a4;font-size:11px;font-weight:800;cursor:pointer}
+.az-catalog-header-actions>a{display:inline-flex;align-items:center;gap:8px;padding:12px 16px;background:#ffd326;font-size:12px;font-weight:800}
+.az-catalog-hero,.az-catalog-list,.az-catalog-video,.az-catalog-footer{max-width:1240px;margin:0 auto}
+.az-catalog-hero{padding:clamp(65px,9vw,120px) clamp(20px,5vw,65px) 52px}
+.az-catalog-kicker{font-size:10px;font-weight:800;letter-spacing:.19em;color:#0055a4;margin:0 0 20px}
+.az-catalog-hero h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(48px,7vw,92px);line-height:1;letter-spacing:-.065em;font-weight:400;max-width:840px;margin:0}
+.az-catalog-hero h1 em,.az-catalog-video h2 em{font-weight:400;color:#168b8b}
+.az-catalog-intro{display:flex;justify-content:space-between;align-items:end;gap:25px;margin-top:32px}
+.az-catalog-intro>p{max-width:550px;font-size:14px;line-height:1.8;color:#536c7a;margin:0}
+.az-catalog-intro>span{display:flex;align-items:center;gap:8px;font-size:11px;color:#5a7483;white-space:nowrap}
+.az-catalog-intro svg{color:#0055a4}
+.az-catalog-list{padding:0 clamp(20px,5vw,65px) 90px}
+.az-catalog-item{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(35px,7vw,100px);align-items:center;padding:42px 0;border-top:1px solid #d9e2e4}
+.az-catalog-item:last-child{border-bottom:1px solid #d9e2e4}
+.az-catalog-image{position:relative;aspect-ratio:1.32;background:#d9e7ec;overflow:hidden}
+.az-catalog-image img{display:block;width:100%;height:100%;object-fit:cover}
+.az-catalog-image>span{position:absolute;left:14px;top:14px;background:#062047;color:#fff;font-size:10px;letter-spacing:.1em;font-weight:800;padding:8px}
+.az-catalog-detail h2{font-family:Georgia,'Times New Roman',serif;font-size:clamp(32px,4.5vw,56px);line-height:1.08;font-weight:400;letter-spacing:-.045em;margin:0 0 18px}
+.az-catalog-detail .az-catalog-kicker{margin-bottom:14px}
+.az-catalog-facts{display:flex;gap:12px;flex-wrap:wrap;align-items:baseline;font-size:13px}
+.az-catalog-facts span{color:#5d7684}.az-catalog-facts strong{font-weight:800}
+.az-catalog-detail>p:not(.az-catalog-kicker){color:#5d7684;font-size:13px;line-height:1.7;margin:13px 0 0}
+.az-catalog-detail>p.az-catalog-unavailable{color:#9b3939}
+.az-catalog-detail>a{display:inline-flex;align-items:center;gap:8px;margin-top:25px;border-bottom:1px solid #0055a4;padding-bottom:5px;text-decoration:none;color:#0055a4;font-size:12px;font-weight:800}
+.az-catalog-video{display:grid;grid-template-columns:1fr .85fr;gap:clamp(30px,5vw,75px);align-items:center;background:#062047;color:#fff;padding:clamp(40px,6vw,75px)}
+.az-catalog-video .az-catalog-kicker{color:#8abfe5}
+.az-catalog-video h2{font-family:Georgia,'Times New Roman',serif;font-size:clamp(37px,5vw,62px);font-weight:400;letter-spacing:-.055em;line-height:1.1;margin:0}
+.az-catalog-video p:not(.az-catalog-kicker){color:#c5d7e3;font-size:13px;line-height:1.8;margin:18px 0 25px}
+.az-catalog-video a{display:inline-flex;align-items:center;gap:9px;color:#ffd326;text-decoration:none;border-bottom:1px solid #ffd326;padding-bottom:6px;font-size:12px;font-weight:800}
+.az-catalog-video-image{aspect-ratio:1.2;overflow:hidden}
+.az-catalog-video-image img{width:100%;height:100%;object-fit:cover}
+.az-catalog-footer{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:55px clamp(20px,5vw,65px) 80px;font-family:Georgia,'Times New Roman',serif;font-size:24px}
+.az-catalog-footer a{display:inline-flex;align-items:center;gap:8px;background:#ffd326;color:#062047;text-decoration:none;padding:14px 18px;font-family:Arial,sans-serif;font-size:12px;font-weight:800}
+
+/* Desktop-only restaurant photo composition. Mobile retains original single photo. */
+.restaurant-v9-desktop-photos{display:none}
+@media(min-width:901px){
+ .restaurant-v9-visual{position:relative;min-height:730px}
+ .restaurant-v9-visual>.restaurant-v9-photo{display:none}
+ .restaurant-v9-desktop-photos{display:block;position:sticky;top:95px;height:min(68vh,620px);min-height:490px;margin:18px 15px 20px 0;isolation:isolate}
+ .restaurant-v9-desktop-photo{position:absolute;background-position:center;background-size:cover;background-repeat:no-repeat;box-shadow:0 15px 40px rgba(6,32,71,.13);border:5px solid #faf9f5;will-change:transform}
+ .restaurant-v9-desktop-photo-one{inset:2% 12% 18% 1%;z-index:1;background-image:url('/images/restaurant/poisson-braise.webp')}
+ .restaurant-v9-desktop-photo-two{inset:28% 0 10% 30%;z-index:2;background-image:url('/images/gallery/gallery-04.webp');transform:rotate(3deg)}
+ .restaurant-v9-desktop-photo-three{inset:49% 34% 0 5%;z-index:3;background-image:url('/images/gallery/gallery-19.webp');transform:rotate(-3deg)}
+ @supports (animation-timeline:view()){
+  .restaurant-v9-desktop-photo-two{animation:az-rest-photo-two linear both;animation-timeline:view(block);animation-range:entry 0% exit 100%}
+  .restaurant-v9-desktop-photo-three{animation:az-rest-photo-three linear both;animation-timeline:view(block);animation-range:entry 0% exit 100%}
+ }
+}
+@keyframes az-rest-photo-two{from{transform:translateY(24px) rotate(4deg)}to{transform:translateY(-14px) rotate(1deg)}}
+@keyframes az-rest-photo-three{from{transform:translateY(45px) rotate(-5deg)}to{transform:translateY(-15px) rotate(-1deg)}}
+@media(prefers-reduced-motion:reduce){.restaurant-v9-desktop-photo{animation:none!important;will-change:auto}}
+
+/* Rating-first visitor experience */
+.visitor-rating-experience{opacity:1}
+.visitor-rating-experience.is-visible .visitor-rating-invite{animation:az-rating-reveal .5s ease-out both}
+.visitor-rating-invite{display:grid;gap:13px;padding:20px 0 14px}
+.visitor-rating-kicker{font-size:10px;letter-spacing:.17em;color:#0055a4;font-weight:800}
+.visitor-rating-invite>strong{font-family:Georgia,'Times New Roman',serif;font-size:clamp(24px,2.7vw,34px);font-weight:400;line-height:1.2;letter-spacing:-.025em}
+.visitor-rating-invite>p{font-size:13px;line-height:1.7;color:#607887;margin:0}
+.visitor-rating-choices{display:flex;gap:9px;margin-top:8px}
+.visitor-rating-choices button{width:50px;height:50px;display:grid;place-items:center;border:1px solid #b8cfd9;background:#fff;color:#ad7e19;cursor:pointer;transition:transform .2s ease,background .2s ease}
+.visitor-rating-choices button:hover{background:#fff3c4;transform:translateY(-3px)}
+.visitor-rating-selected{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;font-size:12px;font-weight:800}
+.visitor-rating-selected>div{display:flex;gap:4px}
+.visitor-rating-selected button{width:37px;height:37px;display:grid;place-items:center;background:transparent;border:0;color:#ad7e19;cursor:pointer}
+.visitor-reviews-form-progressive{padding-top:8px}
+@keyframes az-rating-reveal{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.visitor-rating-experience.is-visible .visitor-rating-invite{animation:none}.visitor-rating-choices button{transition:none}}
+@media(max-width:800px){
+ .az-catalog-intro{align-items:start;flex-direction:column}
+ .az-catalog-item{grid-template-columns:1fr;gap:22px}
+ .az-catalog-video{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+ .az-catalog-header{padding:10px 16px;gap:8px}.az-catalog-logo{font-size:12px}.az-catalog-logo small{display:none}
+ .az-catalog-header-actions{gap:8px}.az-catalog-header-actions>a{padding:10px;font-size:11px}
+ .az-catalog-hero{padding:60px 20px 35px}.az-catalog-hero h1{font-size:clamp(43px,12vw,64px)}
+ .az-catalog-list{padding:0 20px 60px}.az-catalog-item{padding:30px 0}
+ .az-catalog-detail h2{font-size:36px}
+ .az-catalog-video{padding:35px 20px}.az-catalog-footer{flex-direction:column;align-items:flex-start;padding:42px 20px 65px;font-size:21px}
+ .visitor-rating-choices button{width:44px;height:44px}
+}
