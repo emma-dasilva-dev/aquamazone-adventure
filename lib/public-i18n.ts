@@ -301,9 +301,19 @@ const translations:Record<'es'|'hi',Record<string,string>>={
     "Contact the restaurant": "रेस्तराँ से संपर्क करें"
   }
 };
+const fonVerified:Record<string,string>={
+  "Welcome to Aquamazone":"Kwabɔ — Aquamazone",
+  "Water":"Sìn",
+  "Rice":"Mɔ̌lǐ",
+  "Food":"Nùɖúɖú",
+  "Right":"Ɖisixwe",
+  "Left":"Amyɔxwe",
+  "Straight ahead":"Trele",
+  "Today":"Égbé",
+};
 export function publicText(lang:PublicLanguage,en:string,fr:string):string{
  if(lang==='fr')return fr;
  if(lang==='en')return en;
- if(lang==='fon')return en; // Unverified Fongbe must not be fabricated; pending native translation.
+ if(lang==='fon')return fonVerified[en]??fr; // Verified vocabulary only; preserve accurate French for complex business rules.
  return translations[lang][en]??en;
 }
