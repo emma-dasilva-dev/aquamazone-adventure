@@ -1,5 +1,5 @@
 // Customer-facing reservation labels. Operational booking messages remain in French/English.
-// Fongbe intentionally falls back to French until native-speaker review.
+// Fon uses an English fallback for untranslated strings; a complete Fon catalog is still required.
 export type SiteLanguage='fr'|'en'|'es'|'hi'|'fon';
 const labels:Record<'es'|'hi',Record<string,string>>={
   "es": {
@@ -142,7 +142,7 @@ const labels:Record<'es'|'hi',Record<string,string>>={
   }
 };
 export function reservationLabel(lang:SiteLanguage,english:string,french:string):string{
- if(lang==='fr'||lang==='fon')return french;
- if(lang==='en')return english;
- return labels[lang][english]??french;
+ if(lang==='fr')return french;
+ if(lang==='en'||lang==='fon')return english;
+ return labels[lang][english]??english;
 }
