@@ -1261,3 +1261,9 @@ img,video,iframe{max-width:100%}
 .az-hero-info span:last-child{font-weight:700}
 @media(max-width:950px){.az-hero-info{font-size:11px;gap:14px}.az-hero-info span{align-items:flex-start}}
 @media(max-width:680px){.az-hero-info{left:22px;right:22px;bottom:49px;display:grid;grid-template-columns:1fr;gap:7px;font-size:10px}.az-hero-info span{gap:7px}}
+
+/* Official brand mark replaces the header's text wordmark */
+.site-header .wordmark-logo{display:block;width:clamp(150px,16vw,220px);flex:none;line-height:0}
+.site-header .wordmark-logo img{display:block;width:100%;height:auto;filter:brightness(0) invert(1)}
+.site-header .wordmark-logo:focus-visible{outline:3px solid #ffd326;outline-offset:5px}
+@media(max-width:680px){.site-header .wordmark-logo{width:clamp(125px,35vw,165px)}}
