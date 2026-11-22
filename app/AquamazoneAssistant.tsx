@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { ArrowUpRight, Check, MessageCircle, Send, Waves, X } from 'lucide-react';
 
-type Lang = 'fr' | 'en';
+type Lang = 'fr' | 'en' | 'es' | 'hi' | 'fon';
 type Message = { id: number; role: 'assistant' | 'user'; text: string };
 const contact = 'https://wa.me/2290154284444';
 const content = {
@@ -51,6 +51,14 @@ const content = {
   }
 } as const;
 
+// Fongbe text remains in French pending native-speaker review; do not invent customer instructions.
+const translatedContent = {
+ es:{...content.en,name:'Asistente Aquamazone',status:'Información y orientación',welcome:'¡Bienvenido a AQUAMAZONE ADVENTURE! Ofrecemos actividades acuáticas, paseos por el lago y bar y restaurante. ¿En qué puedo ayudarte?',intro:'Elige una pregunta o escríbenos.',placeholder:'Escribe tu pregunta…',send:'Enviar',close:'Cerrar',open:'Abrir asistente',helper:'Solo información oficial. No se hacen reservas ni pagos en este chat.',guideStatus:'Información verificada',aiStatus:'Asistente de IA activo',fallback:'El chat no está disponible. Inténtalo de nuevo o contáctanos por WhatsApp.',noKey:'El asistente de IA no está configurado. Consulta nuestra guía de información.',providerError:'El asistente de IA no responde ahora. La guía puede ayudarte.',connectionError:'No se pudo conectar. Actualiza la página o escríbenos por WhatsApp.',handoff:'Contactar al equipo',handoffLabel:'¿Necesitas más información?',badge:'ASISTENTE',questions:['¿Cuándo abren?','¿Dónde están?','¿Cuáles son los precios?','¿Cómo reservo?']},
+ hi:{...content.en,name:'Aquamazone सहायक',status:'जानकारी और सहायता',welcome:'AQUAMAZONE ADVENTURE में आपका स्वागत है! यहाँ जल गतिविधियाँ, झील की सैर और बार व रेस्तराँ उपलब्ध हैं। मैं कैसे मदद कर सकता हूँ?',intro:'कोई सवाल चुनें या लिखें।',placeholder:'अपना सवाल लिखें…',send:'भेजें',close:'बंद करें',open:'सहायक खोलें',helper:'केवल आधिकारिक जानकारी। इस चैट में बुकिंग या भुगतान नहीं होता।',guideStatus:'सत्यापित जानकारी',aiStatus:'AI सहायक सक्रिय',fallback:'चैट अभी उपलब्ध नहीं है। फिर कोशिश करें या WhatsApp पर संपर्क करें।',noKey:'AI सहायक कॉन्फ़िगर नहीं है। जानकारी गाइड में उपलब्ध है।',providerError:'AI सहायक अभी उपलब्ध नहीं है। गाइड से जानकारी लें।',connectionError:'कनेक्ट नहीं हो सका। पेज रीफ़्रेश करें या WhatsApp पर लिखें।',handoff:'हमारी टीम से संपर्क करें',handoffLabel:'और जानकारी चाहिए?',badge:'सहायक',questions:['आप कब खुले रहते हैं?','आप कहाँ स्थित हैं?','गतिविधियों की कीमतें क्या हैं?','बुकिंग कैसे करें?']},
+ fon:{...content.fr,name:'Assistant Aquamazone',status:'Informations — traduction Fɔ̀ngbè en révision',welcome:'Bienvenue à AQUAMAZONE ADVENTURE ! Pour des renseignements en fɔ̀ngbè, contactez notre équipe sur WhatsApp. Les informations ci-dessous sont temporairement en français.',intro:'Choisissez une question ou écrivez-nous.',questions:['Quels sont les horaires ?','Où êtes-vous situés ?','Quels sont les tarifs ?','Comment réserver ?']}
+} satisfies Record<'es'|'hi'|'fon',typeof content.en>;
+const allContent:Record<Lang,typeof content.en>={...content,...translatedContent};
+
 export default function AquamazoneAssistant({lang}:{lang:Lang}) {
   const [open,setOpen]=useState(false);
   const [draft,setDraft]=useState('');
@@ -63,7 +71,7 @@ export default function AquamazoneAssistant({lang}:{lang:Lang}) {
   const panelRef=useRef<HTMLElement>(null);
   const launcherRef=useRef<HTMLButtonElement>(null);
   const idRef=useRef(0);
-  const t=content[lang];
+  const t=allContent[lang];
   const displayMessages=messages.length?messages:[{id:-1,role:'assistant' as const,text:t.welcome}];
 
   useEffect(()=>{if(open){scrollRef.current?.scrollTo({top:scrollRef.current.scrollHeight,behavior:'smooth'});}},[messages,open]);
@@ -124,7 +132,7 @@ export default function AquamazoneAssistant({lang}:{lang:Lang}) {
   return <>
     <button ref={launcherRef} className={'assistant-v14-launcher'+(open?' is-open':'')} type="button" aria-label={open?t.close:t.open} aria-expanded={open} aria-controls="assistant-v14-panel" onClick={()=>setOpen(v=>!v)}>
       {open?<X size={23} aria-hidden="true"/>:<MessageCircle size={25} aria-hidden="true"/>}
-      {!open&&<span className="assistant-v14-launcher-label">{lang==='fr'?'Une question ?':'Need help?'}</span>}
+      {!open&&<span className="assistant-v14-launcher-label">{lang==='es'?'¿Una pregunta?':lang==='hi'?'कोई सवाल?':lang==='fon'?'Une question ?':lang==='fr'?'Une question ?':'Need help?'}</span>}
     </button>
     {open&&<aside id="assistant-v14-panel" ref={panelRef} className="assistant-v14-panel" role="dialog" aria-modal="false" aria-label={t.name}>
       <header className="assistant-v14-head">
@@ -139,7 +147,7 @@ export default function AquamazoneAssistant({lang}:{lang:Lang}) {
           {message.role==='assistant'&&<span className="assistant-v14-avatar" aria-hidden="true"><Waves size={14}/></span>}
           <p>{message.text}</p>
         </div>)}
-        {pending&&<div className="assistant-v14-message assistant"><span className="assistant-v14-avatar" aria-hidden="true"><Waves size={14}/></span><p role="status">{lang==='fr'?'Je prépare ma réponse…':'Preparing a response…'}</p></div>}
+        {pending&&<div className="assistant-v14-message assistant"><span className="assistant-v14-avatar" aria-hidden="true"><Waves size={14}/></span><p role="status">{lang==='es'?'Preparando la respuesta…':lang==='hi'?'जवाब तैयार हो रहा है…':lang==='fon'?'Réponse en préparation…':lang==='fr'?'Je prépare ma réponse…':'Preparing a response…'}</p></div>}
         {messages.length===0&&<div className="assistant-v14-suggestions"><span>{t.intro}</span>{t.questions.map(q=><button key={q} onClick={()=>void send(q)} disabled={pending} type="button">{q}<ArrowUpRight size={16} aria-hidden="true"/></button>)}</div>}
         <div className="assistant-v14-handoff"><span>{t.handoffLabel}</span><a href={contact} target="_blank" rel="noopener noreferrer">{t.handoff}<ArrowUpRight size={16} aria-hidden="true"/></a></div>
       </div>
