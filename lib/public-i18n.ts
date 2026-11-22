@@ -1,6 +1,12 @@
 export type PublicLanguage='fr'|'en'|'es'|'hi'|'fon';
 const translations:Record<'es'|'hi',Record<string,string>>={
   "es": {
+    "Advance booking required": "Reserva previa obligatoria",
+    "Unavailable — maintenance": "No disponible — mantenimiento",
+    "Child under 12: 2,500 FCFA": "Menor de 12 años: 2.500 FCFA",
+    "3 to 4 people: 3,000 FCFA per person": "3 a 4 personas: 3.000 FCFA por persona",
+    "2 people on the same craft": "2 personas en la misma embarcación",
+    "1 person per craft": "1 persona por embarcación",
     "Activity photographed at Aquamazone": "Actividad fotografiada en Aquamazone",
     "Close image": "Cerrar imagen",
     "Image preview": "Vista previa de imagen",
@@ -145,6 +151,12 @@ const translations:Record<'es'|'hi',Record<string,string>>={
     "Contact the restaurant": "Contactar con el restaurante"
   },
   "hi": {
+    "Advance booking required": "अग्रिम बुकिंग ज़रूरी",
+    "Unavailable — maintenance": "उपलब्ध नहीं — रखरखाव",
+    "Child under 12: 2,500 FCFA": "12 वर्ष से कम बच्चा: 2,500 FCFA",
+    "3 to 4 people: 3,000 FCFA per person": "3 से 4 लोग: प्रति व्यक्ति 3,000 FCFA",
+    "2 people on the same craft": "एक ही नाव में 2 लोग",
+    "1 person per craft": "प्रति नाव 1 व्यक्ति",
     "Activity photographed at Aquamazone": "Aquamazone में गतिविधि की तस्वीर",
     "Close image": "तस्वीर बंद करें",
     "Image preview": "तस्वीर का पूर्वावलोकन",
