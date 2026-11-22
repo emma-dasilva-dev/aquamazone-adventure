@@ -384,8 +384,8 @@ export default function Home(){
   </div>
   <div className="faq-v13-questions">
    {faqItems.map((item,i)=><details className="faq-v13-item" key={i} name="aquamazone-faq" >
-    <summary><span className="faq-v13-index">{String(i+1).padStart(2,'0')}</span><span className="faq-v13-question">{item.q[lang]}</span><span className="faq-v13-toggle" aria-hidden="true"><Plus size={19}/></span></summary>
-    <div className="faq-v13-answer"><p>{item.a[lang]}</p></div>
+    <summary><span className="faq-v13-index">{String(i+1).padStart(2,'0')}</span><span className="faq-v13-question">{lang==='es'?item.esQ:lang==='hi'?item.hiQ:item.q[contentLang]}</span><span className="faq-v13-toggle" aria-hidden="true"><Plus size={19}/></span></summary>
+    <div className="faq-v13-answer"><p>{lang==='es'?item.esA:lang==='hi'?item.hiA:item.a[contentLang]}</p></div>
    </details>)}
    <p className="faq-v13-footnote">{lang!=='en'?'Pour les détails particuliers à votre sortie, contactez directement notre équipe.':'For details specific to your visit, please contact our team directly.'}</p>
   </div>
