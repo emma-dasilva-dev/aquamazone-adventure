@@ -1284,3 +1284,8 @@ img,video,iframe{max-width:100%}
 .visit-v12-bigtime .visit-v12-localized-time{display:block;max-width:100%;font-family:inherit;font-size:clamp(44px,6.8vw,100px);font-weight:500;letter-spacing:-.055em;line-height:1.08;white-space:normal;overflow-wrap:normal;word-break:normal;text-wrap:balance}
 @media(max-width:760px){.visit-v12-bigtime .visit-v12-localized-time{font-size:clamp(34px,8.5vw,62px);line-height:1.13;letter-spacing:-.045em}}
 @media(max-width:380px){.visit-v12-bigtime .visit-v12-localized-time{font-size:clamp(30px,8vw,38px)}}
+
+/* Footer closing statement: prevent the italic line from colliding with the headline on narrow screens. */
+.footer-v15-opening h2{min-width:0;max-width:100%;overflow-wrap:break-word}
+.footer-v15-opening h2 em{display:block;max-width:100%;font-size:.74em;line-height:1.18;letter-spacing:-.045em;overflow-wrap:break-word}
+@media(max-width:760px){.footer-v15-opening h2{font-size:clamp(36px,9vw,62px);line-height:1.08;letter-spacing:-.055em}.footer-v15-opening h2 em{font-size:.78em;line-height:1.2;margin-top:8px}.footer-v15-opening{min-width:0}}
