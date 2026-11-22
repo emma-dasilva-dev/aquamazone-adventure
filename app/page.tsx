@@ -113,7 +113,7 @@ export default function Home(){
  <div className="activity-v3-heading"><div><p className="kicker">{lang==='fr'?'02 / NOS ACTIVITÉS':'02 / OUR ACTIVITIES'}</p><h2>{lang==='fr'?'Des expériences uniques sur l’eau':'Unforgettable moments on the water'}</h2></div><p>{lang==='fr'?'Pédalo, kayak, paddle et bien plus encore. Trouvez l’expérience qui vous ressemble.':'Pedal boats, kayaks, paddleboards and more. Find your kind of adventure.'}</p></div>
  
  <div className="activity-vertical-list">
- {activities.slice(0,4).map((a,i)=><article className="activity-list-item" key={a.id}>
+ {activities.map((a,i)=><article className="activity-list-item" key={a.id}>
    <span className="activity-list-index">{String(i+1).padStart(2,'0')}</span>
    <div className="activity-list-copy">
      <h3>{lang==='fr'?a.fr:a.en}</h3>
@@ -137,13 +137,6 @@ export default function Home(){
      <span className="activity-no-photo">{lang==='fr'?'Photo à venir':'Photo pending'}</span>}
  </article>)}
  </div>
-  <div className="activity-featured-cta">
-   <div>
-    <span className="activity-featured-label">{lang==='fr'?'POUR ALLER PLUS LOIN':'EXPLORE MORE'}</span>
-    <p>{lang==='fr'?'L’aventure ne s’arrête pas là.':'There’s more to discover.'}</p>
-   </div>
-   <a className="activity-see-all" href="/activites">{lang==='fr'?'Toutes nos activités':'All activities'}<ArrowUpRight size={17} aria-hidden="true"/></a>
-  </div>
   <p className="prototype-notice">{lang==='fr'?'Réservation et paiement en ligne en cours de développement. Pour le moment, demandez votre réservation sur WhatsApp.':'Online booking and payment are in development. For now, request bookings via WhatsApp.'}</p>
  </section>
  <section id="packages" className="packages packages-v4" aria-labelledby="packages-title">
