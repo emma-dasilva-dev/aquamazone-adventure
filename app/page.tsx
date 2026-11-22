@@ -5,9 +5,10 @@ import AquamazoneAssistant from './AquamazoneAssistant';
 import ReservationPlanner from './ReservationPlanner';
 import LocationRouteVideo from './LocationRouteVideo';
 import VisitorReviews from './VisitorReviews';
-import {ArrowDown,ArrowUpRight,ArrowRight,Menu,X,Plus,Minus,MapPin,Clock,UtensilsCrossed,MessageCircle,Waves,ZoomIn,Instagram,Youtube} from 'lucide-react';
+import {ArrowDown,ArrowUpRight,ArrowRight,Menu,X,Plus,Minus,MapPin,Clock,UtensilsCrossed,MessageCircle,Waves,ZoomIn,Instagram,Youtube,Globe2,ChevronDown} from 'lucide-react';
 
-type Lang='fr'|'en';
+type Lang='fr'|'en'|'hi'|'es'|'fon';
+const languageOptions: {code:Lang;label:string}[]=[{code:'fr',label:'Français'},{code:'en',label:'English'},{code:'hi',label:'हिन्दी'},{code:'es',label:'Español'},{code:'fon',label:'Fɔ̀ngbè'}];
 function TikTokIcon({size=17}:{size?:number}){
  return <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
    <path d="M16.65 2h-3.1v13.35c0 1.98-1.6 3.58-3.58 3.58a3.58 3.58 0 1 1 2.52-6.11V9.36a6.72 6.72 0 1 0 4.16 6.21V8.53a8.23 8.23 0 0 0 5.14 1.62V7.01A5.17 5.17 0 0 1 16.65 2Z"/>
@@ -27,6 +28,12 @@ const activities=[
  {id:'rental',fr:'Location embarcation + moteur + machiniste',en:'Boat, motor and operator hire',duration:'Demi-journée / journée',price:'Sur devis',note:'Réservation obligatoire',noteEn:'Advance booking required'}
 ];
 const copy={fr:{nav:['Activités','Forfaits','Restaurant','Galerie','Localisation'],book:'Réserver',hero:'La détente au fil de l’eau.',explore:'Explorer les activités',eyebrow:'VOTRE PROCHAINE ÉVASION',intro:'L’aventure commence ici.',desc:'Des expériences nautiques, des moments à partager et un cadre naturel à découvrir.',activity:'Choisissez votre aventure',activitySub:'Découvrez les activités, leurs tarifs et les photos prises à Aquamazone.',featured:'À DÉCOUVRIR',packages:'Nos forfaits expériences',food:'Une pause gourmande au bord de l’eau',gallery:'Des souvenirs à vivre',location:'Comment nous trouver',hours:'Samedi, dimanche et jours fériés · 11h00–18h00',cta:'Préparer ma visite',placeholder:'Photographie Aquamazone à intégrer',ask:'Une question ?',chat:'Assistant Aquamazone',chatWelcome:'Bonjour ! Je peux vous renseigner sur nos horaires, tarifs et notre localisation.',chatQuestions:['Quels sont vos horaires ?','Où êtes-vous situés ?','Combien coûte le pédalo ?'],close:'Fermer',menu:'Ouvrir le menu'},en:{nav:['Activities','Packages','Restaurant','Gallery','Location'],book:'Book',hero:'Relaxation by the water.',explore:'Explore activities',eyebrow:'YOUR NEXT ESCAPE',intro:'Adventure starts here.',desc:'Water activities, moments together and a natural setting to discover.',activity:'Choose your adventure',activitySub:'Explore activities, prices and photographs from Aquamazone.',featured:'EXPLORE',packages:'Experience packages',food:'A delicious break by the water',gallery:'Memories in the making',location:'Find us',hours:'Saturday, Sunday and public holidays · 11am–6pm',cta:'Plan my visit',placeholder:'Aqu​amazone photo to be added',ask:'Need help?',chat:'Aquamazone Assistant',chatWelcome:'Hello! I can help with our opening hours, prices and location.',chatQuestions:['What are your opening hours?','Where are you located?','How much is pedal boating?'],close:'Close',menu:'Open menu'}};
+const extraCopy={
+ es:{nav:['Actividades','Paquetes','Restaurante','Galería','Ubicación'],book:'Reservar',hero:'Relájate junto al agua.',explore:'Explorar actividades',eyebrow:'TU PRÓXIMA ESCAPADA',intro:'La aventura comienza aquí.',desc:'Actividades acuáticas, momentos para compartir y naturaleza por descubrir.',activity:'Elige tu aventura',activitySub:'Descubre las actividades, precios y fotos de Aquamazone.',featured:'DESCUBRIR',packages:'Nuestros paquetes',food:'Una pausa deliciosa junto al agua',gallery:'Recuerdos por vivir',location:'Cómo llegar',hours:'Sábados, domingos y festivos · 11:00–18:00',cta:'Planificar mi visita',placeholder:'Foto de Aquamazone',ask:'¿Una pregunta?',chat:'Asistente Aquamazone',chatWelcome:'¡Hola! Puedo ayudarte con horarios, precios y ubicación.',chatQuestions:['¿Cuál es el horario?','¿Dónde están?','¿Cuánto cuesta el pedaló?'],close:'Cerrar',menu:'Abrir menú'},
+ hi:{nav:['गतिविधियाँ','पैकेज','रेस्तराँ','गैलरी','स्थान'],book:'बुक करें',hero:'पानी के किनारे सुकून।',explore:'गतिविधियाँ देखें',eyebrow:'आपकी अगली सैर',intro:'रोमांच यहाँ शुरू होता है।',desc:'पानी की गतिविधियाँ, साथ बिताए पल और प्रकृति का आनंद।',activity:'अपनी गतिविधि चुनें',activitySub:'Aquamazone की गतिविधियाँ, कीमतें और तस्वीरें देखें।',featured:'देखें',packages:'हमारे पैकेज',food:'पानी के किनारे स्वादिष्ट भोजन',gallery:'यादगार पल',location:'हम तक कैसे पहुँचें',hours:'शनिवार, रविवार और सार्वजनिक अवकाश · 11:00–18:00',cta:'यात्रा की योजना बनाएँ',placeholder:'Aquamazone की तस्वीर',ask:'कोई सवाल?',chat:'Aquamazone सहायक',chatWelcome:'नमस्ते! समय, कीमत और स्थान की जानकारी उपलब्ध है।',chatQuestions:['खुलने का समय?','आप कहाँ हैं?','पेडलो की कीमत?'],close:'बंद करें',menu:'मेनू खोलें'},
+ fon:{nav:['NǓ WÁN WÁN','Forfaits','Restaurant','Fɔtó','Fí mí ɖè'],book:'Réserver',hero:'La détente au fil de l’eau.',explore:'NǓ WÁN WÁN',eyebrow:'AQUAMAZONE ADVENTURE',intro:'L’aventure commence ici.',desc:'Activités nautiques, détente et découvertes naturelles à Adounko.',activity:'Choisissez votre aventure',activitySub:'Activités, tarifs et photos à Aquamazone.',featured:'À DÉCOUVRIR',packages:'Nos forfaits',food:'Restaurant & Bar',gallery:'Galerie',location:'Comment nous trouver',hours:'Samedi, dimanche et jours fériés · 11h–18h',cta:'Préparer ma visite',placeholder:'Photo Aquamazone',ask:'Une question ?',chat:'Assistant Aquamazone',chatWelcome:'Bonjour ! Notre équipe peut vous aider.',chatQuestions:['Horaires ?','Localisation ?','Tarifs ?'],close:'Fermer',menu:'Ouvrir le menu'}
+} satisfies Record<Exclude<Lang,'fr'|'en'>,typeof copy.fr>;
+const allCopy:Record<Lang,typeof copy.fr>={...copy,...extraCopy};
 const sections=['activities','packages','restaurant','gallery','location'];
 
 const faqItems=[
@@ -75,13 +82,14 @@ function CraftThumbnail({kind,lang}:{kind:'pedalo-simple'|'pedalo-double'|'canoe
  </div>;
 }
 export default function Home(){
- const [lang,setLang]=useState<Lang>('fr');const [menu,setMenu]=useState(false);const [preview,setPreview]=useState<string|null>(null);const [reservationIntent,setReservationIntent]=useState<{activity:string;version:number}|null>(null);const t=copy[lang];
- useEffect(()=>{document.documentElement.lang=lang;},[lang]);
+ const [lang,setLang]=useState<Lang>('fr');const [languageOpen,setLanguageOpen]=useState(false);const [menu,setMenu]=useState(false);const [preview,setPreview]=useState<string|null>(null);const [reservationIntent,setReservationIntent]=useState<{activity:string;version:number}|null>(null);const t=allCopy[lang];const contentLang=lang==='en'?'en':'fr';
+ useEffect(()=>{try{const saved=localStorage.getItem('aquamazone-language');if(saved&&languageOptions.some(l=>l.code===saved))setLang(saved as Lang)}catch{}},[]);
+ useEffect(()=>{document.documentElement.lang=lang==='fon'?'fon':lang;try{localStorage.setItem('aquamazone-language',lang)}catch{}},[lang]);
  useEffect(()=>{document.body.style.overflow=menu||preview?'hidden':'';return()=>{document.body.style.overflow='';};},[menu,preview]);
  useEffect(()=>{if(!preview)return;const close=(event:KeyboardEvent)=>{if(event.key==='Escape')setPreview(null)};window.addEventListener('keydown',close);return()=>window.removeEventListener('keydown',close)},[preview]);
 
  return <>
- <header className="site-header"><a className="wordmark wordmark-logo" href="#top" aria-label="Aquamazone Adventure — accueil"><img src="/images/aquamazone-logo.png" alt="Aquamazone Adventure" width="2048" height="682" /></a><nav className="desktop-nav" aria-label={lang==='fr'?'Navigation principale':'Main navigation'}>{sections.map((section,i)=><a href={'#'+section} key={section}>{t.nav[i]}</a>)}</nav><div className="header-actions"><button className="lang" onClick={()=>setLang(lang==='fr'?'en':'fr')} aria-label={lang==='fr'?'Switch to English':'Passer en français'}><span className="lang-current">{lang.toUpperCase()}</span><span aria-hidden="true" className="lang-divider">/</span><span className="lang-alternate">{lang==='fr'?'EN':'FR'}</span></button><a className="header-book" href="#reservation">{t.book} <ArrowUpRight size={17}/></a><button className="menu-toggle" onClick={()=>setMenu(!menu)} aria-expanded={menu} aria-controls="mobile-menu" aria-label={menu?t.close:t.menu}>{menu?<X/>:<Menu/>}</button></div></header>
+ <header className="site-header"><a className="wordmark wordmark-logo" href="#top" aria-label="Aquamazone Adventure — accueil"><img src="/images/aquamazone-logo.png" alt="Aquamazone Adventure" width="2048" height="682" /></a><nav className="desktop-nav" aria-label={lang==='fr'?'Navigation principale':'Main navigation'}>{sections.map((section,i)=><a href={'#'+section} key={section}>{t.nav[i]}</a>)}</nav><div className="header-actions"><div className="language-picker"><button className="lang language-trigger" type="button" aria-label="Choisir la langue / Select language" aria-haspopup="listbox" aria-expanded={languageOpen} onClick={()=>setLanguageOpen(!languageOpen)}><Globe2 size={19} aria-hidden="true"/><span>{lang.toUpperCase()}</span><ChevronDown size={13} aria-hidden="true"/></button>{languageOpen&&<><button className="language-dismiss" aria-label="Fermer le choix de langue" onClick={()=>setLanguageOpen(false)}/><div className="language-options" role="listbox" aria-label="Langue du site">{languageOptions.map(option=><button type="button" role="option" aria-selected={lang===option.code} key={option.code} onClick={()=>{setLang(option.code);setLanguageOpen(false)}}><span>{option.label}</span><small>{option.code.toUpperCase()}</small></button>)}</div></>}</div><a className="header-book" href="#reservation">{t.book} <ArrowUpRight size={17}/></a><button className="menu-toggle" onClick={()=>setMenu(!menu)} aria-expanded={menu} aria-controls="mobile-menu" aria-label={menu?t.close:t.menu}>{menu?<X/>:<Menu/>}</button></div></header>
  {menu&&<nav id="mobile-menu" className="mobile-nav" aria-label={lang==='fr'?'Navigation mobile':'Mobile navigation'}>{sections.map((s,i)=><a onClick={()=>setMenu(false)} href={'#'+s} key={s}><span>0{i+1}</span>{t.nav[i]}<ArrowUpRight size={20}/></a>)}<a href="#reservation" onClick={()=>setMenu(false)}>{t.book}<ArrowRight/></a></nav>}
  <main id="top">
  <section className="hero hero-v3" aria-labelledby="hero-title">
@@ -383,8 +391,8 @@ export default function Home(){
   </div>
  </div>
 </section>
- <ReservationPlanner lang={lang} intent={reservationIntent}/>
- <VisitorReviews lang={lang}/>
+ <ReservationPlanner lang={contentLang} intent={reservationIntent}/>
+ <VisitorReviews lang={contentLang}/>
  </main>
  <footer className="footer footer-v15" aria-label={lang==='fr'?'Pied de page':'Footer'}>
   <div className="footer-v15-inner">
@@ -434,5 +442,5 @@ export default function Home(){
     <p>{lang==='fr'?'Photographie prise à Aquamazone':'Photographed at Aquamazone'}</p>
   </div>
  </div>}
- <AquamazoneAssistant lang={lang}/>
+ <AquamazoneAssistant lang={contentLang}/>
  </>}
