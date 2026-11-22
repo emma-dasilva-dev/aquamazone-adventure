@@ -1,5 +1,5 @@
 import type {SiteLanguage} from './reservation-i18n';
-// Fongbe requires review by a fluent speaker; French is the temporary fallback.
+// Fon untranslated labels currently fall back to English, not French.
 const reviews:Record<'es'|'hi',Record<string,string>>={
   "es": {
     "A review was submitted recently. Please try later.": "Ya se ha enviado una reseña recientemente. Inténtalo más tarde.",
@@ -86,4 +86,4 @@ const reviews:Record<'es'|'hi',Record<string,string>>={
     "out of 5 stars": "पाँच में से सितारे"
   }
 };
-export function reviewText(lang:SiteLanguage,en:string,fr:string){return lang==='fr'||lang==='fon'?fr:lang==='en'?en:reviews[lang][en]??fr;}
+export function reviewText(lang:SiteLanguage,en:string,fr:string){return lang==='fr'?fr:lang==='en'||lang==='fon'?en:reviews[lang][en]??en;}
