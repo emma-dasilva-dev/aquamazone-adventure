@@ -1267,3 +1267,15 @@ img,video,iframe{max-width:100%}
 .site-header .wordmark-logo img{display:block;width:100%;height:auto;filter:brightness(0) invert(1)}
 .site-header .wordmark-logo:focus-visible{outline:3px solid #ffd326;outline-offset:5px}
 @media(max-width:680px){.site-header .wordmark-logo{width:clamp(125px,35vw,165px)}}
+
+/* Compact globe language selector */
+.language-picker{position:relative;z-index:80;flex:none}
+.language-trigger{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:40px;cursor:pointer}
+.language-trigger span{opacity:1!important;font-weight:750}
+.language-trigger:focus-visible,.language-options button:focus-visible{outline:3px solid #ffd326;outline-offset:2px}
+.language-dismiss{position:fixed;inset:0;z-index:78;border:0;background:transparent;cursor:default}
+.language-options{position:absolute;top:calc(100% + 8px);right:0;z-index:81;min-width:190px;padding:6px;background:#fff;color:#062047;border:1px solid #e0e6e9;box-shadow:0 12px 36px rgba(0,0,0,.22);border-radius:8px}
+.language-options button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:11px 12px;border:0;border-radius:4px;background:transparent;color:inherit;text-align:left;font-size:13px;cursor:pointer}
+.language-options button:hover,.language-options button[aria-selected="true"]{background:#eaf2f7}
+.language-options small{font-size:10px;color:#5c7282;letter-spacing:.05em}
+@media(max-width:680px){.language-trigger{gap:4px;padding:8px 3px}.language-options{right:-38px;min-width:178px}}
