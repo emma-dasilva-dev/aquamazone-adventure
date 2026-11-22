@@ -138,8 +138,11 @@ export default function Home(){
  </article>)}
  </div>
   <div className="activity-featured-cta">
-   <a className="activity-see-all" href="/activites">{lang==='fr'?'Voir toutes les activités':'View all activities'}<ArrowRight size={17}/></a>
-   <p>{lang==='fr'?'Découvrez toutes nos expériences, avec leurs tarifs, photos et exemples vidéo.':'Explore all our experiences, with prices, photos and video examples.'}</p>
+   <div>
+    <span className="activity-featured-label">{lang==='fr'?'POUR ALLER PLUS LOIN':'EXPLORE MORE'}</span>
+    <p>{lang==='fr'?'L’aventure ne s’arrête pas là.':'There’s more to discover.'}</p>
+   </div>
+   <a className="activity-see-all" href="/activites">{lang==='fr'?'Toutes nos activités':'All activities'}<ArrowUpRight size={17} aria-hidden="true"/></a>
   </div>
   <p className="prototype-notice">{lang==='fr'?'Réservation et paiement en ligne en cours de développement. Pour le moment, demandez votre réservation sur WhatsApp.':'Online booking and payment are in development. For now, request bookings via WhatsApp.'}</p>
  </section>
