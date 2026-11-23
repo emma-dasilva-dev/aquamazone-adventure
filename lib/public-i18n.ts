@@ -65,7 +65,6 @@ const translations:Record<'es'|'hi',Record<string,string>>={
     "Map of Togbin Plage, Benin — Aquamazone location area": "Mapa de Togbin Plage, Benín — zona de Aquamazone",
     "Find AQUAMAZONE ADVENTURE in Adounko Village, Cotonou.": "Encuentra AQUAMAZONE ADVENTURE en Adounko Village, Cotonú.",
     "FIND US": "ENCUÉNTRANOS",
-    "Visitor information": "Información para visitantes",
     "Illustrative diagram: ": "Ilustración: ",
     " person(s)": " persona(s)",
     "Main navigation": "Navegación principal",
@@ -215,7 +214,6 @@ const translations:Record<'es'|'hi',Record<string,string>>={
     "Map of Togbin Plage, Benin — Aquamazone location area": "टोगबिन प्लाज, बेनिन का नक्शा — Aquamazone क्षेत्र",
     "Find AQUAMAZONE ADVENTURE in Adounko Village, Cotonou.": "AQUAMAZONE ADVENTURE, अदुनको गाँव, कोटोनू में है।",
     "FIND US": "हमारा स्थान",
-    "Visitor information": "आगंतुक जानकारी",
     "Illustrative diagram: ": "चित्र: ",
     " person(s)": " व्यक्ति",
     "Main navigation": "मुख्य नेविगेशन",
@@ -303,8 +301,6 @@ const translations:Record<'es'|'hi',Record<string,string>>={
 };
 const fonVerified:Record<string,string>={
   "Welcome to Aquamazone":"Kwabɔ — Aquamazone",
-  "Water":"Sìn",
-  "Rice":"Mɔ̌lǐ",
   "Food":"Nùɖúɖú",
   "Right":"Ɖisixwe",
   "Left":"Amyɔxwe",
