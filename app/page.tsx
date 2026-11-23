@@ -84,7 +84,7 @@ function CraftThumbnail({kind,lang}:{kind:'pedalo-simple'|'pedalo-double'|'canoe
  </div>;
 }
 export default function Home(){
- const [lang,setLang]=useState<Lang>('fr');const [languageOpen,setLanguageOpen]=useState(false);const [menu,setMenu]=useState(false);const [preview,setPreview]=useState<string|null>(null);const [reservationIntent,setReservationIntent]=useState<{activity:string;version:number}|null>(null);const t=allCopy[lang];const tx=(en:string,fr:string)=>publicText(lang,en,fr);const contentLang=lang==='en'?'en':'fr';
+ const [lang,setLang]=useState<Lang>('fr');const [languageOpen,setLanguageOpen]=useState(false);const [menu,setMenu]=useState(false);const [preview,setPreview]=useState<string|null>(null);const [reservationIntent,setReservationIntent]=useState<{activity:string;version:number}|null>(null);const t=allCopy[lang];const tx=(en:string,fr:string)=>publicText(lang,en,fr);const contentLang=lang==='fr'?'fr':'en';
  useEffect(()=>{try{const saved=localStorage.getItem('aquamazone-language');if(saved&&languageOptions.some(l=>l.code===saved))setLang(saved as Lang)}catch{}},[]);
  useEffect(()=>{document.documentElement.lang=lang==='fon'?'fon':lang;try{localStorage.setItem('aquamazone-language',lang)}catch{}},[lang]);
  useEffect(()=>{document.body.style.overflow=menu||preview?'hidden':'';return()=>{document.body.style.overflow='';};},[menu,preview]);
