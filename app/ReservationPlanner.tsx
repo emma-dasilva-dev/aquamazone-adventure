@@ -26,7 +26,7 @@ const packageData:{id:PackageId;fr:string;en:string;infoFr:string;infoEn:string;
 ];
 const steps={fr:['Votre groupe','Votre expérience','Date et arrivée','Vérifier et envoyer'],en:['Your group','Your experience','Date and arrival','Review and enquire']};
 function CrossingBreakdown({adults,children,lang,included=false}:{adults:number;children:number;lang:Lang;included?:boolean}){
- const fr=lang!=='en';const tr=(en:string,frText:string)=>reservationLabel(lang,en,frText);
+ const fr=lang==='fr';const tr=(en:string,frText:string)=>reservationLabel(lang,en,frText);
  const adultAmount=adults*1500,childAmount=children*500;
  return <div className="az-wizard-crossing" aria-live="polite" aria-label={tr("Return crossing pricing","Tarif de la traversée aller-retour")}>
   <div className="az-wizard-crossing-heading">
@@ -40,7 +40,7 @@ function CrossingBreakdown({adults,children,lang,included=false}:{adults:number;
  </div>;
 }
 export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{activity:string;version:number}|null}){
- const fr=lang!=='en';
+ const fr=lang==='fr';
  const contentLang: 'fr'|'en'=lang==='en'?'en':'fr';
  const tr=(en:string,frText:string)=>reservationLabel(lang,en,frText);
  const [step,setStep]=useState(0);
