@@ -14,7 +14,7 @@ const sourceNames:Record<DiscoverySource,{fr:string;en:string}>={
 const sources=Object.keys(sourceNames) as DiscoverySource[];
 
 export default function VisitorReviews({lang}:{lang:Lang}){
- const fr=lang==='fr'||lang==='fon';
+ const fr=lang==='fr';
  const tr=(en:string,frText:string)=>reviewText(lang,en,frText);
  const [reviews,setReviews]=useState<PublicReview[]>([]);
  const [enabled,setEnabled]=useState(false);
