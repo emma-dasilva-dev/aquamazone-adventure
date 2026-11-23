@@ -1289,3 +1289,38 @@ img,video,iframe{max-width:100%}
 .footer-v15-opening h2{min-width:0;max-width:100%;overflow-wrap:break-word}
 .footer-v15-opening h2 em{display:block;max-width:100%;font-size:.74em;line-height:1.18;letter-spacing:-.045em;overflow-wrap:break-word}
 @media(max-width:760px){.footer-v15-opening h2{font-size:clamp(36px,9vw,62px);line-height:1.08;letter-spacing:-.055em}.footer-v15-opening h2 em{font-size:.78em;line-height:1.2;margin-top:8px}.footer-v15-opening{min-width:0}}
+
+
+/* Desktop refinement: restrained typography, consistent gutters and calmer layouts.
+   Mobile/tablet styling remains unchanged. */
+@media (min-width:1200px) {
+ .site-header{padding:22px clamp(42px,5vw,76px);gap:28px}
+ .desktop-nav{gap:clamp(18px,1.7vw,30px);font-size:12px;white-space:nowrap}
+ .header-actions{gap:12px;flex-shrink:0}
+ .hero-v3-content{max-width:1380px;padding-top:clamp(165px,19vh,215px);padding-bottom:165px}
+ .hero-v3 h1{font-size:clamp(72px,7vw,108px);line-height:1.01;max-width:850px;letter-spacing:-.055em;margin-bottom:25px}
+ .hero-v3-description{font-size:17px;line-height:1.65;max-width:480px;margin-bottom:30px}
+ .hero-v3-kicker{margin-bottom:24px}
+ .hero-v3-actions{gap:16px}
+ .hero-v3 .yellow-button,.hero-secondary{min-height:50px;padding:13px 21px}
+ .section-shell{max-width:1320px;padding:clamp(80px,7vw,112px) clamp(45px,5vw,75px)}
+ .section-heading{gap:40px;margin-bottom:34px}
+ .section-heading h2,.packages h2,.restaurant h2,.gallery h2,.location h2{font-size:clamp(40px,4vw,56px);line-height:1.12}
+ .activity-photo-grid{gap:14px}
+ .activity-photo-card{min-height:320px}
+ .activity-featured-cta{padding:27px 0 30px}
+ .activity-featured-cta p{font-size:clamp(24px,2.2vw,30px)}
+ .packages-v4-featured{gap:22px}
+ .package-feature{min-height:435px;padding:clamp(30px,2.8vw,40px)}
+ .reservation-v15-layout{grid-template-columns:minmax(0,1.2fr) minmax(330px,.8fr);gap:clamp(38px,4.5vw,64px)}
+ .visit-v12-shell{max-width:1320px;padding:100px clamp(45px,5vw,75px)}
+ .visit-v12-lead h2{font-size:clamp(52px,5vw,72px)}
+ .footer-v15-inner{max-width:1380px;padding-left:clamp(45px,5vw,75px);padding-right:clamp(45px,5vw,75px)}
+ .footer-v15-opening h2{font-size:clamp(58px,6.3vw,88px);line-height:1.04}
+ .footer-v15-opening{padding-bottom:70px}
+ .footer-v15-columns{padding:52px 0 64px;gap:clamp(28px,3vw,48px)}
+}
+@media (min-width:1600px) {
+ .hero-v3-content{padding-left:80px;padding-right:80px}
+ .az-hero-info{left:max(calc((100vw - 1380px)/2 + 80px),5vw);right:max(calc((100vw - 1380px)/2 + 80px),5vw)}
+}
