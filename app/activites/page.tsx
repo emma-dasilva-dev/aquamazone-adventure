@@ -24,7 +24,7 @@ export default function ActivitiesPage(){
   <header className="az-catalog-header">
    <a href="/" className="az-catalog-back"><ArrowLeft size={16}/>{fr?'Accueil':'Home'}</a>
    <a href="/" className="az-catalog-logo">AQUAMAZONE <small>ADVENTURE</small></a>
-   <div className="az-catalog-header-actions"><button type="button" onClick={()=>setLang(fr?'en':'fr')} aria-label={fr?'Switch to English':'Passer en français'}>{lang.toUpperCase()} / {fr?'EN':'FR'}</button><a href="/#reservation">{fr?'Réserver':'Book'} <ArrowUpRight size={16}/></a></div>
+   <div className="az-catalog-header-actions"><select aria-label="Language / Langue" value={lang} onChange={e=>setLang(e.target.value as Lang)}><option value="fr">Français</option><option value="en">English</option><option value="es">Español</option><option value="hi">हिन्दी</option><option value="fon">Fɔ̀ngbè</option></select><a href="/#reservation">{fr?'Réserver':'Book'} <ArrowUpRight size={16}/></a></div>
   </header>
   <section className="az-catalog-hero">
    <p className="az-catalog-kicker">02 / {fr?'NOS ACTIVITÉS':'OUR ACTIVITIES'}</p>
