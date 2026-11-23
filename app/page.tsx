@@ -9,7 +9,7 @@ import VisitorReviews from './VisitorReviews';
 import {ArrowDown,ArrowUpRight,ArrowRight,Menu,X,Plus,Minus,MapPin,Clock,UtensilsCrossed,MessageCircle,Waves,ZoomIn,Instagram,Youtube,Globe2,ChevronDown} from 'lucide-react';
 
 type Lang='fr'|'en'|'hi'|'es'|'fon';
-const languageOptions: {code:Lang;label:string}[]=[{code:'fr',label:'Français'},{code:'en',label:'English'},{code:'hi',label:'हिन्दी'},{code:'es',label:'Español'},{code:'fon',label:'Fɔ̀ngbè'}];
+const languageOptions: {code:Lang;label:string}[]=[{code:'fr',label:'Français'},{code:'en',label:'English'},{code:'hi',label:'हिन्दी'},{code:'es',label:'Español'}];
 function TikTokIcon({size=17}:{size?:number}){
  return <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
    <path d="M16.65 2h-3.1v13.35c0 1.98-1.6 3.58-3.58 3.58a3.58 3.58 0 1 1 2.52-6.11V9.36a6.72 6.72 0 1 0 4.16 6.21V8.53a8.23 8.23 0 0 0 5.14 1.62V7.01A5.17 5.17 0 0 1 16.65 2Z"/>
