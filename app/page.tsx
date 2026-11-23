@@ -100,8 +100,8 @@ export default function Home(){
  <div className="hero-v3-content">
   <p className="hero-v3-kicker">{lang==='es'?'ACTIVIDADES ACUÁTICAS':lang==='hi'?'जल गतिविधियाँ':lang==='en'?'WATERFRONT ADVENTURE':lang==='fon'?'KWABƆ · AQUAMAZONE':'BASE DE LOISIRS NAUTIQUES'}</p>
   <h1 id="hero-title">{lang==='es'?<>Descansa <em>junto al agua.</em></>:lang==='hi'?<>पानी के किनारे <em>सुकून।</em></>:lang==='en'?<>Relaxation <em>by the water.</em></>:lang==='fon'?<>Kwabɔ <em>Aquamazone!</em></>:<>La détente <em>au fil de l’eau.</em></>}</h1>
-  <p className="hero-v3-description">{lang==='es'?'Actividades acuáticas, descanso y naturaleza en Adounko, Cotonú.':lang==='hi'?'अदुनको, कोटोनू में जल गतिविधियाँ, आराम और प्रकृति का आनंद।':lang==='en'?'Water activities, relaxation and nature discovery in Adounko, Cotonou.':lang==='fon'?'Kwabɔ! Activités nautiques, détente et découvertes naturelles à Adounko, Cotonou.':'Activités nautiques, détente et découvertes naturelles à Adounko, Cotonou.'}</p>
-  <div className="hero-v3-actions"><a className="yellow-button" href="#reservation">{lang==='es'?'Solicitar reserva':lang==='hi'?'बुकिंग का अनुरोध करें':lang==='en'?'Request a booking':'Demander une réservation'}<ArrowUpRight size={18}/></a><a className="hero-secondary" href="#activities">{t.explore}<ArrowDown size={17}/></a></div>
+  <p className="hero-v3-description">{lang==='es'?'Actividades acuáticas, descanso y naturaleza en Adounko, Cotonú.':lang==='hi'?'अदुनको, कोटोनू में जल गतिविधियाँ, आराम और प्रकृति का आनंद।':lang==='en'?'Water activities, relaxation and nature discovery in Adounko, Cotonou.':lang==='fon'?'Kwabɔ! Water activities, relaxation and nature discovery in Adounko, Cotonou.':'Activités nautiques, détente et découvertes naturelles à Adounko, Cotonou.'}</p>
+  <div className="hero-v3-actions"><a className="yellow-button" href="#reservation">{lang==='es'?'Solicitar reserva':lang==='hi'?'बुकिंग का अनुरोध करें':lang==='en'||lang==='fon'?'Request a booking':'Demander une réservation'}<ArrowUpRight size={18}/></a><a className="hero-secondary" href="#activities">{t.explore}<ArrowDown size={17}/></a></div>
  </div>
  <div className="az-hero-info" aria-label={tx("Visitor information","Informations pratiques")}>
   <span><MapPin size={13} aria-hidden="true"/>{tx("Adounko Village, Route des Pêches, Cotonou","Adounko Village, Route des Pêches, Cotonou")}</span>
@@ -400,13 +400,13 @@ export default function Home(){
   <div className="footer-v15-inner">
     <div className="footer-v15-opening">
       <p>{tx("ADVENTURE AWAITS","L’AVENTURE VOUS ATTEND")}</p>
-      <h2>{lang==='es'?<>¿Nos vemos <em>junto al agua?</em></>:lang==='hi'?<>पानी के किनारे <em>मिलेंगे?</em></>:lang==='en'?<>See you <em>by the water?</em></>:<>On se retrouve <em>au bord de l’eau ?</em></>}</h2>
+      <h2>{lang==='es'?<>¿Nos vemos <em>junto al agua?</em></>:lang==='hi'?<>पानी के किनारे <em>मिलेंगे?</em></>:lang==='en'||lang==='fon'?<>See you <em>by the water?</em></>:<>On se retrouve <em>au bord de l’eau ?</em></>}</h2>
       <a href="#reservation">{tx("Plan my visit","Préparer ma visite")} <ArrowUpRight size={20} aria-hidden="true"/></a>
     </div>
     <div className="footer-v15-columns">
       <div className="footer-v15-brand">
         <a href="#top" className="footer-v15-wordmark">AQUAMAZONE <span>ADVENTURE</span></a>
-        <p>La détente au fil de l’eau.</p>
+        <p>{lang==='fr'?'La détente au fil de l’eau.':'Relaxation by the water.'}</p>
         <span>Village Adounko · Route des Pêches<br/>Cotonou, Bénin</span>
       </div>
       <nav aria-label={tx("Footer navigation","Navigation du pied de page")}>
