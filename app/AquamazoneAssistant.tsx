@@ -132,7 +132,7 @@ export default function AquamazoneAssistant({lang}:{lang:Lang}) {
   return <>
     <button ref={launcherRef} className={'assistant-v14-launcher'+(open?' is-open':'')} type="button" aria-label={open?t.close:t.open} aria-expanded={open} aria-controls="assistant-v14-panel" onClick={()=>setOpen(v=>!v)}>
       {open?<X size={23} aria-hidden="true"/>:<MessageCircle size={25} aria-hidden="true"/>}
-      {!open&&<span className="assistant-v14-launcher-label">{lang==='es'?'¿Una pregunta?':lang==='hi'?'कोई सवाल?':lang==='fon'?'Une question ?':lang==='fr'?'Une question ?':'Need help?'}</span>}
+      {!open&&<span className="assistant-v14-launcher-label">{lang==='es'?'¿Una pregunta?':lang==='hi'?'कोई सवाल?':lang==='fon'?'Need help?':lang==='fr'?'Une question ?':'Need help?'}</span>}
     </button>
     {open&&<aside id="assistant-v14-panel" ref={panelRef} className="assistant-v14-panel" role="dialog" aria-modal="false" aria-label={t.name}>
       <header className="assistant-v14-head">
