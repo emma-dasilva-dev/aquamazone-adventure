@@ -3,7 +3,7 @@ import {checkBookingWindow, RESERVATION_SLOTS} from './reservation-rules.ts';
 export const ACTIVITIES = ['pedalo','canoe','paddle','waterball','pedalboat','lake'] as const;
 export type ActivityId = typeof ACTIVITIES[number];
 export type PackageId = 'glele'|'guezo'|'toffa'|'behanzin';
-export type Party = {adults:number;children:number};
+export type Party = {adults:number;children:number;underSix?:number};
 export type Line = {id:ActivityId; adults:number;children:number};
 export type Plan = Party & {date:string;time:string;mode:'package'|'custom';packageId?:PackageId;lines:Line[];gleleChoices?:('canoe'|'pedalo'|'paddle')[]};
 export type PriceItem = {label:string;total:number};
@@ -25,7 +25,9 @@ export function validatePlan(input:unknown,now:Date=new Date()):PlanResult{
  const v=input as Record<string,unknown>;
  const adults=v.adults,children=v.children;
  if(!Number.isInteger(adults)||!Number.isInteger(children)||!(typeof adults==='number')||!(typeof children==='number')||adults<1||children<0||adults+children>20)return invalid('invalid_guests');
- const party={adults,children};
+ const underSix=v.underSix??0;
+ if(typeof underSix!=='number'||!Number.isInteger(underSix)||underSix<0||underSix>children)return invalid('invalid_guests');
+ const party={adults,children,underSix};
  if(typeof v.date!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(v.date)||!checkBookingWindow(v.date,now).ok)return invalid('invalid_date');
  if(typeof v.time!=='string'||!(RESERVATION_SLOTS as readonly string[]).includes(v.time))return invalid('invalid_time');
  if(v.mode!=='package'&&v.mode!=='custom')return invalid('invalid_mode');
@@ -57,7 +59,7 @@ export function validatePlan(input:unknown,now:Date=new Date()):PlanResult{
  }
  const activityTotal=lines.reduce((sum,line)=>sum+(activityAmount(line)??0),0);
  const packageTotal=packageId?(packageId==='glele'?adults*5000+children*3500:PACKAGE_PRICE[packageId]):0;
- const crossing=packageId?0:adults*1500+children*500;
+ const crossing=packageId?0:adults*1500+(children-underSix)*500;
  const items:PriceItem[]=[
   ...(packageId?[{label:packageId.toUpperCase(),total:packageTotal}]:[]),
   ...lines.map(line=>({label:line.id+' ('+line.adults+' adultes, '+line.children+' enfants)',total:activityAmount(line)??0})),
