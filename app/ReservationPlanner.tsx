@@ -25,16 +25,16 @@ const packageData:{id:PackageId;fr:string;en:string;infoFr:string;infoEn:string;
  {id:'behanzin',fr:'BÉHANZIN · Groupe',en:'BÉHANZIN · Group',infoFr:'Pour 4 adultes · traversée incluse',infoEn:'For 4 adults · crossing included',image:'/images/gallery/gallery-14.webp'}
 ];
 const steps={fr:['Votre groupe','Votre expérience','Date et arrivée','Vérifier et envoyer'],en:['Your group','Your experience','Date and arrival','Review and enquire']};
-function CrossingBreakdown({adults,children,lang,included=false}:{adults:number;children:number;lang:Lang;included?:boolean}){
+function CrossingBreakdown({adults,children,underSix,lang,included=false}:{adults:number;children:number;underSix:number;lang:Lang;included?:boolean}){
  const fr=lang==='fr';const tr=(en:string,frText:string)=>reservationLabel(lang,en,frText);
- const adultAmount=adults*1500,childAmount=children*500;
+ const adultAmount=adults*1500,childAmount=(children-underSix)*500;
  return <div className="az-wizard-crossing" aria-live="polite" aria-label={tr("Return crossing pricing","Tarif de la traversée aller-retour")}>
   <div className="az-wizard-crossing-heading">
    <strong>{tr("Pirogue crossing · Return trip","Traversée en pirogue · Aller-retour")}</strong>
-   <small>{tr("Adult: 1,500 FCFA · Child under 12: 500 FCFA","Adulte : 1 500 FCFA · Enfant de moins de 12 ans : 500 FCFA")}</small>
+   <small>{tr("Ages 12+: 1,500 FCFA · Ages 6–11: 500 FCFA · Under 6: free","12 ans et plus : 1 500 FCFA · 6 à 11 ans : 500 FCFA · Moins de 6 ans : gratuit")}</small>
   </div>
   <div className="az-wizard-crossing-line"><span>{tr("Adults","Adultes")} · {adults} × 1 500 FCFA</span><strong>{money(adultAmount)}</strong></div>
-  <div className="az-wizard-crossing-line"><span>{tr("Children","Enfants")} · {children} × 500 FCFA</span><strong>{money(childAmount)}</strong></div>
+  <div className="az-wizard-crossing-line"><span>{tr("Children","Enfants")} · {children-underSix} × 500 FCFA</span><strong>{money(childAmount)}</strong></div>
   <div className="az-wizard-crossing-total"><span>{tr("Crossing total","Total traversée")}</span><strong>{money(adultAmount+childAmount)}</strong></div>
   <p>{included?(tr("This amount is already covered by packages that include the crossing and will not be charged twice. Our team will confirm the chosen package and its price.","Ce montant est déjà compris dans les forfaits qui incluent la traversée : il ne sera pas ajouté une deuxième fois. Le forfait choisi et son tarif seront confirmés par notre équipe.")):(tr("This amount is added only once to à-la-carte activities. If you choose a package that includes the crossing, it will not be charged again.","Ce montant sera ajouté une seule fois aux activités à la carte. Si vous choisissez ensuite un forfait incluant la traversée, elle ne sera pas facturée en supplément."))}</p>
  </div>;
@@ -46,6 +46,8 @@ export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{act
  const [step,setStep]=useState(0);
  const [adults,setAdults]=useState(2);
  const [children,setChildren]=useState(0);
+ const [youngChildren,setYoungChildren]=useState(0);
+ const underSix=Math.min(children,youngChildren);
  const [path,setPath]=useState<'package'|'custom'|'private'>('custom');
  const [pkg,setPkg]=useState<PackageId>('guezo');
  const [lines,setLines]=useState<Line[]>([]);
@@ -72,12 +74,12 @@ export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{act
  const eligible=packageData;
  const activePackage=pkg;
  const effectiveLines=lines.map(line=>({...line,adults:Math.min(adults,line.adults),children:Math.min(children,line.children)}));
- const model={adults,children,date,time,mode:path==='package'?'package' as const:'custom' as const,packageId:path==='package'?activePackage:undefined,lines:effectiveLines,gleleChoices:Array.from({length:totalGuests},(_,i)=>gleleChoices[i]??'canoe')};
- const quote=useMemo(()=>dateValid&&path!=='private'?validatePlan(model,now!):null,[dateValid,path,adults,children,date,time,activePackage,lines,gleleChoices,now]);
+ const model={adults,children,underSix,date,time,mode:path==='package'?'package' as const:'custom' as const,packageId:path==='package'?activePackage:undefined,lines:effectiveLines,gleleChoices:Array.from({length:totalGuests},(_,i)=>gleleChoices[i]??'canoe')};
+ const quote=useMemo(()=>dateValid&&path!=='private'?validatePlan(model,now!):null,[dateValid,path,adults,children,underSix,date,time,activePackage,lines,gleleChoices,now]);
  const selected=quote?.ok?quote.quote:null;
  const packagePrice=activePackage==='glele'?adults*5000+children*3500:activePackage==='guezo'?12000:activePackage==='toffa'?18000:36000;
  const extras=effectiveLines.reduce((sum,row)=>sum+(activityAmount(row)??0),0);
- const estimated=path==='package'?packagePrice+extras:path==='custom'?extras+adults*1500+children*500:0;
+ const estimated=path==='package'?packagePrice+extras:path==='custom'?extras+adults*1500+(children-underSix)*500:0;
  const hasInvalidLine=effectiveLines.some(row=>activityAmount(row)===null);
  const chooseActivity=(id:ActivityId)=>{
   setLines(old=>old.some(row=>row.id===id)?old.filter(row=>row.id!==id):[...old,{id,adults,children}]);
@@ -87,7 +89,7 @@ export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{act
  };
  const changeGuests=(kind:'adults'|'children',delta:number)=>{
   if(kind==='adults')setAdults(v=>Math.max(1,Math.min(20-children,v+delta)));
-  else setChildren(v=>Math.max(0,Math.min(20-adults,v+delta)));
+  else {setChildren(v=>Math.max(0,Math.min(20-adults,v+delta)));if(delta<0)setYoungChildren(v=>Math.min(v,Math.max(0,children+delta)));}
  };
  const send=async()=>{
   if(busy||!dateValid||!contact.ok||!selected||path==='private')return;
@@ -120,7 +122,7 @@ export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{act
    ]:[];
    const crossingLabel=path==='package'
     ?(fr?'Traversée aller-retour : incluse':'Return crossing: included')
-    :(fr?'Traversée aller-retour':'Return crossing')+' ('+adults+' × 1 500'+(children?' + '+children+' × 500':'')+') : '+money(adults*1500+children*500);
+    :(fr?'Traversée aller-retour':'Return crossing')+' ('+adults+' × 1 500'+(children-underSix?' + '+(children-underSix)+' × 500':'')+') : '+money(adults*1500+(children-underSix)*500);
    const message=[
     '*'+(fr?'DEMANDE DE RÉSERVATION':'BOOKING REQUEST')+' — AQUAMAZONE ADVENTURE*',
     '',
@@ -157,7 +159,7 @@ export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{act
    (fr?'Forfait souhaité : ':'Requested package: ')+(chosen?.[contentLang]??pkg.toUpperCase()),
    (fr?'Activité souhaitée : ':'Preferred activity: ')+activityData[packageActivity][contentLang],
    (fr?'Adultes (12 ans et plus) : ':'Adults (12 and over): ')+adults,
-   (fr?'Enfants (moins de 12 ans) : ':'Children (under 12): ')+children,
+   (fr?'Enfants (moins de 12 ans) : ':'Children (under 12): ')+children+' ('+underSix+' '+(fr?'moins de 6 ans':'under 6')+')',
    fr?'Merci de confirmer les activités incluses, le prix total, la traversée et les disponibilités. Ceci est une demande de devis, pas une réservation.':'Please confirm included activities, total price, crossing and availability. This is a quotation request, not a confirmed booking.'
   ].join('\\n');
   window.location.assign(WA+encodeURIComponent(msg));
@@ -184,7 +186,8 @@ export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{act
       <div className="az-wizard-counter"><div><strong>{tr("Adults","Adultes")}</strong><small>{tr("Age 12 and over","12 ans et plus")}</small></div><div><button type="button" disabled={adults<=1} onClick={()=>changeGuests('adults',-1)} aria-label={tr("Remove an adult","Retirer un adulte")}><Minus size={17}/></button><strong>{adults}</strong><button type="button" disabled={totalGuests>=20} onClick={()=>changeGuests('adults',1)} aria-label={tr("Add an adult","Ajouter un adulte")}><Plus size={17}/></button></div></div>
       <div className="az-wizard-counter"><div><strong>{tr("Children","Enfants")}</strong><small>{tr("Under 12 years","Moins de 12 ans")}</small></div><div><button type="button" disabled={!children} onClick={()=>changeGuests('children',-1)} aria-label={tr("Remove a child","Retirer un enfant")}><Minus size={17}/></button><strong>{children}</strong><button type="button" disabled={totalGuests>=20} onClick={()=>changeGuests('children',1)} aria-label={tr("Add a child","Ajouter un enfant")}><Plus size={17}/></button></div></div>
       <p className="az-wizard-note">{totalGuests} {tr("guest(s). Children must be accompanied by an adult.","participant(s). Les enfants doivent être accompagnés.")}</p>
-      <CrossingBreakdown adults={adults} children={children} lang={lang}/>
+      {children>0&&<label>{tr('Of these children, how many are under 6?','Parmi ces enfants, combien ont moins de 6 ans ?')} <select value={underSix} onChange={e=>setYoungChildren(Number(e.target.value))}>{Array.from({length:children+1},(_,i)=><option key={i} value={i}>{i}</option>)}</select></label>}
+      <CrossingBreakdown adults={adults} children={children} underSix={underSix} lang={lang}/>
      </>}
      {step===1&&<>
       <h3>{tr("Choose your experience","Choisissez votre expérience")}</h3>
@@ -209,7 +212,8 @@ export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{act
          </label>
          <div className="az-wizard-counter"><div><strong>{tr("Adults","Adultes")}</strong><small>{tr("Age 12 and over","12 ans et plus")}</small></div><div><button type="button" disabled={adults<=1} onClick={()=>changeGuests('adults',-1)} aria-label={tr("Remove an adult","Retirer un adulte")}><Minus size={17}/></button><strong>{adults}</strong><button type="button" disabled={totalGuests>=20} onClick={()=>changeGuests('adults',1)} aria-label={tr("Add an adult","Ajouter un adulte")}><Plus size={17}/></button></div></div>
          <div className="az-wizard-counter"><div><strong>{tr("Children","Enfants")}</strong><small>{tr("Under 12 years","Moins de 12 ans")}</small></div><div><button type="button" disabled={children===0} onClick={()=>changeGuests('children',-1)} aria-label={tr("Remove a child","Retirer un enfant")}><Minus size={17}/></button><strong>{children}</strong><button type="button" disabled={totalGuests>=20} onClick={()=>changeGuests('children',1)} aria-label={tr("Add a child","Ajouter un enfant")}><Plus size={17}/></button></div></div>
-         <CrossingBreakdown adults={adults} children={children} lang={lang} included/>
+         {children>0&&<label>{tr('Of these children, how many are under 6?','Parmi ces enfants, combien ont moins de 6 ans ?')} <select value={underSix} onChange={e=>setYoungChildren(Number(e.target.value))}>{Array.from({length:children+1},(_,i)=><option key={i} value={i}>{i}</option>)}</select></label>}
+      <CrossingBreakdown adults={adults} children={children} underSix={underSix} lang={lang} included/>
          <p className="az-wizard-note">{tr("The price depends on the package and guests. Your activity selection is a preference, not an automatic change to the package inclusions. No payment or confirmed booking.","Le tarif dépend du forfait et des participants. La sélection de l’activité exprime une préférence, sans modifier automatiquement les activités incluses. Aucun paiement ni réservation confirmée.")}</p>
          <button type="button" className="az-wizard-next az-wizard-quote-button" onClick={requestPackage}><MessageCircle size={17}/>{tr("Ask us for the total price","Nous contacter pour le tarif total")} <ArrowRight size={17}/></button>
         </div>
@@ -249,7 +253,7 @@ export default function ReservationPlanner({lang,intent}:{lang:Lang;intent?:{act
        <div><span>{tr("Date · arrival","Date · arrivée")}</span><strong>{date} · {time}</strong></div>
        {path==='package'&&<div><span>{tr("Package","Forfait")} {activePackage?.toUpperCase()}</span><strong>{money(packagePrice)}</strong></div>}
        {effectiveLines.map(line=><div key={line.id}><span>{tr(activityData[line.id].en,activityData[line.id].fr)} ({line.adults}+{line.children})</span><strong>{money(activityAmount(line)??0)}</strong></div>)}
-       <div><span>{tr("Return crossing","Traversée aller-retour")}</span><strong>{path==='package'?tr('Included','Incluse'):money(adults*1500+children*500)}</strong></div>
+       <div><span>{tr("Return crossing","Traversée aller-retour")}</span><strong>{path==='package'?tr('Included','Incluse'):money(adults*1500+(children-underSix)*500)}</strong></div>
        <div className="az-wizard-total"><strong>{tr("Estimated total","Total estimé")}</strong><strong>{money(estimated)}</strong></div>
       </div>
       <p className="az-wizard-note">{tr("Estimate → WhatsApp enquiry → Team confirmation. No booking or payment is confirmed here.","Estimation → Demande WhatsApp → Confirmation par l’équipe. Aucune réservation ni paiement ne sont confirmés ici.")}</p>
