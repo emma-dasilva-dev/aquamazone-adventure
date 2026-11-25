@@ -14,6 +14,7 @@ export type ReservationRequest = {
   time: string;
   adults: number;
   children: number;
+  underSix?: number;
   choice?: ReservationChoice;
   choices?: ReservationChoice[];
 };
@@ -146,8 +147,10 @@ export function validateReservation(input: unknown, now: Date = new Date(), opti
     else return error('activity_choice','Choose exactly one GLÈLÈ activity for each participant.');
   }
   const choice=choices?.[0];
+  const underSix=obj.underSix??0;
+  if(typeof underSix!=='number'||!Number.isInteger(underSix)||underSix<0||underSix>children)return error('invalid_guests','Invalid number of children under six.');
   const crossingIncluded = ['glele','guezo','toffa','behanzin'].includes(experience);
-  const crossingAmount = crossingIncluded ? 0 : 1500*adults + 500*children;
+  const crossingAmount = crossingIncluded ? 0 : 1500*adults + 500*(children-underSix);
   let total: number | null = null;
   if (experience==='glele') total = adults*5000 + children*3500;
   else if (experience==='guezo') total = 12000;
@@ -157,7 +160,7 @@ export function validateReservation(input: unknown, now: Date = new Date(), opti
   else if (['pedalo','canoe','paddle','waterball'].includes(experience)) total = count*3000 + crossingAmount;
   else if (experience==='lake' || experience==='mangrove') total = adults*5000+children*2500+crossingAmount;
   // Legacy 'mangrove' requests share the same combined lake/mangrove visit tariff.
-  const reservation: ReservationRequest = {experience,date:obj.date,time:obj.time,adults,children,...(choice?{choice}:{}),...(choices?{choices}:{})};
+  const reservation: ReservationRequest = {experience,date:obj.date,time:obj.time,adults,children,underSix,...(choice?{choice}:{}),...(choices?{choices}:{})};
   return {ok:true,reservation,quote:{
     total,currency:'XOF',crossingIncluded,crossingAmount,
     status:total===null?'confirm_with_team':'estimate',
@@ -190,7 +193,7 @@ export function validateActivitySelection(
   const accepted=results.filter((result):result is Extract<ValidationResult,{ok:true}>=>result.ok);
   const first=accepted[0];
   const adults=data.adults as number,children=data.children as number;
-  const crossingAmount=1500*adults+500*children;
+  const crossingAmount=1500*adults+500*(children-Number(data.underSix??0));
   // The pricing function for individual activities already includes crossing.
   // Remove duplicate crossing from each subsequent activity.
   const knownPrices=accepted.every(result=>result.quote.total!==null);
