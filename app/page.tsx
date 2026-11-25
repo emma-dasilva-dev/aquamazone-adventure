@@ -118,7 +118,7 @@ export default function Home(){
        <p>{tx("Every visitor takes the return pirogue crossing to reach our waterside base. All packages already include this crossing, so there is no additional charge.","Pour rejoindre notre base nautique, chaque visiteur effectue la traversée aller-retour. Elle est déjà incluse dans tous nos forfaits : aucun supplément à payer.")}</p>
      </div>
      <div className="az-crossing-first-prices">
-       <div><span>{tx("Adults and ages 12+","Adulte et 12 ans +")}</span><strong>1 500 <small>FCFA</small></strong></div>
+       <div><span>{tx("Adult","Adulte")}</span><strong>1 500 <small>FCFA</small></strong></div>
        <div><span>{tx("Ages 6–11","Enfants de 6 à 11 ans")}</span><strong>500 <small>FCFA</small></strong></div>
        <div><span>{tx("Under 6","Moins de 6 ans")}</span><strong>{tx("Free","Gratuit")}</strong></div>
      </div>
